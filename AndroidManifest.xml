@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.detimil.breadcrumbs1"
+    android:versionCode="3"
+    android:versionName="1.1" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <permission
+        android:name="com.detimil.breadcrumbs1.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="com.detimil.breadcrumbs1.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/breadloaves"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.detimil.breadcrumbs1.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.detimil.breadcrumbs1.DroppedCrumb"
+            android:label="@string/title_activity_dropped_crumb"
+            android:parentActivityName="com.detimil.breadcrumbs1.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.detimil.breadcrumbs1.MainActivity" />
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyA5pksHDf3yjN4Xpq74ECu-oRHGLpiwplw" />
+
+        <activity
+            android:name="com.detimil.breadcrumbs1.CollectedBreadcrumbsActivity"
+            android:label="@string/title_activity_collected_breadcrumbs" >
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical" 
+    android:padding="2dp"
+    android:background="#333300"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/button1"
+        style="@style/ButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="3dp"
+        android:layout_weight="16"
+        android:background="@drawable/custom_button2"
+        android:onClick="dropBreadcrumb"
+        android:text="@string/DropBreadcrumb"
+        android:textSize="45sp" />
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/ButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="3dp"
+        android:layout_weight="5"
+        android:background="@drawable/custom_button2"
+        android:text="@string/CollectBreadcrumbs"
+		android:onClick="collectBreadcrumbs"
+        android:textSize="30sp" />
+    
+    <Button
+        android:id="@+id/button3"
+        style="@style/ButtonText"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@drawable/custom_button_blackout"
+        android:text="@string/BlackoutMode"
+        android:textSize="20sp" />
+
+</LinearLayout>
