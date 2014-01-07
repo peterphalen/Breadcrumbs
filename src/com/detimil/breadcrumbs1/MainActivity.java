@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 	
 	//When we get an updated location through our location listener, receive the updated 
 	//location and call a method that tells us what to do with the location. When I get a new location
-	//here I just assign it to the variable mostCurrentLocation
+	//here I assign it to the variable mostCurrentLocation
 	
 	public class MyCurrentLoctionListener implements LocationListener{ 
 	    @Override
