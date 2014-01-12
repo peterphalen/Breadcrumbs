@@ -25,7 +25,7 @@ public class DroppedCrumb extends Activity {
 		    setContentView(R.layout.activity_dropped_crumb);
 		    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 		        .getMap();
-		    map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+		    map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 	        DatabaseHandler db = new DatabaseHandler(this);
 		    
 		    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
