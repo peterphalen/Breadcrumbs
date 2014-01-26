@@ -6,7 +6,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -26,6 +25,7 @@ public class DroppedCrumb extends Activity {
 		    setContentView(R.layout.activity_dropped_crumb);
 		    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 		        .getMap();
+		    map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 	        DatabaseHandler db = new DatabaseHandler(this);
 		    
 		    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();

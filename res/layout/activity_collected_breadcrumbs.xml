@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/text_view_categories_title"
         android:layout_width="fill_parent"
-        android:layout_height="45dp"
+        android:layout_height=“50dp"
         android:background="#111111"
         android:paddingTop="10dp"
         android:text="@string/title_collected_breadcrumbs_activity"
@@ -19,18 +19,17 @@
     
     <ListView
         android:id="@+id/list"
-        android:padding="5dp"
+        android:padding=“0dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:longClickable="true"
         android:cacheColorHint="#00000000">
     </ListView>
-    
     <TextView
 		android:id="@+id/empty"
 		android:text="@string/EmptyListview"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-	</TextView>
+		android:layout_height="fill_parent"
+		android:visibility="gone">
 
 </LinearLayout>

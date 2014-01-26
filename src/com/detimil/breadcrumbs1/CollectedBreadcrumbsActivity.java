@@ -40,6 +40,8 @@ public class CollectedBreadcrumbsActivity extends Activity {
         ArrayAdapter<Breadcrumb> adapter = new ArrayAdapter<Breadcrumb>(this,
                 android.R.layout.simple_list_item_1, breadcrumbs);
             listview.setAdapter(adapter);
+	TextView emptyText = (TextView)findViewById(android.R.id.empty);
+            listview.setEmptyView(emptyText);
 
     this.listview.setOnItemClickListener(new OnItemClickListener() {
 
