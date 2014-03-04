@@ -106,18 +106,25 @@ public class MainActivity extends Activity {
 	// DroppedCrumb activity as an extra.
 	
 	public void dropBreadcrumb(View view) {
-	    Intent intent = new Intent(this, DroppedCrumb.class);
+	    Intent intent = new Intent(this, BreadcrumbMap.class);
         DatabaseHandler db = new DatabaseHandler(this);
         BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
         int lat = (int)BREADCRUMB_LATITUDE;
         BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
         int lng = (int)BREADCRUMB_LONGITUDE;
-	    db.addBreadcrumb(new Breadcrumb(lat, lng));
+        String label = ("Breadcrumb " + (db.getBreadcrumbsCount()+1) );
+        		
+	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
 	    startActivity(intent);
 	}
 	
 	public void collectBreadcrumbs(View view) {
 	    Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
+        startActivity(intent);
+	}
+	
+	public void breadcrumbMap(View view) {
+	    Intent intent = new Intent(this, BreadcrumbMap.class);
         startActivity(intent);
 	}
 	

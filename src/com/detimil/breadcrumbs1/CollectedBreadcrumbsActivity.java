@@ -1,5 +1,6 @@
 package com.detimil.breadcrumbs1;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,6 +24,8 @@ public class CollectedBreadcrumbsActivity extends Activity {
 
 	private ListView listview;
 	private DatabaseHandler db;
+	private List<Breadcrumb> breadcrumbs;
+	private List<String> breadcrumbLabels;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,25 +34,36 @@ public class CollectedBreadcrumbsActivity extends Activity {
         setContentView(R.layout.activity_collected_breadcrumbs);
 
         db = new DatabaseHandler(this);
-        List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
+        breadcrumbs = db.getAllBreadcrumbs();
         
-        //Convert breadcrumbs list to array. Unneeded? Commented out...
-        //String[] array = breadcrumbs.toArray(new String[breadcrumbs.size()]);
+        //Create empty String Array 
+        breadcrumbLabels = new ArrayList<String>();
         
-        listview = (ListView) findViewById(R.id.list);
-        ArrayAdapter<Breadcrumb> adapter = new ArrayAdapter<Breadcrumb>(this,
-                android.R.layout.simple_list_item_1, breadcrumbs);
-            listview.setAdapter(adapter);
+        //Add all breadcrumb labels to the String Array
+        for (Breadcrumb brd : breadcrumbs) {
+        	breadcrumbLabels.add(brd.getLabel());
+        };
+        	
+            listview = (ListView) findViewById(R.id.list);
+            ArrayAdapter<String> breadcrumbLabelArray = new ArrayAdapter<String>(this, 
+            		android.R.layout.simple_list_item_1, breadcrumbLabels);
+            		listview.setAdapter(breadcrumbLabelArray);
+        
+        
+      // If there are no breadcrumbs this emptyTextView will show up
 	TextView emptyText = (TextView)findViewById(android.R.id.empty);
             listview.setEmptyView(emptyText);
 
     this.listview.setOnItemClickListener(new OnItemClickListener() {
 
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-
-	ArrayAdapter<Breadcrumb> adapter = (ArrayAdapter<Breadcrumb>) listview.getAdapter();
+	
     if (listview.getAdapter().getCount() > 0) {
-    	Breadcrumb breadcrumb = (Breadcrumb) listview.getAdapter().getItem(position);
+    	
+    	Breadcrumb breadcrumb = db.getBreadcrumb(position+1);
+    	Log.d("HelloListView", "You shortclicked Item: " + id + " at position:" + position);
+    	Log.d("HelloListView", "Number of items in adapter:" + listview.getAdapter().getCount());
+    	Log.d("HelloListView", "Number of items in database:" + db.getBreadcrumbsCount());
 
     	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6));
         startActivity(intent);
@@ -60,6 +74,8 @@ public class CollectedBreadcrumbsActivity extends Activity {
     public boolean onItemLongClick(AdapterView<?> l, View v, final int position, long id) {
     	Log.d("HelloListView", "You clicked Item: " + id + " at position:" + position);
     	Log.d("HelloListView", "Number of items in adapter:" + listview.getAdapter().getCount());
+    	Log.d("HelloListView", "Number of items in database:" + db.getBreadcrumbsCount());
+
     	
     	AlertDialog.Builder alertbox = new AlertDialog.Builder(CollectedBreadcrumbsActivity.this);
         
@@ -72,11 +88,13 @@ public class CollectedBreadcrumbsActivity extends Activity {
             // do something when the button is clicked
             public void onClick(DialogInterface arg0, int arg1) {                
             	@SuppressWarnings("unchecked")
-        		ArrayAdapter<Breadcrumb> adapter = (ArrayAdapter<Breadcrumb>) listview.getAdapter();
+        		ArrayAdapter<String> adapter = (ArrayAdapter<String>) listview.getAdapter();
                 if (listview.getAdapter().getCount() > 0) {
-                	Breadcrumb breadcrumb = (Breadcrumb) listview.getAdapter().getItem(position);
+                	String label = (String) listview.getAdapter().getItem(position);
+
+                	Breadcrumb breadcrumb = db.getBreadcrumb(position+1);
                     db.deleteBreadcrumb(breadcrumb);
-                    adapter.remove(breadcrumb);
+                    adapter.remove(label);
                     }
                 adapter.notifyDataSetChanged();
                 

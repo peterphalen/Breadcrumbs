@@ -4,23 +4,25 @@ public class Breadcrumb {
 	private int _id;
 	private int _latitude;
 	private int _longitude;
-	private String breadcrumb;
+	private String _label;
 
     // Empty constructor
     public Breadcrumb(){
 	}	
     
     // constructor
-	public Breadcrumb(int id, int latitude, int longitude){
+	public Breadcrumb(int id, int latitude, int longitude, String label){
 		this._id = id;
 		this._latitude = latitude;
 		this._longitude = longitude;
+		this._label = label;
 	}
 	
 	// constructor
-	public Breadcrumb(int latitude, int longitude){
+	public Breadcrumb(int latitude, int longitude, String label){
 		this._latitude = latitude;
 		this._longitude = longitude;
+		this._label = label;
 	}
 	
 	// getting id
@@ -51,6 +53,18 @@ public class Breadcrumb {
 	// setting longitude
 	public void setBreadcrumbLongitude(int longitude) {
 		this._longitude = longitude;
+	}
+	
+	// getting label
+	
+	public String getLabel() {
+		return _label;
+	}
+	
+	// setting label
+	
+	public void setLabel(String label) {
+		this._label = label;
 	}
 
 }

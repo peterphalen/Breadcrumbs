@@ -27,6 +27,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_LATITUDE = "latitude";
     private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_LABEL = "label";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,7 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_BREADCRUMBS_TABLE = "CREATE TABLE " + TABLE_BREADCRUMBS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_LATITUDE + " TEXT,"
-                + KEY_LONGITUDE + " TEXT" + ")";
+                + KEY_LONGITUDE + " TEXT," + KEY_LABEL + " TEXT" + ")";
         db.execSQL(CREATE_BREADCRUMBS_TABLE);
     }
  
@@ -54,7 +55,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * All CRUD(Create, Read, Update, Delete) Operations
      */
-     
+    
+    // Column numbers:
+    //
+    // 0 = ID
+    // 1 = Latitude
+    // 2 = Longitude
+    // 3 = Label 
+    //
     
     	// Adding new location/breadcrumb
     public void addBreadcrumb(Breadcrumb breadcrumb) {
@@ -63,25 +71,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     		ContentValues values = new ContentValues();
     		values.put(KEY_LATITUDE, breadcrumb.getBreadcrumbLatitude()); // Latitude
     		values.put(KEY_LONGITUDE, breadcrumb.getBreadcrumbLongitude()); // Longitude
+    		values.put(KEY_LABEL, breadcrumb.getLabel()); // label
+
  
     		// Inserting Row
     		db.insert(TABLE_BREADCRUMBS, null, values);
     		db.close(); // Closing database connection
     	}
     
+    public void relabelBreadcrumb(Integer id, String string) {
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	 
+		ContentValues values = new ContentValues();
+		values.put(KEY_LABEL, string); // put second arg into LABEL column
+		db.update(TABLE_BREADCRUMBS, values, KEY_ID + "=" + id, null); // update specific row by id
+
+    }
 
     	// Getting single breadcrumb
     public Breadcrumb getBreadcrumb(int id) {
     	SQLiteDatabase db = this.getReadableDatabase();
  
     	Cursor cursor = db.query(TABLE_BREADCRUMBS, new String[] { KEY_ID,
-    			KEY_LATITUDE, KEY_LONGITUDE }, KEY_ID + "=?",
+    			KEY_LATITUDE, KEY_LONGITUDE, KEY_LABEL }, KEY_ID + "=?",
     			new String[] { String.valueOf(id) }, null, null, null, null);
     	if (cursor != null)
     		cursor.moveToLast();
  
     		Breadcrumb breadcrumb = new Breadcrumb(Integer.parseInt(cursor.getString(0)),
-    		cursor.getInt(1), cursor.getInt(2));
+    		cursor.getInt(1), cursor.getInt(2), cursor.getString(3));
     	// return breadcrumb
     	cursor.close();
     	return breadcrumb;
@@ -105,6 +123,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             	breadcrumb.setId(Integer.parseInt(cursor.getString(0)));
             	breadcrumb.setBreadcrumbLatitude(cursor.getInt(1));
             	breadcrumb.setBreadcrumbLongitude(cursor.getInt(2));
+            	breadcrumb.setLabel(cursor.getString(3));
             	// Adding location to list
             	breadcrumbList.add(breadcrumb);
         	} while (cursor.moveToNext());
@@ -117,13 +136,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     // Getting breadcrumbs/locations Count
     	public int getBreadcrumbsCount() {
+    		int count;
         	String countQuery = "SELECT  * FROM " + TABLE_BREADCRUMBS;
         	SQLiteDatabase db = this.getReadableDatabase();
         	Cursor cursor = db.rawQuery(countQuery, null);
+        	if ( cursor.getCount() > 0 ){
+        		count = cursor.getCount();}
+        	else
+        	{count = 0;}
         	cursor.close();
  
         	// return count
-        	return cursor.getCount();
+        	return count;
     	}
     	
     	
@@ -134,7 +158,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	    ContentValues values = new ContentValues();
     	    values.put(KEY_LATITUDE, breadcrumb.getBreadcrumbLatitude());
     	    values.put(KEY_LONGITUDE, breadcrumb.getBreadcrumbLongitude());
-    	 
+    	    values.put(KEY_LABEL, breadcrumb.getLabel());
+
     	    // updating row
     	    return db.update(TABLE_BREADCRUMBS, values, KEY_ID + " = ?",
     	            new String[] { String.valueOf(breadcrumb.getId()) });

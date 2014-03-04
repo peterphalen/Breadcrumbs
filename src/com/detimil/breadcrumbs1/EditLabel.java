@@ -9,16 +9,20 @@ import android.widget.EditText;
 
 public class EditLabel extends Activity {
 	
-	//THIS STUFF IS JUST PLACEHOLDER
-	private DatabaseHandler db;
-	Integer breadcrumbId;
-	Breadcrumb breadcrumb;
-	String breadcrumbLabel;
 
+	
+	private DatabaseHandler db;
+	private int breadcrumbId;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_label);
+		db = new DatabaseHandler(this);
+		
+		Bundle extras = getIntent().getExtras();
+		breadcrumbId = extras.getInt("breadcrumbId");
+
 	}
 
 	@Override
@@ -32,13 +36,8 @@ public class EditLabel extends Activity {
     public void setBreadcrumbLabel(View view) {
     	// Store breadcrumb label in the database
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
-    	String label = editText.getEditableText().toString();
-    	
-
-		//NEED BREADCRUMB POSITION HERE//
-    	db.getBreadcrumb(breadcrumbId);
-    	breadcrumb.setLabel( breadcrumbLabel );
-    	//!!!!!!!
+    	String breadcrumbLabel = editText.getEditableText().toString();
+    	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);
     	
    	    Intent intent = new Intent(this, BreadcrumbMap.class);
    	    startActivity(intent);
