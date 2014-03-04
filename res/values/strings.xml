@@ -7,7 +7,7 @@
     <string name="CollectBreadcrumbs">Collect Breadcrumbs</string>
     <string name="DropBreadcrumb">Drop\nBreadcrumb</string>
     <string name="title_activity_dropped_crumb">Return to menu</string>
-    <string name="title_collected_breadcrumbs_activity">Click a breadcrumb to navigate.\n(Hold to delete.)</string>
+    <string name="title_collected_breadcrumbs_activity">Click a breadcrumb to navigate back to it.\n(Hold to delete.)</string>
     <string name="EmptyListview">None Collected</string>
 
     <string name="save_button_label">Save</string>
@@ -31,7 +31,8 @@
     <string name="title_activity_breadcrumb_map">Return to menu</string>
     <string name="title_activity_edit_label">Edit Breadcrumb Name</string>
     
-
-
     
+    <string name="edit_label_hint">Breadcrumb label</string>
+    
+
 </resources>

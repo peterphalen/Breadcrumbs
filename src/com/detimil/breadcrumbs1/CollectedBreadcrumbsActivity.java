@@ -79,11 +79,26 @@ public class CollectedBreadcrumbsActivity extends Activity {
     	
     	AlertDialog.Builder alertbox = new AlertDialog.Builder(CollectedBreadcrumbsActivity.this);
         
-        // set the message to display
-        alertbox.setMessage("Delete Breadcrumb?");
+    	Breadcrumb breadcrumb = db.getBreadcrumb(position+1);
+    	String breadcrumbLabel = breadcrumb.getLabel();
+    	alertbox.setMessage(breadcrumbLabel);
+    	
+        // set a rename button and create a listener
+        alertbox.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
 
-        // set a positive/yes button and create a listener
-        alertbox.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            // open EditLabel activity and pass it the selected bcrumb ID to allow rename 
+            public void onClick(DialogInterface arg0, int arg1) {
+            	
+            	Integer breadcrumbId = db.getBreadcrumb(position+1).getId();
+            	
+            	Intent intent = new Intent(getApplicationContext(), EditLabel.class);
+    			intent.putExtra("breadcrumbId", breadcrumbId);
+    	        startActivity(intent);
+            }
+        });
+    	
+        // set a delete button and create a listener
+        alertbox.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
 
             // do something when the button is clicked
             public void onClick(DialogInterface arg0, int arg1) {                
@@ -98,18 +113,10 @@ public class CollectedBreadcrumbsActivity extends Activity {
                     }
                 adapter.notifyDataSetChanged();
                 
-                
-                
             }
         });
 
-        // set a negative/no button and create a listener
-        alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
-            // do something when the button is clicked
-            public void onClick(DialogInterface arg0, int arg1) {
-            }
-        });
 
         alertbox.show();
 

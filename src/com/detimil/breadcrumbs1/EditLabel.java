@@ -22,6 +22,11 @@ public class EditLabel extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		breadcrumbId = extras.getInt("breadcrumbId");
+		
+    	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
+    	String breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
+    	editText.setText(breadcrumbLabel);
+    	editText.selectAll();
 
 	}
 
@@ -39,13 +44,15 @@ public class EditLabel extends Activity {
     	String breadcrumbLabel = editText.getEditableText().toString();
     	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);
     	
-   	    Intent intent = new Intent(this, BreadcrumbMap.class);
-   	    startActivity(intent);
+        Intent result = getIntent(); //gets the intent that called this intent
+        result.putExtra("breadcrumbId", breadcrumbId);
+        setResult(RESULT_OK, result);
+        		
+   	    finish();
     }
     
     public void cancel(View view) {
-    	Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);    
+   	    finish();  
     }
 
 }

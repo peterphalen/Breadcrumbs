@@ -113,8 +113,11 @@ public class MainActivity extends Activity {
         BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
         int lng = (int)BREADCRUMB_LONGITUDE;
         String label = ("Breadcrumb " + (db.getBreadcrumbsCount()+1) );
+
         		
 	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
+		Integer breadcrumbId = (db.getBreadcrumbsCount());
+	    intent.putExtra("breadcrumbId", breadcrumbId);
 	    startActivity(intent);
 	}
 	
