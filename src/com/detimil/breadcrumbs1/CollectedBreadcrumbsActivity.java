@@ -26,13 +26,18 @@ public class CollectedBreadcrumbsActivity extends Activity {
 	private DatabaseHandler db;
 	private List<Breadcrumb> breadcrumbs;
 	private List<String> breadcrumbLabels;
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_collected_breadcrumbs);
-
+    }
+    
+    	protected void onResume(){
+    		super.onResume();
+        
         db = new DatabaseHandler(this);
         breadcrumbs = db.getAllBreadcrumbs();
         
@@ -88,12 +93,15 @@ public class CollectedBreadcrumbsActivity extends Activity {
 
             // open EditLabel activity and pass it the selected bcrumb ID to allow rename 
             public void onClick(DialogInterface arg0, int arg1) {
-            	
+                if (listview.getAdapter().getCount() > 0) {
+
             	Integer breadcrumbId = db.getBreadcrumb(position+1).getId();
             	
             	Intent intent = new Intent(getApplicationContext(), EditLabel.class);
     			intent.putExtra("breadcrumbId", breadcrumbId);
     	        startActivity(intent);
+                }
+
             }
         });
     	

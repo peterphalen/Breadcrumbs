@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,37 +20,31 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class BreadcrumbMap extends Activity {
 	  private GoogleMap map;
-	  Integer breadcrumbId = null;
 	  double BREADCRUMB_LATITUDE;
 	  double BREADCRUMB_LONGITUDE;
-	  DatabaseHandler db = new DatabaseHandler(this);
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
 	    
-	  
-	    @Override
-	    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-	      if (resultCode == RESULT_OK && requestCode == 0) {
-	        if (result.hasExtra("breadcrumbId")) {
-	       breadcrumbId = result.getExtras().getInt("breadcrumbId");
-	       }
-	      }
-	    };
-	    
-	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_breadcrumb_map);	      
+	
+	}
+	
+	@SuppressLint("NewApi")
+	protected void onResume(){
+		super.onResume();
+		DatabaseHandler db = new DatabaseHandler(this);
 
-	    if (breadcrumbId == null){
-	    Bundle extras = getIntent().getExtras();
-		breadcrumbId = extras.getInt("breadcrumbId");}
-	    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
+	    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
 	    
+  
+	    int breadcrumbsCount = breadcrumbs.size()-1;
+	    BREADCRUMB_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
+	    BREADCRUMB_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
+
 	    
-	    //All breadcrumbs to list, and get the lat lang of most recent
-    	List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
-	    BREADCRUMB_LATITUDE = ((breadcrumb.getBreadcrumbLatitude())/1e6);
-	    BREADCRUMB_LONGITUDE = ((breadcrumb.getBreadcrumbLongitude())/1e6);
+
+	  
 	    
 	    //get MapFragment
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))

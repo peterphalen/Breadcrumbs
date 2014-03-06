@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -113,11 +114,7 @@ public class MainActivity extends Activity {
         BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
         int lng = (int)BREADCRUMB_LONGITUDE;
         String label = ("Breadcrumb " + (db.getBreadcrumbsCount()+1) );
-
-        		
 	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
-		Integer breadcrumbId = (db.getBreadcrumbsCount());
-	    intent.putExtra("breadcrumbId", breadcrumbId);
 	    startActivity(intent);
 	}
 	
@@ -127,8 +124,14 @@ public class MainActivity extends Activity {
 	}
 	
 	public void breadcrumbMap(View view) {
+        DatabaseHandler db = new DatabaseHandler(this);
+		if ( db.getBreadcrumbsCount() == 0 ) {
+			Toast.makeText(getApplicationContext(), "You don't have any breadcrumbs on the map",
+				    Toast.LENGTH_LONG).show();
+		}
+	else{
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
-        startActivity(intent);
+        startActivity(intent);}
 	}
 	
 	protected void onPause(){

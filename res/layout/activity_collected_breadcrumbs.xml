@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/text_view_categories_title"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="#111111"
         android:paddingTop="10dp"
         android:text="@string/title_collected_breadcrumbs_activity"

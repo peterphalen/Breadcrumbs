@@ -41,6 +41,6 @@
         android:background="@drawable/custom_button_blackout"
         android:text="@string/ViewMap"
 		android:onClick="breadcrumbMap"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>

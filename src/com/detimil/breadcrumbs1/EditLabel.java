@@ -44,11 +44,8 @@ public class EditLabel extends Activity {
     	String breadcrumbLabel = editText.getEditableText().toString();
     	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);
     	
-        Intent result = getIntent(); //gets the intent that called this intent
-        result.putExtra("breadcrumbId", breadcrumbId);
-        setResult(RESULT_OK, result);
-        		
-   	    finish();
+		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+		startActivity(intent);
     }
     
     public void cancel(View view) {
