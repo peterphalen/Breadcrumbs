@@ -119,14 +119,20 @@ public class MainActivity extends Activity {
 	}
 	
 	public void collectBreadcrumbs(View view) {
+		DatabaseHandler db = new DatabaseHandler(this);
+		if ( db.getBreadcrumbsCount() == 0 ) {
+			Toast.makeText(getApplicationContext(), "You haven't dropped any breadcrumbs yet",
+				    Toast.LENGTH_LONG).show();
+		}
+	else{
 	    Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
-        startActivity(intent);
+        startActivity(intent);}
 	}
 	
 	public void breadcrumbMap(View view) {
         DatabaseHandler db = new DatabaseHandler(this);
 		if ( db.getBreadcrumbsCount() == 0 ) {
-			Toast.makeText(getApplicationContext(), "You don't have any breadcrumbs on the map",
+			Toast.makeText(getApplicationContext(), "You haven't dropped any breadcrumbs yet",
 				    Toast.LENGTH_LONG).show();
 		}
 	else{

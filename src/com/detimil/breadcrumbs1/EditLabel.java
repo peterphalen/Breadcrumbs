@@ -25,8 +25,7 @@ public class EditLabel extends Activity {
 		
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
     	String breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
-    	editText.setText(breadcrumbLabel);
-    	editText.selectAll();
+    	editText.setHint(breadcrumbLabel);
 
 	}
 
@@ -44,9 +43,16 @@ public class EditLabel extends Activity {
     	String breadcrumbLabel = editText.getEditableText().toString();
     	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);
     	
-		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-		startActivity(intent);
+		finish();
     }
+    
+    public void deleteBreadcrumb(View view) {
+    	// Delete breadcrumb label in the database
+    	Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
+        db.deleteBreadcrumb(breadcrumb);
+    	
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);    }
     
     public void cancel(View view) {
    	    finish();  

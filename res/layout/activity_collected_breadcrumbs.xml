@@ -12,25 +12,19 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#111111"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         android:text="@string/title_collected_breadcrumbs_activity"
+        android:textSize="16sp"
         android:textColor="#FFFFFF" >
     </TextView>
     
     <ListView
-        android:id="@+id/list"
+        android:id="@android:id/list"
         android:padding="0dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:longClickable="true"
         android:cacheColorHint="#00000000">
     </ListView>
-    
-    <TextView
-		android:id="@+id/empty"
-		android:text="@string/EmptyListview"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:visibility="gone">
-		      </TextView>
+
 </LinearLayout>

@@ -66,5 +66,7 @@ public class Breadcrumb {
 	public void setLabel(String label) {
 		this._label = label;
 	}
+	
+	
 
 }

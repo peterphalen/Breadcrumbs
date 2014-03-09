@@ -18,7 +18,7 @@
         android:background="@drawable/custom_button2"
         android:onClick="dropBreadcrumb"
         android:text="@string/DropBreadcrumb"
-        android:textSize="45sp" />
+        android:textSize="55sp" />
 
     <Button
         android:id="@+id/button2"
@@ -41,6 +41,6 @@
         android:background="@drawable/custom_button_blackout"
         android:text="@string/ViewMap"
 		android:onClick="breadcrumbMap"
-        android:textSize="20sp" />
+        android:textSize="22sp" />
 
 </LinearLayout>

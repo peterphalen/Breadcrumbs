@@ -12,22 +12,22 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-	 
+
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 1;
  
     // Database Name
-    private static final String DATABASE_NAME = "breadcrumbsManager";
+    public static final String DATABASE_NAME = "breadcrumbsManager";
  
     // Contacts table name
-    private static final String TABLE_BREADCRUMBS = "breadcrumbs";
+    public static final String TABLE_BREADCRUMBS = "breadcrumbs";
  
     // Contacts Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_LATITUDE = "latitude";
-    private static final String KEY_LONGITUDE = "longitude";
-    private static final String KEY_LABEL = "label";
+    public static final String _id = "_id";
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_LABEL = "label";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,7 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_BREADCRUMBS_TABLE = "CREATE TABLE " + TABLE_BREADCRUMBS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_LATITUDE + " TEXT,"
+                + _id + " INTEGER PRIMARY KEY," + KEY_LATITUDE + " TEXT,"
                 + KEY_LONGITUDE + " TEXT," + KEY_LABEL + " TEXT" + ")";
         db.execSQL(CREATE_BREADCRUMBS_TABLE);
     }
@@ -84,7 +84,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	 
 		ContentValues values = new ContentValues();
 		values.put(KEY_LABEL, string); // put second arg into LABEL column
-		db.update(TABLE_BREADCRUMBS, values, KEY_ID + "=" + id, null); // update specific row by id
+		db.update(TABLE_BREADCRUMBS, values, _id + "=" + id, null); // update specific row by id
 
     }
 
@@ -92,8 +92,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public Breadcrumb getBreadcrumb(int id) {
     	SQLiteDatabase db = this.getReadableDatabase();
  
-    	Cursor cursor = db.query(TABLE_BREADCRUMBS, new String[] { KEY_ID,
-    			KEY_LATITUDE, KEY_LONGITUDE, KEY_LABEL }, KEY_ID + "=?",
+    	Cursor cursor = db.query(TABLE_BREADCRUMBS, new String[] { _id,
+    			KEY_LATITUDE, KEY_LONGITUDE, KEY_LABEL }, _id + "=?",
     			new String[] { String.valueOf(id) }, null, null, null, null);
     	if (cursor != null)
     		cursor.moveToLast();
@@ -161,7 +161,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	    values.put(KEY_LABEL, breadcrumb.getLabel());
 
     	    // updating row
-    	    return db.update(TABLE_BREADCRUMBS, values, KEY_ID + " = ?",
+    	    return db.update(TABLE_BREADCRUMBS, values, _id + " = ?",
     	            new String[] { String.valueOf(breadcrumb.getId()) });
     	}
     	
@@ -170,9 +170,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       		SQLiteDatabase db = this.getWritableDatabase();
       		int id = breadcrumb.getId();
     		System.out.println("Comment deleted with id: " + id);
-    		db.delete(TABLE_BREADCRUMBS, KEY_ID
+    		db.delete(TABLE_BREADCRUMBS, _id
     		        + " = " + id, null);
-        	db.close();
+    		db.close();
+    		  }
+    	  
+    	  //get all labels as strings
+    	  
+    	  public Cursor getAllLabels() {
+        	 SQLiteDatabase db = this.getReadableDatabase();
+    		  return db.rawQuery("SELECT " + _id + " ," + KEY_LABEL + " FROM " + TABLE_BREADCRUMBS, null);
     		  }
     	
 }

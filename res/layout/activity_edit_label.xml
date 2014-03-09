@@ -36,7 +36,15 @@
             android:text="@string/save_button_label" />
 
         <Button
-            android:id="@+id/BreadcrumbLabelEnntryCancelButton"
+            android:id="@+id/EditLabelDeleteButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="deleteBreadcrumb"
+            android:text="@string/delete_button_label" />
+        
+        <Button
+            android:id="@+id/BreadcrumbLabelEntryCancelButton"
             android:layout_width="fill_parent"
         android:layout_height="wrap_content"
                     android:layout_weight="1"
