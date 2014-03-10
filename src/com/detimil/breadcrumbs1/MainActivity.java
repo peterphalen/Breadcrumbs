@@ -1,11 +1,13 @@
 package com.detimil.breadcrumbs1;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +17,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends Activity {
-	private LocationManager locationManager;
+	protected LocationManager locationManager;
+	MyCurrentLocationListener locationListener;
 	private String bestProvider;
 	private Location lastKnownLocation;
 	private Location mostCurrentLocation;
@@ -28,7 +31,7 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -61,8 +64,9 @@ public class MainActivity extends Activity {
 	  
 		//Register locationListener to locationManager and start getting updates as to your current location
 
-		MyCurrentLoctionListener locationListener = new MyCurrentLoctionListener();
+		locationListener = new MyCurrentLocationListener();
 		locationManager.requestLocationUpdates(bestProvider, 0, 0, locationListener);
+
 
 		
 		//The following snippet says: if our locationListener hasn't had time to get our current 
@@ -81,7 +85,7 @@ public class MainActivity extends Activity {
 	//location and call a method that tells us what to do with the location. When I get a new location
 	//here I assign it to the variable mostCurrentLocation
 	
-	public class MyCurrentLoctionListener implements LocationListener{ 
+	public class MyCurrentLocationListener implements LocationListener{ 
 	    @Override
 	    public void onLocationChanged(Location location) {
 	    	mostCurrentLocation = location;
@@ -101,12 +105,31 @@ public class MainActivity extends Activity {
 	    }    
 	}
 	
+	
 	/** Called when the user clicks the dropBreadcrumb button */
 	// This says that when we press the "Scatter Breadcrumbs" button
 	// we send our most recent known latitude and longitude to the
 	// DroppedCrumb activity as an extra.
 	
 	public void dropBreadcrumb(View view) {
+		
+
+		// check if enabled and if not send user to the GSP settings
+				// Better solution would be to display a toast suggesting they
+				// go to the settings
+		final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+
+	    if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
+	    	Log.d(TAG, "GPS and WIFI both disabled");
+	    	Toast.makeText(getApplicationContext(), "Improve accuracy by enabling WIFI and/or GPS",
+					Toast.LENGTH_LONG).show();
+	    }
+
+
+		
+
+		
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
         DatabaseHandler db = new DatabaseHandler(this);
         BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
@@ -140,8 +163,10 @@ public class MainActivity extends Activity {
         startActivity(intent);}
 	}
 	
-	protected void onPause(){
-		super.onPause();
+	protected void onStop(){
+		locationManager.removeUpdates(locationListener);
 		if(locationManager==null){Log.d(TAG, "While pausing your locationManager is NULL");}else{Log.d(TAG, "Your locationManager is NOT NULL when your app pauses");};
+		super.onStop();
+
 	}
 }

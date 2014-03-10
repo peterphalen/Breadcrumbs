@@ -1,8 +1,9 @@
 package com.detimil.breadcrumbs1;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -33,15 +34,23 @@ public class EditLabel extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.edit_label, menu);
-		return true;
+		return false;
 	}
 	
+    public void navigateTo(View view) {
+    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
+	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6));
+    startActivity(intent);
+    intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+    }
 	
     public void setBreadcrumbLabel(View view) {
     	// Store breadcrumb label in the database
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
     	String breadcrumbLabel = editText.getEditableText().toString();
-    	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);
+    	if (breadcrumbLabel.matches("")) {
+    	}else{
+    	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);}
     	
 		finish();
     }
@@ -52,7 +61,8 @@ public class EditLabel extends Activity {
         db.deleteBreadcrumb(breadcrumb);
     	
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);    }
+        startActivity(intent);    
+        finish();}
     
     public void cancel(View view) {
    	    finish();  

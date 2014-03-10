@@ -3,14 +3,13 @@ package com.detimil.breadcrumbs1;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,6 +38,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collected_breadcrumbs);
         listview = (ListView) findViewById(android.R.id.list);
+
         
 		
     }

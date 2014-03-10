@@ -21,6 +21,7 @@ public class BreadcrumbMap extends Activity {
 	  private GoogleMap map;
 	  double BREADCRUMB_LATITUDE;
 	  double BREADCRUMB_LONGITUDE;
+	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
 	    
 	@SuppressLint("NewApi")
@@ -36,9 +37,8 @@ public class BreadcrumbMap extends Activity {
 
 			DatabaseHandler db = new DatabaseHandler(this);
 
-		    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
+		    breadcrumbs = db.getAllBreadcrumbs();
 		    
-	  
 		    int breadcrumbsCount = breadcrumbs.size()-1;
 		    BREADCRUMB_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
 		    BREADCRUMB_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
@@ -56,18 +56,14 @@ public class BreadcrumbMap extends Activity {
 
 		DatabaseHandler db = new DatabaseHandler(this);
 
-	    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
-	    
-  
-	    int breadcrumbsCount = breadcrumbs.size()-1;
-	    BREADCRUMB_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
-	    BREADCRUMB_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
+	    breadcrumbs = db.getAllBreadcrumbs();
+
 		//get markers for each breadcrumb
         for (Breadcrumb brd : breadcrumbs) {
 			        Marker allbreadcrumblocations = map.addMarker(new MarkerOptions()
 			          .position(new LatLng((brd.getBreadcrumbLatitude()/1e6), (brd.getBreadcrumbLongitude())/1e6))
 			          .title(brd.getLabel())
-			          .snippet("Click here to rename me!")
+			          .snippet("Click me for more!")
 			          .icon(BitmapDescriptorFactory
 			              .fromResource(R.drawable.red_dot)));
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());

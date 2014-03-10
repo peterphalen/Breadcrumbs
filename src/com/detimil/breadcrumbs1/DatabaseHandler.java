@@ -85,7 +85,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(KEY_LABEL, string); // put second arg into LABEL column
 		db.update(TABLE_BREADCRUMBS, values, _id + "=" + id, null); // update specific row by id
-
+		db.close();
     }
 
     	// Getting single breadcrumb
@@ -127,6 +127,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             	// Adding location to list
             	breadcrumbList.add(breadcrumb);
         	} while (cursor.moveToNext());
+        	db.close();
     	}
  
     	// return locations list
@@ -180,6 +181,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	  public Cursor getAllLabels() {
         	 SQLiteDatabase db = this.getReadableDatabase();
     		  return db.rawQuery("SELECT " + _id + " ," + KEY_LABEL + " FROM " + TABLE_BREADCRUMBS, null);
-    		  }
+    	  }
     	
 }

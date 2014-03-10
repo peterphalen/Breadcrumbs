@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#f1d0a7"
+    android:background="#f4ddca"
     tools:context=".EditLabel" >
 
     <EditText
@@ -32,6 +32,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/custom_button2" 
+			style="@style/ButtonText"           
             android:onClick="setBreadcrumbLabel"
             android:text="@string/save_button_label" />
 
@@ -39,6 +43,10 @@
             android:id="@+id/EditLabelDeleteButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+			android:background="@drawable/custom_button2"
+			style="@style/ButtonText"
             android:layout_weight="1"
             android:onClick="deleteBreadcrumb"
             android:text="@string/delete_button_label" />
@@ -46,12 +54,32 @@
         <Button
             android:id="@+id/BreadcrumbLabelEntryCancelButton"
             android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-                    android:layout_weight="1"
-        
+        	android:layout_height="wrap_content"
+			android:background="@drawable/custom_button2"
+			android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+        	style="@style/ButtonText"
+            android:layout_weight="1"
             android:onClick="cancel"
             android:text="@string/cancel_button_label" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <Button
+            android:id="@+id/BreadcrumbNavigateEditText"
+            android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+			android:background="@drawable/custom_button2"
+			android:layout_marginTop="5dp"
+			android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+        	style="@style/ButtonText"
+            android:onClick="navigateTo"
+            android:text="@string/navigate_button_label" />
     </LinearLayout>
 
 </LinearLayout>
