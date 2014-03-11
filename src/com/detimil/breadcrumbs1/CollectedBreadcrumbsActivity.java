@@ -91,8 +91,8 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         
     	Breadcrumb breadcrumb = db.getBreadcrumb(_id);
     	String breadcrumbLabel = breadcrumb.getLabel();
-    	alertbox.setMessage(breadcrumbLabel);
     	
+    	alertbox.setMessage("'" + breadcrumbLabel +"'");
     	Log.d("HelloListView", "You long clicked breadcrumb at position: " + position + " with SQL id :" + breadcrumb.getId());
 
     	

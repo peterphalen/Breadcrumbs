@@ -46,7 +46,7 @@ public class BreadcrumbMap extends Activity {
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BREADCRUMB_LATITUDE, BREADCRUMB_LONGITUDE), 10));
 
 		    // Zoom in, animating the camera.
-		    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);}
+		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);}
 	}
 
 	
