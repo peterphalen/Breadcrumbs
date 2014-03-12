@@ -2,11 +2,15 @@ package com.detimil.breadcrumbs1;
 
 import java.util.HashMap;
 import java.util.List;
+import com.revmob.RevMob;
+import com.revmob.ads.banner.RevMobBanner;
+import com.revmob.RevMobTestingMode;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +27,8 @@ public class BreadcrumbMap extends Activity {
 	  double BREADCRUMB_LONGITUDE;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
+	  
+	  private RevMob revmob;
 	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,7 @@ public class BreadcrumbMap extends Activity {
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
 		    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		    map.setPadding(0, 0, 0, 55);
 
 			DatabaseHandler db = new DatabaseHandler(this);
 
@@ -83,7 +90,11 @@ public class BreadcrumbMap extends Activity {
 			});
    
         
-			        
+			  revmob = RevMob.start(this); 
+			  RevMobBanner banner = revmob.createBanner(this);
+		      ViewGroup view = (ViewGroup) findViewById(R.id.banner);
+		      view.addView(banner);
+			  revmob.setTestingMode(RevMobTestingMode.WITH_ADS);
 
 			    	
 		  }

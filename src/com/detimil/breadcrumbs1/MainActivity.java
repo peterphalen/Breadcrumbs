@@ -15,15 +15,19 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.revmob.RevMob;
 
 public class MainActivity extends Activity {
 	protected LocationManager locationManager;
+	protected LocationManager locationManagerRev;
+	protected WifiManager wifi;
 	MyCurrentLocationListener locationListener;
 	private String bestProvider;
 	private Location lastKnownLocation;
 	private Location mostCurrentLocation;
 	private double BREADCRUMB_LATITUDE;
 	private double BREADCRUMB_LONGITUDE;
+	private RevMob revmob;
 	
 	private static final String TAG = "MyActivity";
 	    
@@ -56,6 +60,19 @@ public class MainActivity extends Activity {
 		// Get the last known location from the provider
 				
 				lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
+				
+				Location gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				Location netLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+				revmob = RevMob.start(this); 
+
+				
+				if (gpsLocation != null) {
+				    revmob.setUserLocation(gpsLocation.getLatitude(), gpsLocation.getLongitude(), gpsLocation.getAccuracy());
+				}
+				else if (netLocation != null) {
+				    revmob.setUserLocation(netLocation.getLatitude(), netLocation.getLongitude(), netLocation.getAccuracy());
+				}
 			}
 		
 	
@@ -117,10 +134,10 @@ public class MainActivity extends Activity {
 		// check if enabled and if not send user to the GSP settings
 				// Better solution would be to display a toast suggesting they
 				// go to the settings
-		final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
 		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
-	    if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
+	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
 	    	Log.d(TAG, "GPS and WIFI both disabled");
 	    	Toast.makeText(getApplicationContext(), "Improve accuracy by enabling WIFI and/or GPS",
 					Toast.LENGTH_LONG).show();

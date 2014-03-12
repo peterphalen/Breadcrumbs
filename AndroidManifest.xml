@@ -30,6 +30,10 @@
         android:icon="@drawable/breadcrumbs_nobackground"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
+        <meta-data android:name="com.revmob.app.id" android:value="531f7104860b15660816b6de"/>
+        
+        
         <activity
             android:name="com.detimil.breadcrumbs1.MainActivity"
             android:screenOrientation="portrait"
@@ -80,7 +84,10 @@
             android:name="com.detimil.breadcrumbs1.EditLabel"
             android:label="@string/title_activity_edit_label" >
         </activity>
-
-        </application>
-
+        
+    	<activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+              android:theme="@android:style/Theme.Translucent"
+              android:configChanges="keyboardHidden|orientation">
+    	</activity>
+</application>
 </manifest>
