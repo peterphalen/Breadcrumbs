@@ -40,7 +40,7 @@ public class BreadcrumbMap extends Activity {
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
 		    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		    map.setPadding(0, 0, 0, 55);
+		    map.setPadding(0, 0, 0, 58);
 
 			DatabaseHandler db = new DatabaseHandler(this);
 
@@ -96,7 +96,7 @@ public class BreadcrumbMap extends Activity {
 		      view.addView(banner);
 			  revmob.setTestingMode(RevMobTestingMode.WITH_ADS);
 
-			    	
+			  db.close();
 		  }
 }	
 
