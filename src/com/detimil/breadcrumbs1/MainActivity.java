@@ -1,5 +1,7 @@
 package com.detimil.breadcrumbs1;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +17,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.revmob.RevMob;
 
 public class MainActivity extends Activity {
 	protected LocationManager locationManager;
@@ -27,7 +28,6 @@ public class MainActivity extends Activity {
 	private Location mostCurrentLocation;
 	private double BREADCRUMB_LATITUDE;
 	private double BREADCRUMB_LONGITUDE;
-	private RevMob revmob;
 	
 	private static final String TAG = "MyActivity";
 	    
@@ -61,18 +61,6 @@ public class MainActivity extends Activity {
 				
 				lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
 				
-				Location gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				Location netLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-				revmob = RevMob.start(this); 
-
-				
-				if (gpsLocation != null) {
-				    revmob.setUserLocation(gpsLocation.getLatitude(), gpsLocation.getLongitude(), gpsLocation.getAccuracy());
-				}
-				else if (netLocation != null) {
-				    revmob.setUserLocation(netLocation.getLatitude(), netLocation.getLongitude(), netLocation.getAccuracy());
-				}
 			}
 		
 	
@@ -142,10 +130,6 @@ public class MainActivity extends Activity {
 	    	Toast.makeText(getApplicationContext(), "Improve accuracy by enabling WIFI and/or GPS",
 					Toast.LENGTH_LONG).show();
 	    }
-
-
-		
-
 		
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
         DatabaseHandler db = new DatabaseHandler(this);
@@ -155,6 +139,10 @@ public class MainActivity extends Activity {
         int lng = (int)BREADCRUMB_LONGITUDE;
         String label = ("Breadcrumb " + (db.getBreadcrumbsCount()+1) );
 	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
+	    
+		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LATITUDE", lat);
+		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LONGITUDE", lng);
+	    
 	    startActivity(intent);
 	}
 	
@@ -177,7 +165,14 @@ public class MainActivity extends Activity {
 		}
 	else{
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
+	    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
+	    int breadcrumbsCount = breadcrumbs.size()-1;
+	    int blat = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude()));
+	    int blong = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude()));
+	    intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LATITUDE", blat);
+		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LONGITUDE", blong);
         startActivity(intent);}
+		db.close();
 	}
 	
 	protected void onStop(){

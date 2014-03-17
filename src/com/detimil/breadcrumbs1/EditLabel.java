@@ -8,13 +8,16 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class EditLabel extends Activity {
 	
 
 	
 	private DatabaseHandler db;
 	private int breadcrumbId;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,13 +30,20 @@ public class EditLabel extends Activity {
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
     	String breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
     	editText.setHint(breadcrumbLabel);
-
+    	
+        // Look up the AdView as a resource and load a request.
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+        .build();
+        adView.loadAd(adRequest);
+        
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.edit_label, menu);
+		
 		return false;
 	}
 	

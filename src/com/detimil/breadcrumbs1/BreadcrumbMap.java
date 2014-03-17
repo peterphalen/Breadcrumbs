@@ -2,16 +2,14 @@ package com.detimil.breadcrumbs1;
 
 import java.util.HashMap;
 import java.util.List;
-import com.revmob.RevMob;
-import com.revmob.ads.banner.RevMobBanner;
-import com.revmob.RevMobTestingMode;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -27,9 +25,7 @@ public class BreadcrumbMap extends Activity {
 	  double BREADCRUMB_LONGITUDE;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
-	  
-	  private RevMob revmob;
-	    
+	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -41,19 +37,25 @@ public class BreadcrumbMap extends Activity {
 		        .getMap();
 		    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		    map.setPadding(0, 0, 0, 58);
-
-			DatabaseHandler db = new DatabaseHandler(this);
-
-		    breadcrumbs = db.getAllBreadcrumbs();
 		    
-		    int breadcrumbsCount = breadcrumbs.size()-1;
-		    BREADCRUMB_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
-		    BREADCRUMB_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
+			Bundle extras = getIntent().getExtras();
+			int INT_BREADCRUMB_LATITUDE = extras.getInt("INT_SHOW_THIS_BREADCRUMB_LATITUDE");
+			int INT_BREADCRUMB_LONGITUDE = extras.getInt("INT_SHOW_THIS_BREADCRUMB_LONGITUDE");
+
+		    BREADCRUMB_LATITUDE = INT_BREADCRUMB_LATITUDE/1e6;
+		    BREADCRUMB_LONGITUDE = INT_BREADCRUMB_LONGITUDE/1e6;
 		    if(map != null){
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BREADCRUMB_LATITUDE, BREADCRUMB_LONGITUDE), 10));
 
 		    // Zoom in, animating the camera.
 		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);}
+			      
+
+			        // Look up the AdView as a resource and load a request.
+			        AdView adView = (AdView)this.findViewById(R.id.adView);
+			        AdRequest adRequest = new AdRequest.Builder()
+			        .build();
+			    adView.loadAd(adRequest);
 	}
 
 	
@@ -89,14 +91,7 @@ public class BreadcrumbMap extends Activity {
         	};
 			});
    
-        
-			  revmob = RevMob.start(this); 
-			  RevMobBanner banner = revmob.createBanner(this);
-		      ViewGroup view = (ViewGroup) findViewById(R.id.banner);
-		      view.addView(banner);
-			  revmob.setTestingMode(RevMobTestingMode.WITH_ADS);
 
-			  db.close();
 		  }
 }	
 

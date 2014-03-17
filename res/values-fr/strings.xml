@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="ViewMap">Voir la Carte</string>
     <string name="CollectBreadcrumbs">Retrouver Breadcrumbs</string>
-    <string name="DropBreadcrumb">Drop\nBreadcrumb</string>
+    <string name="DropBreadcrumb">Drop a\nBreadcrumb</string>
     <string name="title_activity_dropped_crumb">Revenir au menu</string>
     <string name="title_collected_breadcrumbs_activity">Appuyer sur un Breadcrumb pour y naviguer.\n(Maintenir pour renommer ou supprimer.)</string>
     <string name="EmptyListview">Aucun ramassé</string>
@@ -13,6 +13,8 @@
     <string name="save_button_label">Enregistrer</string>
     <string name="cancel_button_label">Annuler</string>
     <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
+    <string name="navigate_button_label">Naviguer au Breadcrumb</string>
+    
     
     <style name="ButtonText">
         <item name="android:layout_width">fill_parent</item>
