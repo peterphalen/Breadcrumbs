@@ -9,13 +9,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 	
@@ -42,6 +43,12 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         
 		
     }
+    
+    @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
+	  }
     
     @Override
     protected void onResume() {
@@ -139,5 +146,11 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     });
 
 }
+    
+    @Override
+	  public void onStop() {
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
+	  }
 
 }

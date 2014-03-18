@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends Activity {
@@ -62,7 +63,12 @@ public class MainActivity extends Activity {
 				lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
 				
 			}
-		
+	
+	  @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
+	  }
 	
 	protected void onResume(){
 		super.onResume();
@@ -179,6 +185,7 @@ public class MainActivity extends Activity {
 		locationManager.removeUpdates(locationListener);
 		if(locationManager==null){Log.d(TAG, "While pausing your locationManager is NULL");}else{Log.d(TAG, "Your locationManager is NOT NULL when your app pauses");};
 		super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
 
 	}
 }

@@ -18,7 +18,7 @@
         android:background="@drawable/custom_button2"
         android:onClick="dropBreadcrumb"
         android:text="@string/DropBreadcrumb"
-        android:textSize="50sp" />
+        android:textSize="48sp" />
 
     <Button
         android:id="@+id/button2"

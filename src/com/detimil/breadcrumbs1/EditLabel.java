@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -38,6 +39,12 @@ public class EditLabel extends Activity {
         adView.loadAd(adRequest);
         
 	}
+	
+	  @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
+	  }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,5 +84,11 @@ public class EditLabel extends Activity {
     public void cancel(View view) {
    	    finish();  
     }
+    
+    @Override
+	  public void onStop() {
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
+	  }
 
 }
