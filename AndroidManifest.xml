@@ -35,7 +35,7 @@
              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>     
         
          <activity android:name="com.inneractive.api.ads.InneractiveFullScreenView"
-             android:configChanges="orientation|screenSize" >
+             android:configChanges="orientation|screenSize" />
          
         <activity
             android:name="com.detimil.breadcrumbs1.MainActivity"
@@ -48,6 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="com.detimil.breadcrumbs1.DroppedCrumb"
             android:screenOrientation="portrait"

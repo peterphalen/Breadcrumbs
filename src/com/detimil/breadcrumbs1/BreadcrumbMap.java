@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -51,12 +49,6 @@ public class BreadcrumbMap extends Activity {
 		    // Zoom in, animating the camera.
 		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);}
 			      
-
-			        // Look up the AdView as a resource and load a request.
-			        AdView adView = (AdView)this.findViewById(R.id.adView);
-			        AdRequest adRequest = new AdRequest.Builder()
-			        .build();
-			    adView.loadAd(adRequest);
 	}
 
 	
