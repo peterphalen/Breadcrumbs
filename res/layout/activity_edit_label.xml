@@ -84,13 +84,4 @@
             android:text="@string/navigate_button_label" />
 	</LinearLayout>
         
-		<com.google.android.gms.ads.AdView
-		        xmlns:ads="http://schemas.android.com/apk/res-auto"
-				android:id="@+id/adView"
-		    	ads:adSize="BANNER"
-                android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				ads:adUnitId="ca-app-pub-9215174569054218/6848651888"
-				android:layout_alignParentBottom="true"
-                         />
 </RelativeLayout>

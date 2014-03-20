@@ -76,6 +76,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     		db.insert(TABLE_BREADCRUMBS, null, values);
     		db.close(); // Closing database connection
     	}
+   
+
+   public void deleteAllBreadcrumbs()   {
+	   
+	 SQLiteDatabase db = this.getWritableDatabase();
+       db.delete(TABLE_BREADCRUMBS, null, null);
+       db.close();
+   }
     
     public void relabelBreadcrumb(Integer id, String string) {
     	SQLiteDatabase db = this.getWritableDatabase();

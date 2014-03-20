@@ -40,6 +40,9 @@
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
+    <string name="delete_all">Delete all Breadcrumbs</string>
+    
+    
     
 
 </resources>

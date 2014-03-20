@@ -35,7 +35,7 @@ public class BreadcrumbMap extends Activity {
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
 		    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		    map.setPadding(0, 0, 0, 58);
+		    map.setPadding(0, 0, 0, 60);
 		    
 			Bundle extras = getIntent().getExtras();
 			int INT_BREADCRUMB_LATITUDE = extras.getInt("INT_SHOW_THIS_BREADCRUMB_LATITUDE");
@@ -55,11 +55,12 @@ public class BreadcrumbMap extends Activity {
 	@SuppressLint("NewApi")
 	protected void onResume(){
 		super.onResume();
+	    map.clear();
 
 		DatabaseHandler db = new DatabaseHandler(this);
 
 	    breadcrumbs = db.getAllBreadcrumbs();
-
+	    if (breadcrumbs != null) {
 		//get markers for each breadcrumb
         for (Breadcrumb brd : breadcrumbs) {
 			        Marker allbreadcrumblocations = map.addMarker(new MarkerOptions()
@@ -72,6 +73,7 @@ public class BreadcrumbMap extends Activity {
 			          allbreadcrumblocations.showInfoWindow();
         }
         
+        
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
         	@Override
@@ -83,8 +85,8 @@ public class BreadcrumbMap extends Activity {
 	        startActivityForResult(intent, 0);
         	};
 			});
-   
-
+	    
+	    }
 		  }
 	
 	  @Override

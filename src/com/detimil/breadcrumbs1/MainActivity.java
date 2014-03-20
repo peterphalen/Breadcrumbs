@@ -57,11 +57,13 @@ public class MainActivity extends Activity {
 				
 				Criteria criteria = new Criteria();
 				bestProvider = locationManager.getBestProvider(criteria, false);
+				
 
-		// Get the last known location from the provider
-				
+
+				// Get the last known location from the provider
+						
 				lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
-				
+
 			}
 	
 	  @Override
@@ -73,6 +75,7 @@ public class MainActivity extends Activity {
 	protected void onResume(){
 		super.onResume();
 	  
+				
 		//Register locationListener to locationManager and start getting updates as to your current location
 
 		locationListener = new MyCurrentLocationListener();
@@ -85,10 +88,13 @@ public class MainActivity extends Activity {
 		//an updated location by now, get our lat and lang from that. (The mostCurrentLocation
 		//variable is defined in the LocationListener class below.)
 		
-	    if (mostCurrentLocation == null){
+
+
+	    if (mostCurrentLocation == null && lastKnownLocation != null){
 	    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
 	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
 	    }
+		
 	
 	}
 	
@@ -125,6 +131,14 @@ public class MainActivity extends Activity {
 	public void dropBreadcrumb(View view) {
 		
 
+		// Check if any location has been found
+	    if (mostCurrentLocation == null && lastKnownLocation == null){
+	    	Toast.makeText(getApplicationContext(), "No location found yet\nPlease try again in just a sec",
+					Toast.LENGTH_LONG).show();
+	    }
+	    else{
+		    
+	    
 		// check if enabled and if not send user to the GSP settings
 				// Better solution would be to display a toast suggesting they
 				// go to the settings
@@ -132,7 +146,6 @@ public class MainActivity extends Activity {
 		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
 	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
-	    	Log.d(TAG, "GPS and WIFI both disabled");
 	    	Toast.makeText(getApplicationContext(), "Improve accuracy by enabling WIFI and/or GPS",
 					Toast.LENGTH_LONG).show();
 	    }
@@ -149,8 +162,9 @@ public class MainActivity extends Activity {
 		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LATITUDE", lat);
 		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LONGITUDE", lng);
 	    
-	    startActivity(intent);
+	    startActivity(intent);}
 	}
+	
 	
 	public void collectBreadcrumbs(View view) {
 		DatabaseHandler db = new DatabaseHandler(this);
@@ -182,9 +196,10 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void onStop(){
-		locationManager.removeUpdates(locationListener);
-		if(locationManager==null){Log.d(TAG, "While pausing your locationManager is NULL");}else{Log.d(TAG, "Your locationManager is NOT NULL when your app pauses");};
 		super.onStop();
+
+		locationManager.removeUpdates(locationListener);
+		if(locationManager==null){Log.d(TAG, "While stopping your locationManager is NULL");}else{Log.d(TAG, "Your locationManager is NOT NULL when your app stops");};
 	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
 
 	}

@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 public class EditLabel extends Activity {
 	
@@ -31,12 +28,6 @@ public class EditLabel extends Activity {
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
     	String breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
     	editText.setHint(breadcrumbLabel);
-    	
-        // Look up the AdView as a resource and load a request.
-        AdView adView = (AdView)this.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-        .build();
-        adView.loadAd(adRequest);
         
 	}
 	
@@ -45,14 +36,6 @@ public class EditLabel extends Activity {
 	    super.onStart();
 	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
 	  }
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_label, menu);
-		
-		return false;
-	}
 	
     public void navigateTo(View view) {
     Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
@@ -76,10 +59,9 @@ public class EditLabel extends Activity {
     	// Delete breadcrumb label in the database
     	Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
         db.deleteBreadcrumb(breadcrumb);
-    	
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);    
-        finish();}
+    	   
+        finish();
+        }
     
     public void cancel(View view) {
    	    finish();  
