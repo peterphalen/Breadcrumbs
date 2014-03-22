@@ -159,9 +159,9 @@ public class MainActivity extends Activity {
         String label = ("Breadcrumb " + (db.getBreadcrumbsCount()+1) );
 	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
 	    
-		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LATITUDE", lat);
-		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LONGITUDE", lng);
-	    
+		intent.putExtra("INT_SHOW_THIS_LATITUDE", lat);
+		intent.putExtra("INT_SHOW_THIS_LONGITUDE", lng);
+		db.close();
 	    startActivity(intent);}
 	}
 	
@@ -171,17 +171,36 @@ public class MainActivity extends Activity {
 		if ( db.getBreadcrumbsCount() == 0 ) {
 			Toast.makeText(getApplicationContext(), "You haven't dropped any breadcrumbs yet",
 				    Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
+	        startActivity(intent);
 		}
 	else{
 	    Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
         startActivity(intent);}
+		db.close();
 	}
 	
 	public void breadcrumbMap(View view) {
         DatabaseHandler db = new DatabaseHandler(this);
+     // Check if any location has been found and there are no breadcrumbs then do nothing with message
+        
+	    if (mostCurrentLocation == null && lastKnownLocation == null && db.getBreadcrumbsCount() == 0 ){
+	    	Toast.makeText(getApplicationContext(), "Your location isn't set\nPlease try again in just a sec",
+					Toast.LENGTH_LONG).show();
+	    }
+	    else{
+	    	
+	    	//If no breadcrumbs found but current location is found, send current location to the map and open it
 		if ( db.getBreadcrumbsCount() == 0 ) {
 			Toast.makeText(getApplicationContext(), "You haven't dropped any breadcrumbs yet",
 				    Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this, BreadcrumbMap.class);
+			
+	        int current_lat = (int)(BREADCRUMB_LATITUDE * 1e6);
+	        int current_lng = (int)(BREADCRUMB_LONGITUDE * 1e6);
+			intent.putExtra("INT_SHOW_THIS_LATITUDE", current_lat);
+			intent.putExtra("INT_SHOW_THIS_LONGITUDE", current_lng);
+			startActivity(intent);
 		}
 	else{
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
@@ -189,10 +208,13 @@ public class MainActivity extends Activity {
 	    int breadcrumbsCount = breadcrumbs.size()-1;
 	    int blat = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude()));
 	    int blong = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude()));
-	    intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LATITUDE", blat);
-		intent.putExtra("INT_SHOW_THIS_BREADCRUMB_LONGITUDE", blong);
+	    intent.putExtra("INT_SHOW_THIS_LATITUDE", blat);
+		intent.putExtra("INT_SHOW_THIS_LONGITUDE", blong);
         startActivity(intent);}
+		
+	    }
 		db.close();
+
 	}
 	
 	protected void onStop(){
