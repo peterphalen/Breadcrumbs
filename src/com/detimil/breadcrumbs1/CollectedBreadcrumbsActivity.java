@@ -46,6 +46,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         setContentView(R.layout.activity_collected_breadcrumbs);
         listview = (ListView) findViewById(android.R.id.list);
 
+
         // Look up the AdView as a resource and load a request.
         AdView adView = (AdView)this.findViewById(R.id.adView1);
         AdRequest adRequest = new AdRequest.Builder()

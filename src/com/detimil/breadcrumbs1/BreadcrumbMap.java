@@ -50,13 +50,15 @@ public class BreadcrumbMap extends Activity {
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 		    // Zoom in, animating the camera.
-		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);}
+		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
+		    db.close();
+		    }
 		    
 		    if(map != null && db.getAllBreadcrumbs() == null){
-		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
+		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 7));
 
 			    // Zoom in, animating the camera.
-			    map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+			    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
 		    }
 			      
 	}
@@ -85,6 +87,7 @@ public class BreadcrumbMap extends Activity {
 			              .fromResource(R.drawable.red_dot)));
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());
 			          allbreadcrumblocations.showInfoWindow();
+			          db.close();
         }
         
         

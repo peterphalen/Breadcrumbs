@@ -16,7 +16,6 @@
         android:isScrollContainer="true"
         android:longClickable="true"
         android:padding="0dp" >
-
     </ListView>
 
 	<com.google.android.gms.ads.AdView
