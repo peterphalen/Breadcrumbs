@@ -6,7 +6,6 @@
     <string name="ViewMap">Voir la Carte</string>
     <string name="CollectBreadcrumbs">Retrouver Breadcrumbs</string>
     <string name="DropBreadcrumb">Drop a\nBreadcrumb</string>
-    <string name="title_activity_dropped_crumb">Revenir au menu</string>
     <string name="title_collected_breadcrumbs_activity">Appuyer sur un Breadcrumb pour y naviguer.\n(Maintenir pour renommer ou supprimer.)</string>
     <string name="EmptyListview">Aucun ramassé</string>
 
@@ -29,7 +28,6 @@
     </style>
 
     <string name="title_activity_collected_breadcrumbs">Collected Breadcrumbs</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_breadcrumb_map">Revenir au menu</string>
     <string name="title_activity_edit_label">Renommer le Breadcrumb</string>
     

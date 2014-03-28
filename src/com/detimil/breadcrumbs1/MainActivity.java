@@ -25,7 +25,6 @@ public class MainActivity extends Activity implements
 		GooglePlayServicesClient.OnConnectionFailedListener,
 		LocationListener{
 	protected LocationManager locationManager;
-	protected LocationManager locationManagerRev;
     protected LocationClient mLocationClient;
     protected LocationRequest mLocationRequest;
 
@@ -60,7 +59,7 @@ public class MainActivity extends Activity implements
 	      mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 	   // Set the update interval to 0 seconds
 	      mLocationRequest.setInterval(0);
-	   // Set the fastest update interval to 1 second
+	   // Set the fastest update interval to 0 second
 	      mLocationRequest.setFastestInterval(0);
 
 			// Get the location manager	
@@ -95,7 +94,7 @@ public class MainActivity extends Activity implements
 	   @Override
 	   public void onConnectionFailed(ConnectionResult connectionResult) {
 	      // Display the error code on failure
-	      Toast.makeText(this, "Location connection failure: " + 
+	      Toast.makeText(this, "Location services failure: " + 
 	      connectionResult.getErrorCode(),
 	      Toast.LENGTH_SHORT).show();
 	   }
@@ -135,9 +134,8 @@ public class MainActivity extends Activity implements
 	    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
 	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
 
-		// check if enabled and if not send user to the GSP settings
-				// Better solution would be to display a toast suggesting they
-				// go to the settings
+		// check if Wifi or GPS enabled and if not send user to the GSP settings
+			
 
 		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 

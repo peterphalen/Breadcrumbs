@@ -51,16 +51,16 @@ public class BreadcrumbMap extends Activity {
 
 		    // Zoom in, animating the camera.
 		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
-		    db.close();
 		    }
 		    
 		    if(map != null && db.getAllBreadcrumbs() == null){
-		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 7));
+		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 6));
 
 			    // Zoom in, animating the camera.
-			    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
+			    map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 		    }
-			      
+		    db.close();
+
 	}
 
 	  @Override
