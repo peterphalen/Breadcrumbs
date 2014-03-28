@@ -5,8 +5,13 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +30,9 @@ public class BreadcrumbMap extends Activity {
 	  DatabaseHandler db;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
+	  
+	private static final String TAG = "DatabaseState";
+
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,66 @@ public class BreadcrumbMap extends Activity {
 		    db.close();
 
 	}
+	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.breadcrumb_map, menu);
+		
+		return true;
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+         
+        switch (item.getItemId())
+        {
+        case R.id.delete_all:
+            // Single menu item is selected do something
+            // Ex: launching new activity/screen or show alert message
+        	AlertDialog.Builder delete_alertbox = new AlertDialog.Builder(BreadcrumbMap.this);
+            db = new DatabaseHandler(getApplicationContext());
+
+            // set the message to display
+            delete_alertbox.setMessage("Delete all Breadcrumbs?");
+
+            // set a positive/yes button and create a listener
+            delete_alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+                // do something when the button is clicked
+                public void onClick(DialogInterface arg0, int arg1) {   
+
+               if (db.getBreadcrumbsCount() > 0) {
+          		  Log.d(TAG, "db.getAllBreadcrumbs() is not null");
+
+              	db.deleteAllBreadcrumbs();
+        	    map.clear();}
+                }});
+            
+            // set a negative/no button and create a listener
+            delete_alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                // do something when the button is clicked
+                public void onClick(DialogInterface arg0, int arg1) {
+                }
+            });
+
+            
+
+            if (db.getBreadcrumbsCount() > 0) {
+       		  Log.d(TAG, "getBreadcrumbsCount is greater than 0");
+
+            delete_alertbox.show();
+            db.close();
+            }
+        	return true;
+ 
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }    
 
 	  @Override
 	  public void onStart() {

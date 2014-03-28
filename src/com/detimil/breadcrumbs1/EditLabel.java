@@ -1,9 +1,13 @@
 package com.detimil.breadcrumbs1;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -16,6 +20,8 @@ public class EditLabel extends Activity {
 	private DatabaseHandler db;
 	private int breadcrumbId;
 
+	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,6 +35,36 @@ public class EditLabel extends Activity {
     	String breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
     	editText.setHint(breadcrumbLabel);
         
+    	if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
+    		  // call something for API Level 11+
+    		ActionBar actionBar = getActionBar();
+    		actionBar.setDisplayHomeAsUpEnabled(true);
+    		}
+    	
+	}
+	
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+			    // Inflate the menu; this adds items to the action bar if it is present.
+			    getMenuInflater().inflate(R.menu.edit_label, menu);
+			    return true;
+			    }
+	
+	
+			
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            // app icon in action bar clicked; goto parent activity.
+	            this.finish();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	  @Override
@@ -36,6 +72,7 @@ public class EditLabel extends Activity {
 	    super.onStart();
 	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
 	  }
+	  
 	
     public void navigateTo(View view) {
     Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
