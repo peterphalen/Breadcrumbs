@@ -38,8 +38,7 @@ public class EditLabel extends Activity {
     	if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
     		  // call something for API Level 11+
     		ActionBar actionBar = getActionBar();
-    		actionBar.setDisplayHomeAsUpEnabled(true);
-    		}
+    		actionBar.setDisplayHomeAsUpEnabled(true);}
     	
 	}
 	

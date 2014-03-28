@@ -10,37 +10,32 @@
 
     <Button
         android:id="@+id/button1"
-        style="@style/ButtonText"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
-        android:layout_weight="16"
-        android:background="@drawable/custom_button2"
+        android:layout_weight="15"
+        android:background="@drawable/main_buttons"
         android:onClick="dropBreadcrumb"
         android:text="@string/DropBreadcrumb"
         android:textSize="48sp" />
 
     <Button
         android:id="@+id/button2"
-        style="@style/ButtonText"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
         android:layout_weight="5"
-        android:background="@drawable/custom_button2"
+        android:background="@drawable/main_buttons"
         android:text="@string/CollectBreadcrumbs"
 		android:onClick="collectBreadcrumbs"
-        android:textSize="30sp" />
+        android:textSize="32sp" />
     
     <Button
         android:id="@+id/button3"
-        style="@style/ButtonText"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:background="@drawable/custom_button_blackout"
+        android:layout_weight="4"
+        android:background="@drawable/main_buttons"
         android:text="@string/ViewMap"
 		android:onClick="breadcrumbMap"
-        android:textSize="22sp" />
+        android:textSize="24sp" />
 
 </LinearLayout>

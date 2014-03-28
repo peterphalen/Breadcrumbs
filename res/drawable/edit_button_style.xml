@@ -3,26 +3,21 @@
     <item android:state_pressed="true" >
         <shape>
             <solid
-                android:color="#EEC591" />
+                android:color="#449EA9" />
             <stroke
                 android:width="1dp"
-                android:color="#c3834c" />
+                android:color="#449EA9" />
             <corners
-                android:radius="6dp" />
+                android:radius="1dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <gradient
-                android:startColor="#EEC591"
-                android:endColor="#c3834c"
-                android:angle="270" />
+            <solid
+                android:color="#4CB1BE" />
             <stroke
                 android:width="1dp"
-                android:color="#c3834c" />
-            <corners
-                android:radius="8dp" />
+                android:color="#449EA9" />
         </shape>
     </item>
 </selector>
-

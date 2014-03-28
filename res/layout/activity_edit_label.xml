@@ -1,87 +1,78 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/EditLabelLinearLayout"
-    android:layout_width="fill_parent"
+   	android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#f4ddca"
-    tools:context=".EditLabel" >
+	android:orientation="vertical" 
+    tools:context=".EditLabel"
+    >
+
 
     <EditText
         android:id="@+id/breadcrumbLabelEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
         android:inputType="text"
         android:hint="@string/edit_label_hint" >
 
-        <requestFocus />
+        <requestFocus android:layout_width="wrap_content" />
+
     </EditText>
 
+    <RelativeLayout 
+    android:id="@+id/EditLabelLinearLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+    android:layout_weight="2"      
+    android:orientation="vertical" 
+    android:layout_marginTop="8dp">
     <LinearLayout
-        android:id="@+id/breadcrumbLabelButtonLayout"
+        android:id="@+id/breadcrumbLabelButtonLayoutFirst"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/breadcrumbLabelEditText"
-        android:orientation="horizontal"
-        android:layout_marginTop="14dp" >
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"  >
 
         <Button
             android:id="@+id/button1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+			android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:background="@drawable/custom_button2" 
-			style="@style/ButtonText"           
+            android:background="@drawable/main_buttons"
             android:onClick="setBreadcrumbLabel"
             android:text="@string/save_button_label" />
 
         <Button
             android:id="@+id/EditLabelDeleteButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-			android:background="@drawable/custom_button2"
-			style="@style/ButtonText"
+            android:layout_height="fill_parent"
+			android:layout_width="0dp"
+            android:background="@drawable/main_buttons"
             android:layout_weight="1"
             android:onClick="deleteBreadcrumb"
             android:text="@string/delete_button_label" />
-        
-        <Button
-            android:id="@+id/BreadcrumbLabelEntryCancelButton"
-            android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-			android:background="@drawable/custom_button2"
-			android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-        	style="@style/ButtonText"
-            android:layout_weight="1"
-            android:onClick="cancel"
-            android:text="@string/cancel_button_label" />
 
     </LinearLayout>
-
+	</RelativeLayout>
+    
     <LinearLayout
+        android:id="@+id/breadcrumbLabelButtonLayoutSecond"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/breadcrumbLabelButtonLayout" 
+        android:layout_height="0dp"
+        android:layout_weight="3"      
         >
         
         <Button
             android:id="@+id/BreadcrumbNavigateEditText"
             android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-			android:background="@drawable/custom_button2"
-			android:layout_marginTop="5dp"
-			android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-        	style="@style/ButtonText"
+        	android:layout_height="fill_parent"
+            android:background="@drawable/main_buttons"
             android:onClick="navigateTo"
             android:text="@string/navigate_button_label" />
 	</LinearLayout>
-        
-</RelativeLayout>
+	
+    <View android:id="@+id/emptySpace"
+		android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"    
+        ></View>
+    
+	</LinearLayout>
