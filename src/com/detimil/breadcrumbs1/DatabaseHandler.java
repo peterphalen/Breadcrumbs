@@ -102,7 +102,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     			KEY_LATITUDE, KEY_LONGITUDE, KEY_LABEL }, _id + "=?",
     			new String[] { String.valueOf(id) }, null, null, null, null);
     	if (cursor != null)
-    		cursor.moveToLast();
+    	cursor.moveToLast();
  
     		Breadcrumb breadcrumb = new Breadcrumb(Integer.parseInt(cursor.getString(0)),
     		cursor.getInt(1), cursor.getInt(2), cursor.getString(3));

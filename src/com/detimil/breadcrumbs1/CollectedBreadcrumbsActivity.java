@@ -170,7 +170,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
 
     	
         // set a rename button and create a listener
-        alertbox.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+        alertbox.setPositiveButton("Options", new DialogInterface.OnClickListener() {
 
             // open EditLabel activity and pass it the selected bcrumb ID to allow rename 
             public void onClick(DialogInterface arg0, int arg1) {

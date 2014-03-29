@@ -34,7 +34,7 @@
 
     <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs*:</string>
     <string name="title_activity_breadcrumb_map">Breadcrumbs Map</string>
-    <string name="title_activity_edit_label">Edit Breadcrumb Name</string>
+    <string name="title_activity_edit_label">Breadcrumbs</string>
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
