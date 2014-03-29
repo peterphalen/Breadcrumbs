@@ -37,7 +37,7 @@
             android:layout_height="fill_parent"
 			android:layout_width="0dp"
             android:layout_weight="1"
-            android:background="@drawable/main_buttons"
+            android:background="@drawable/edit_button_style"
             android:onClick="setBreadcrumbLabel"
             android:text="@string/save_button_label" />
 
@@ -45,7 +45,7 @@
             android:id="@+id/EditLabelDeleteButton"
             android:layout_height="fill_parent"
 			android:layout_width="0dp"
-            android:background="@drawable/main_buttons"
+            android:background="@drawable/edit_button_style"
             android:layout_weight="1"
             android:onClick="deleteBreadcrumb"
             android:text="@string/delete_button_label" />
@@ -64,7 +64,7 @@
             android:id="@+id/BreadcrumbNavigateEditText"
             android:layout_width="fill_parent"
         	android:layout_height="fill_parent"
-            android:background="@drawable/main_buttons"
+            android:background="@drawable/edit_button_style"
             android:onClick="navigateTo"
             android:text="@string/navigate_button_label" />
 	</LinearLayout>
