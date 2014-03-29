@@ -1,8 +1,6 @@
 package com.detimil.breadcrumbs1;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -17,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ShareActionProvider;
-import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -28,6 +25,13 @@ public class EditLabel extends Activity {
 	private DatabaseHandler db;
 	int breadcrumbId;
 	ShareActionProvider provider;
+
+	Geocoder geocoder;
+	List<Address> addresses;
+
+	int blat;
+	int blang;
+	String breadcrumbLabel;
 	
 	
 	@SuppressLint("NewApi")
@@ -41,7 +45,7 @@ public class EditLabel extends Activity {
 		breadcrumbId = extras.getInt("breadcrumbId");
 		
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
-    	String breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
+    	breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
     	editText.setHint(breadcrumbLabel);
         
     	if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -67,46 +71,22 @@ public class EditLabel extends Activity {
 			        .getActionProvider();
 			    if (provider != null){
 			    Intent intent = new Intent(Intent.ACTION_SEND);
-			    if (db.getBreadcrumbsCount() > 0) {
 			    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
-			    int blat = breadcrumb.getBreadcrumbLatitude();
-			    int blang = breadcrumb.getBreadcrumbLongitude();
-			    Geocoder geocoder= new Geocoder(this, Locale.ENGLISH);
-		         
-		        try {
-		               
-		              //Place your latitude and longitude
-		              List<Address> addresses = geocoder.getFromLocation(blat, blang, 1);
-		              
-		              if(addresses != null) {
-		               
-		            	  String address = addresses.get(0).getAddressLine(0);
-		            	    String city = addresses.get(0).getAddressLine(1);
-		            	    String postalCode = addresses.get(0).getPostalCode();
-		            	    intent.setType("text/plain");
-		    			    intent.putExtra(Intent.EXTRA_TEXT, address + " " + city + ", " + postalCode);
-		    			    provider.setShareIntent(intent);
-		    			    }
-		              else {
-		              Toast.makeText(getApplicationContext(),"Could not get address..! Generating latitude and longitude", Toast.LENGTH_LONG).show();
+			    blat = breadcrumb.getBreadcrumbLatitude();
+			    blang = breadcrumb.getBreadcrumbLongitude();
+			   
+	 			    intent.setType("text/plain");
+	 			    intent.putExtra(Intent.EXTRA_TEXT, "Directions to " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6);
+				    provider.setShareIntent(intent);
+		        }
 
-		 			    intent.setType("text/plain");
-		 			    intent.putExtra(Intent.EXTRA_TEXT, blat + "," + blang);
-					    provider.setShareIntent(intent);}
-		              
-		              }
-		            	  
-		         
-		        catch (IOException e) {
-		                 e.printStackTrace();
-		                 Toast.makeText(getApplicationContext(),"Could not get address..! Generating lat and longitude", Toast.LENGTH_LONG).show();
-
-		 			    intent.setType("text/plain");
-		 			    intent.putExtra(Intent.EXTRA_TEXT, blat + "," + blang);
-					    provider.setShareIntent(intent);}
-			    	}
-				}
+	        
 			    }
+			    
+			    
+			   
+			
+			    
 			    
 			    return true;
 			    }

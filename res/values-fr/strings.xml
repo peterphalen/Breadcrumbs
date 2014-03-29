@@ -4,9 +4,9 @@
     <string name="app_name">Breadcrumbs</string>
     <string name="action_settings">Settings</string>
     <string name="ViewMap">Voir la Carte</string>
-    <string name="CollectBreadcrumbs">Retrouver Breadcrumbs</string>
+    <string name="CollectBreadcrumbs">Breadcrumbs*:</string>
     <string name="DropBreadcrumb">Drop a\nBreadcrumb</string>
-    <string name="title_collected_breadcrumbs_activity">Appuyer sur un Breadcrumb pour y naviguer.\n(Maintenir pour renommer ou supprimer.)</string>
+    <string name="title_collected_breadcrumbs_activity">*Appuyer sur un Breadcrumb pour y naviguer.\n(Maintenir pour plus.)</string>
     <string name="EmptyListview">Aucun ramassé</string>
 
     <string name="save_button_label">Enregistrer</string>
@@ -14,22 +14,10 @@
     <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
     <string name="navigate_button_label">Naviguer au Breadcrumb</string>
     
-    
-    <style name="ButtonText">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#000000</item>
-        <item name="android:shadowDx">1</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">2</item>
-    </style>
 
     <string name="title_activity_collected_breadcrumbs">Collected Breadcrumbs</string>
     <string name="title_activity_breadcrumb_map">Revenir au menu</string>
-    <string name="title_activity_edit_label">Renommer le Breadcrumb</string>
+    <string name="title_activity_edit_label">Breadcrumb</string>
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
