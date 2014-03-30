@@ -14,11 +14,7 @@
     <string name="delete_button_label">Delete</string>
 	<string name="navigate_button_label">Directions to this Breadcrumb</string>
     
-
-    
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
-
-    
 
     <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs*:</string>
     <string name="title_activity_breadcrumb_map">Breadcrumbs Map</string>

@@ -12,7 +12,7 @@
 	
     <com.inneractive.api.ads.InneractiveAd
     android:id="@+id/ad"
-    xmlns:inneractive="http://schemas.android.com/apk/res/com.detimil.breadcrumbs1"
+    xmlns:inneractive="http://schemas.android.com/apk/res/com.peter.breadcrumbs"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     inneractive:appID="Self_Breadcrumbs_Android"
