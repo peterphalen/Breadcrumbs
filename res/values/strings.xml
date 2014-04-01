@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Breadcrumbs</string>
+      <string name="app_name">Breadcrumbs</string>
     <string name="ViewMap"> view map </string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">drop a\nbreadcrumb</string>
@@ -20,8 +20,11 @@
     
     <string name="edit_label_hint">Breadcrumb label</string>
     <string name="delete_all">Delete all Breadcrumbs</string>
+    <string name="delete_all_question">Delete all Breadcrumbs?</string>
+    <string name="okay">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="options">Options</string>
+    <string name="info_box_instructions">Click this box for more!</string>
+    <string name="share_directions_snippet">Directions to</string>
     
-    
-    
-
 </resources>

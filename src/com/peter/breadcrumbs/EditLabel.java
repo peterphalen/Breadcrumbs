@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -30,7 +31,8 @@ public class EditLabel extends Activity {
 	int blat;
 	int blang;
 	String breadcrumbLabel;
-	
+	String DIRECTIONS_SNIPPET;
+
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -50,6 +52,9 @@ public class EditLabel extends Activity {
     		  // call something for API Level 11+
     		ActionBar actionBar = getActionBar();
     		actionBar.setDisplayHomeAsUpEnabled(true);}
+    
+    	Resources res = getResources();
+    	DIRECTIONS_SNIPPET = res.getString(R.string.share_directions_snippet);
     	
 	}
 	
@@ -74,7 +79,7 @@ public class EditLabel extends Activity {
 			    blang = breadcrumb.getBreadcrumbLongitude();
 			   
 	 			    intent.setType("text/plain");
-	 			    intent.putExtra(Intent.EXTRA_TEXT, "Directions to " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6);
+	 			    intent.putExtra(Intent.EXTRA_TEXT, DIRECTIONS_SNIPPET + " " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6);
 				    provider.setShareIntent(intent);
 		        }
 

@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">Breadcrumbs</string>
-    <string name="ViewMap">Voir la Carte</string>
-    <string name="CollectBreadcrumbs">Collection*:</string>
-    <string name="DropBreadcrumb">Drop a\nBreadcrumb</string>
+    <string name="ViewMap">voir la carte</string>
+    <string name="CollectBreadcrumbs">collection:</string>
+    <string name="DropBreadcrumb">drop a\nbreadcrumb</string>
     <string name="title_collected_breadcrumbs_activity">*Appuyer sur un Breadcrumb pour y naviguer.\n(Maintenir pour plus.)</string>
 
     <string name="save_button_label">Enregistrer</string>
@@ -12,12 +12,21 @@
     <string name="navigate_button_label">Naviguer au Breadcrumb</string>
     
 
-    <string name="title_activity_collected_breadcrumbs">Collected Breadcrumbs</string>
+    <string name="title_activity_collected_breadcrumbs">Collection*</string>
     <string name="title_activity_breadcrumb_map">Carte</string>
     <string name="title_activity_edit_label">Breadcrumb</string>
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
     
+    <string name="delete_all">Supprimer tous</string>
+    
+    
+    <string name="delete_all_question">Supprimer tous les Breadcrumbs?</string>
+    <string name="okay">Oui</string>
+    <string name="cancel">Annuler</string>
+        <string name="options">Options</string>
+    <string name="info_box_instructions">Cliquez cette fenêtre pour plus!</string>
+    <string name="share_directions_snippet">Directions à</string>
 
 </resources>

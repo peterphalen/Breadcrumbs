@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,12 @@ public class CollectedBreadcrumbsActivity extends Activity  {
 	SimpleCursorAdapter adapter; 
 	Cursor cursor;
 	
+	  String DELETE_ALL_QUESTION_TEXT;
+	  String OKAY_TEXT;
+	  String CANCEL_TEXT;
+	  String DELETE_TEXT;
+	  String OPTIONS_TEXT;
+	
 	    
     @SuppressLint("NewApi")
 	@Override
@@ -46,7 +53,14 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         AdRequest adRequest = new AdRequest.Builder()
         .build();
         adView.loadAd(adRequest);
-		
+        
+		  Resources res = getResources();
+		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
+		  OKAY_TEXT = res.getString(R.string.okay);
+		  CANCEL_TEXT = res.getString(R.string.cancel);	
+		  DELETE_TEXT = res.getString(R.string.delete_button_label);		
+		  OPTIONS_TEXT = res.getString(R.string.options);		
+
     }
     
     @Override
@@ -77,10 +91,10 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         	AlertDialog.Builder delete_alertbox = new AlertDialog.Builder(CollectedBreadcrumbsActivity.this);
             
             // set the message to display
-            delete_alertbox.setMessage("Delete all Breadcrumbs?");
+            delete_alertbox.setMessage(DELETE_ALL_QUESTION_TEXT);
 
             // set a positive/yes button and create a listener
-            delete_alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            delete_alertbox.setPositiveButton(OKAY_TEXT, new DialogInterface.OnClickListener() {
 
                 // do something when the button is clicked
                 public void onClick(DialogInterface arg0, int arg1) {   
@@ -93,7 +107,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
                 }});
             
             // set a negative/no button and create a listener
-            delete_alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            delete_alertbox.setNegativeButton(CANCEL_TEXT, new DialogInterface.OnClickListener() {
 
                 // do something when the button is clicked
                 public void onClick(DialogInterface arg0, int arg1) {
@@ -156,7 +170,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     	alertbox.setMessage("'" + breadcrumbLabel +"'");
     	
         // set a rename button and create a listener
-        alertbox.setPositiveButton("Options", new DialogInterface.OnClickListener() {
+        alertbox.setPositiveButton(OPTIONS_TEXT, new DialogInterface.OnClickListener() {
 
             // open EditLabel activity and pass it the selected bcrumb ID to allow rename 
             public void onClick(DialogInterface arg0, int arg1) {
@@ -172,7 +186,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         });
     	
         // set a delete button and create a listener
-        alertbox.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+        alertbox.setNegativeButton(DELETE_TEXT, new DialogInterface.OnClickListener() {
         	
 
             // do something when the button is clicked

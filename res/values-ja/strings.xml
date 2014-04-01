@@ -14,14 +14,16 @@
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
 
     <string name="title_activity_collected_breadcrumbs">収集</string>
-    <string name="title_activity_breadcrumb_map">マップ</string>
+    <string name="title_activity_breadcrumb_map">地図</string>
     <string name="title_activity_edit_label">パン屑</string>
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
-    <string name="delete_all">すべてのパン粉を削除します。</string>
-    
-    
-    
-
+    <string name="delete_all">すべて削除</string>
+    <string name="delete_all_question">すべてを削除しますか？</string>
+    <string name="okay">はい</string>
+    <string name="cancel">取り消す</string>
+    <string name="options">取捨</string>
+    <string name="info_box_instructions">詳細は、ボックスをクリックします</string>
+    <string name="share_directions_snippet"> </string>
 </resources>

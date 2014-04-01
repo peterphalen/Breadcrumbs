@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,11 +30,23 @@ public class BreadcrumbMap extends Activity {
 	  DatabaseHandler db;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
+	  
+	  String DELETE_ALL_QUESTION_TEXT;
+	  String OKAY_TEXT;
+	  String CANCEL_TEXT;
+	  String INFO_BOX_TEXT;
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_breadcrumb_map);
+	    
+
+		  Resources res = getResources();
+		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
+		  OKAY_TEXT = res.getString(R.string.okay);
+		  CANCEL_TEXT = res.getString(R.string.cancel);
+		  INFO_BOX_TEXT = res.getString(R.string.info_box_instructions);
 	    
 	    //get MapFragment
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
@@ -79,6 +92,8 @@ public class BreadcrumbMap extends Activity {
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+		
+		
          
         switch (item.getItemId())
         {
@@ -89,10 +104,10 @@ public class BreadcrumbMap extends Activity {
             db = new DatabaseHandler(getApplicationContext());
 
             // set the message to display
-            delete_alertbox.setMessage("Delete all Breadcrumbs?");
+            delete_alertbox.setMessage(DELETE_ALL_QUESTION_TEXT);
 
             // set a positive/yes button and create a listener
-            delete_alertbox.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            delete_alertbox.setPositiveButton(OKAY_TEXT, new DialogInterface.OnClickListener() {
 
                 // do something when the button is clicked
                 public void onClick(DialogInterface arg0, int arg1) {   
@@ -104,7 +119,7 @@ public class BreadcrumbMap extends Activity {
                 }});
             
             // set a negative/no button and create a listener
-            delete_alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            delete_alertbox.setNegativeButton(CANCEL_TEXT, new DialogInterface.OnClickListener() {
 
                 // do something when the button is clicked
                 public void onClick(DialogInterface arg0, int arg1) {
@@ -144,7 +159,7 @@ public class BreadcrumbMap extends Activity {
 			        Marker allbreadcrumblocations = map.addMarker(new MarkerOptions()
 			          .position(new LatLng((brd.getBreadcrumbLatitude()/1e6), (brd.getBreadcrumbLongitude())/1e6))
 			          .title(brd.getLabel())
-			          .snippet("Click this box for more!")
+			          .snippet(INFO_BOX_TEXT)
 			          .icon(BitmapDescriptorFactory
 			              .fromResource(R.drawable.red_dot)));
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="/Users/broscoe007/Documents/workspace/Breadcrumbs1/libs/inneractiveAdSDK-v4.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Users/broscoe007/Documents/workspace/Breadcrumbs1/libs/libGoogleAnalyticsServices.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry exported="true" kind="lib" path="/Users/broscoe007/Documents/workspace/Breadcrumbs1/libs/inneractiveAdSDK-v4.0.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
