@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Breadcrumbs</string>
+    <string name="ViewMap">ver mapa</string>
+    <string name="CollectBreadcrumbs">colección</string>
+    <string name="DropBreadcrumb">tirar un \nbreadcrumb</string>
+    <string name="title_collected_breadcrumbs_activity">*Haz click un Breadcrumb para indicaciones para llegar a la ubicación.\n(Mantener para màs.)</string>
+    <string name="delete_button_label">Eliminar</string>
+    <string name="save_button_label">Guardar</string>
+    <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
+    <string name="navigate_button_label">Indicaciones para llegar al Breadcrumb</string>
+
+    <string name="title_activity_collected_breadcrumbs">Colección*</string>
+    <string name="title_activity_breadcrumb_map">Mapa</string>
+    <string name="title_activity_edit_label">Breadcrumb</string>
+
+    <string name="edit_label_hint">Breadcrumb label</string>
+    
+    <string name="delete_all">Eliminar todos</string>
+
+    <string name="delete_all_question">¿Eliminar todos los Breadcrumbs?</string>
+    <string name="okay">Si</string>
+    <string name="cancel">No</string>
+    <string name="options">Opciones</string>
+    <string name="info_box_instructions">¡Haz click en esta ventana para más!</string>
+    <string name="share_directions_snippet">Indicaciones para llegar a</string>
+    
+    <string name="no_location_found_warning">Ubicación no encontrado\nTrata de nuevo en un segundo</string>
+    <string name="improve_accuracy_warning">Para mejorar la precisión, activa le WIFI o el GPS</string>
+    <string name="no_breadcrumbs_yet_warning">Todavía no has tirado un Breadcrumb</string>
+    <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
+
+</resources>

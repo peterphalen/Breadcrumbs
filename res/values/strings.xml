@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-      <string name="app_name">Breadcrumbs</string>
+    <string name="app_name">Breadcrumbs</string>
     <string name="ViewMap"> view map </string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">drop a\nbreadcrumb</string>
@@ -10,21 +9,26 @@
     <string name="save_button_label">Save</string>
     <string name="delete_button_label">Delete</string>
 	<string name="navigate_button_label">Directions to this Breadcrumb</string>
-    
+	    
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
-
-    <string name="title_activity_collected_breadcrumbs">Collection*:</string>
-    <string name="title_activity_breadcrumb_map">Breadcrumbs Map</string>
+    <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs*:</string>
+    <string name="title_activity_breadcrumb_map">Breadcrumbs</string>
     <string name="title_activity_edit_label">Breadcrumb</string>
-    
-    
+  
     <string name="edit_label_hint">Breadcrumb label</string>
     <string name="delete_all">Delete all Breadcrumbs</string>
     <string name="delete_all_question">Delete all Breadcrumbs?</string>
-    <string name="okay">Ok</string>
+    <string name="okay">Okay</string>
     <string name="cancel">Cancel</string>
-    <string name="options">Options</string>
+    <string name="options">Open</string>
     <string name="info_box_instructions">Click this box for more!</string>
     <string name="share_directions_snippet">Directions to</string>
+    
+    
+    <string name="no_location_found_warning">No location found yet\nPlease try again in just a sec</string>
+    <string name="improve_accuracy_warning">Improve accuracy by enabling WIFI and/or GPS</string>
+    <string name="no_breadcrumbs_yet_warning">You haven\'t dropped any Breadcrumbs yet</string>
+    <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
+    
     
 </resources>

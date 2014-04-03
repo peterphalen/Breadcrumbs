@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">パン屑</string>
+    <string name="app_name">パンくずトラッカー</string>
     <string name="ViewMap">地図を見てください</string>
     <string name="CollectBreadcrumbs">収集</string>
-    <string name="DropBreadcrumb"> パン屑を落としてください。 </string>
-    <string name="title_collected_breadcrumbs_activity">パン屑をタッチしてオプション画面に戻ってください</string>
+    <string name="DropBreadcrumb"> パンくずを落としてください。 </string>
+    <string name="title_collected_breadcrumbs_activity">パンくずをタッチしてオプション画面に戻ってください</string>
 
     <string name="save_button_label">保存</string>
     <string name="delete_button_label">削除</string>
-	<string name="navigate_button_label">このパン屑までの行き方を表示してください</string>
+	<string name="navigate_button_label">このパンくずまでの行き方を表示してください</string>
     
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
 
     <string name="title_activity_collected_breadcrumbs">収集</string>
     <string name="title_activity_breadcrumb_map">地図</string>
-    <string name="title_activity_edit_label">パン屑</string>
+    <string name="title_activity_edit_label">パンくず</string>
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
     <string name="delete_all">すべて削除</string>
-    <string name="delete_all_question">すべてを削除しますか？</string>
+    <string name="delete_all_question">すべてのパンくずを削除しますか？</string>
     <string name="okay">はい</string>
-    <string name="cancel">取り消す</string>
-    <string name="options">取捨</string>
-    <string name="info_box_instructions">詳細は、ボックスをクリックします</string>
+    <string name="cancel">取消</string>
+    <string name="options">オプション</string>
+    <string name="info_box_instructions">詳細は、ボックスをクリックしてください</string>
     <string name="share_directions_snippet"> </string>
+    
+    <string name="no_location_found_warning">いいえ場所まだ見つかりませんでした。瞬間にもう一度お試しください。まだ場所がみつかっていません、しばらくしてからもう一度お試し下さい。</string>
+    <string name="improve_accuracy_warning">無線LANやGPSを有効にすることで正確さが向上します。</string>
+    <string name="no_breadcrumbs_yet_warning">まだパンくずが落とされていません</string>
+    <string name="auto_generated_breadcrumb_label">パンくず</string>
+    
 </resources>

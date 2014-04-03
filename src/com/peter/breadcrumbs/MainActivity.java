@@ -3,6 +3,7 @@ package com.peter.breadcrumbs;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
@@ -32,6 +33,10 @@ public class MainActivity extends Activity implements
 	private Location lastKnownLocation;
 	private double BREADCRUMB_LATITUDE;
 	private double BREADCRUMB_LONGITUDE;
+	String NO_LOCATION_WARNING_TEXT;
+	String IMPROVE_ACCURACY_WARNING_TEXT;
+	String NO_BREADCRUMBS_YET_WARNING_TEXT;
+	String AUTO_GENERATED_BREADCRUMB_LABEL;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,6 +65,14 @@ public class MainActivity extends Activity implements
 
 			// Get the location manager	
 					locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+					
+					Resources res = getResources();
+					NO_LOCATION_WARNING_TEXT = res.getString(R.string.no_location_found_warning);
+					IMPROVE_ACCURACY_WARNING_TEXT = res.getString(R.string.improve_accuracy_warning);
+					NO_BREADCRUMBS_YET_WARNING_TEXT = res.getString(R.string.no_breadcrumbs_yet_warning);
+					AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);
+				
+					
 			}
 	
 
@@ -119,7 +132,7 @@ public class MainActivity extends Activity implements
 		      
 		// Check if any location has been found
 	    if ( lastKnownLocation == null){
-	    	Toast.makeText(getApplicationContext(), "No location found yet\nPlease try again in just a sec",
+	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
 	    }
 	    else{
@@ -134,7 +147,7 @@ public class MainActivity extends Activity implements
 		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
 	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
-	    	Toast.makeText(getApplicationContext(), "Improve accuracy by enabling WIFI and/or GPS",
+	    	Toast.makeText(getApplicationContext(), IMPROVE_ACCURACY_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
 	    }
 
@@ -144,7 +157,7 @@ public class MainActivity extends Activity implements
         int lat = (int)BREADCRUMB_LATITUDE;
         BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
         int lng = (int)BREADCRUMB_LONGITUDE;
-        String label = ("Breadcrumb " + (db.getBreadcrumbsCount()+1) );
+        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (db.getBreadcrumbsCount()+1) );
 	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
 
 		intent.putExtra("INT_SHOW_THIS_LATITUDE", lat);
@@ -157,7 +170,7 @@ public class MainActivity extends Activity implements
 	public void collectBreadcrumbs(View view) {
 		DatabaseHandler db = new DatabaseHandler(this);
 		if ( db.getBreadcrumbsCount() == 0 ) {
-			Toast.makeText(getApplicationContext(), "You haven't dropped any breadcrumbs yet",
+			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
 	        startActivity(intent);
@@ -175,7 +188,7 @@ public class MainActivity extends Activity implements
         
      // Check if any location has been found
 	    if (lastKnownLocation == null){
-	    	Toast.makeText(getApplicationContext(), "No location found yet\nPlease try again in just a sec",
+	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
 	    }
 	    else{	    	
@@ -184,7 +197,7 @@ public class MainActivity extends Activity implements
 	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
 	    	//If no breadcrumbs found but current location is found, send current location to the map and open it
 		if ( db.getBreadcrumbsCount() == 0 ) {
-			Toast.makeText(getApplicationContext(), "You haven't dropped any breadcrumbs yet",
+			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();}
 			Intent intent = new Intent(this, BreadcrumbMap.class);
 
