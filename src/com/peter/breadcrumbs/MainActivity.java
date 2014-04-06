@@ -33,6 +33,8 @@ public class MainActivity extends Activity implements
 	private Location lastKnownLocation;
 	private double BREADCRUMB_LATITUDE;
 	private double BREADCRUMB_LONGITUDE;
+	private int BREADCRUMB_LATITUDE_CONVERTED;
+	private int BREADCRUMB_LONGITUDE_CONVERTED;
 	String NO_LOCATION_WARNING_TEXT;
 	String IMPROVE_ACCURACY_WARNING_TEXT;
 	String NO_BREADCRUMBS_YET_WARNING_TEXT;
@@ -66,6 +68,7 @@ public class MainActivity extends Activity implements
 			// Get the location manager	
 					locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 					
+			// Get string resources
 					Resources res = getResources();
 					NO_LOCATION_WARNING_TEXT = res.getString(R.string.no_location_found_warning);
 					IMPROVE_ACCURACY_WARNING_TEXT = res.getString(R.string.improve_accuracy_warning);
@@ -83,14 +86,40 @@ public class MainActivity extends Activity implements
 		   // Get the current location's latitude & longitude
 		      lastKnownLocation = mLocationClient.getLastLocation();
 		      
+		   //Request locaiton updates
 		      mLocationClient.requestLocationUpdates(mLocationRequest, this);
+		      
+				 // Get the current location's latitude & longitude
+		    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
+		    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
+		    		    	
+		    	//Convert latitude and longitude to an integer
+		    	//Requires multiplying by 1e6, which means you have to divide 
+		    	//the number by 1e6 when you access it later
+		    	
+		        BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
+		        BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
+		        BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
+		        BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
 		    
 	   }
 	  
 	  @Override
 	  public void onLocationChanged(Location location) {
-		// Use the location here!!!
+		// When new location is found, update lastKnownLocation var to it
 		  lastKnownLocation = location;
+		  
+			 // Get the current location's latitude & longitude
+	    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
+	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
+	    	
+	    	//Convert latitude and longitude to an integer
+	    	//Requires multiplying by 1e6, which means you have to divide 
+	    	//the number by 1e6 when you access it later
+	    	 BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
+		     BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
+		     BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
+		     BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
 		  	  }
 	  
 	   @Override
@@ -137,31 +166,28 @@ public class MainActivity extends Activity implements
 	    }
 	    else{
 
-			 // Get the current location's latitude & longitude
-	    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
-	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
-
 		// check if Wifi or GPS enabled and if not send user to the GSP settings
-			
 
 		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
+		//If both GPS and Wifi are off, continue with method but warn user with toast
 	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
 	    	Toast.makeText(getApplicationContext(), IMPROVE_ACCURACY_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
 	    }
 
+	    //open breadcrumb map
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
         DatabaseHandler db = new DatabaseHandler(this);
-        BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
-        int lat = (int)BREADCRUMB_LATITUDE;
-        BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
-        int lng = (int)BREADCRUMB_LONGITUDE;
-        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (db.getBreadcrumbsCount()+1) );
-	    db.addBreadcrumb(new Breadcrumb(lat, lng, label));
 
-		intent.putExtra("INT_SHOW_THIS_LATITUDE", lat);
-		intent.putExtra("INT_SHOW_THIS_LONGITUDE", lng);
+        //Auto generate breadcrumb label which will be "Breadcrumb "
+        //In whatever language and its number in your database
+        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (db.getBreadcrumbsCount()+1) );
+	    db.addBreadcrumb(new Breadcrumb(BREADCRUMB_LATITUDE_CONVERTED, BREADCRUMB_LONGITUDE_CONVERTED, label));
+
+	    //Pass current location as an extra to map activity
+		intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
+		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 		db.close();
 	    startActivity(intent);}
 	}
@@ -169,6 +195,8 @@ public class MainActivity extends Activity implements
 
 	public void collectBreadcrumbs(View view) {
 		DatabaseHandler db = new DatabaseHandler(this);
+		
+		//Open collection activity. If there are no breadcrumbs show toast warning as well
 		if ( db.getBreadcrumbsCount() == 0 ) {
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
@@ -188,23 +216,22 @@ public class MainActivity extends Activity implements
         
      // Check if any location has been found
 	    if (lastKnownLocation == null){
+	    	//if location hasn't been found, show toast warning
 	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
 	    }
 	    else{	    	
-	    	 // Get the current location's latitude & longitude
-	    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
-	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
-	    	//If no breadcrumbs found but current location is found, send current location to the map and open it
+	    	
+	    	//If no breadcrumbs are in database but current location is found, 
+	    	//send current location to the map and open it
 		if ( db.getBreadcrumbsCount() == 0 ) {
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();}
 			Intent intent = new Intent(this, BreadcrumbMap.class);
 
-	        int current_lat = (int)(BREADCRUMB_LATITUDE * 1e6);
-	        int current_lng = (int)(BREADCRUMB_LONGITUDE * 1e6);
-			intent.putExtra("INT_SHOW_THIS_LATITUDE", current_lat);
-			intent.putExtra("INT_SHOW_THIS_LONGITUDE", current_lng);
+			//put our lastknowlocation (times 1e6) as extra
+			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
+			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 			startActivity(intent);
 	    }
 		db.close();
