@@ -11,9 +11,9 @@
     <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
     <string name="navigate_button_label">Indicaciones para llegar al Breadcrumb</string>
 
-    <string name="title_activity_collected_breadcrumbs">Colección*</string>
-    <string name="title_activity_breadcrumb_map">Mapa</string>
-    <string name="title_activity_edit_label">Breadcrumb</string>
+    <string name="title_activity_collected_breadcrumbs">Colección</string>
+    <string name="title_activity_breadcrumb_map">Breadcrumbs</string>
+    <string name="title_activity_edit_label">Breadcrumbs</string>
 
     <string name="edit_label_hint">Breadcrumb label</string>
     

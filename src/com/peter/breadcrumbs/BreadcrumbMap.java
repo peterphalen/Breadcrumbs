@@ -12,11 +12,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.RelativeLayout;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -35,7 +32,6 @@ public class BreadcrumbMap extends Activity {
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
 	  //if this bool is set to true by an intent, zoom to the bounds of all markers
-	  boolean ZOOM_TO_ALL_BREADCRUMBS = false;
 	  LatLngBounds bounds;
 
 	  
@@ -62,13 +58,12 @@ public class BreadcrumbMap extends Activity {
 		    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		    map.setPadding(0, 0, 0, 60);
 		    DatabaseHandler db = new DatabaseHandler(this);
-
-		    breadcrumbs = db.getAllBreadcrumbs();
+		    
+		    int breadcrumbCount = db.getBreadcrumbsCount();
 		    
 			Bundle extras = getIntent().getExtras();
 			int INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
 			int INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
-			boolean ZOOM_TO_ALL_BREADCRUMBS = extras.getBoolean("ZOOM_TO_ALL_BREADCRUMBS");
 
 			
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
@@ -76,8 +71,7 @@ public class BreadcrumbMap extends Activity {
 			
 			//If the map has been generated and ZOOM_TO_ALL_BREADCRUMBS bool is false
 			//show the latest breadcrumb, or if there's just one breadcrumb do the same
-		    if((map != null && breadcrumbs != null && ZOOM_TO_ALL_BREADCRUMBS == false) || 
-		    		( map != null && db.getBreadcrumbsCount() == 1 && ZOOM_TO_ALL_BREADCRUMBS == true )){
+		    if(map != null && breadcrumbCount > 0 ){
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 		    // Zoom in, animating the camera.
@@ -86,11 +80,11 @@ public class BreadcrumbMap extends Activity {
 		    
 			//If the map has been generated and there are no breadcrumbs in the db
 			//show the latest location		    
-		    if(map != null && db.getBreadcrumbsCount() == 0){
+		    if(map != null && breadcrumbCount == 0){
 		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 			    // Zoom in, animating the camera.
-			    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
+			    map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 		    }
 		    db.close();
 
@@ -125,6 +119,7 @@ public class BreadcrumbMap extends Activity {
             // set a positive/yes button and create a listener
             delete_alertbox.setPositiveButton(OKAY_TEXT, new DialogInterface.OnClickListener() {
 
+            	
                 // do something when the button is clicked
                 public void onClick(DialogInterface arg0, int arg1) {   
 
@@ -171,7 +166,6 @@ public class BreadcrumbMap extends Activity {
 	    DatabaseHandler db = new DatabaseHandler(this);
 
 	    breadcrumbs = db.getAllBreadcrumbs();
-	    final int breadcrumbCount = db.getBreadcrumbsCount();
 	    
 	    if (breadcrumbs != null) {
 		//get markers for each breadcrumb
@@ -185,20 +179,9 @@ public class BreadcrumbMap extends Activity {
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());
 			          allbreadcrumblocations.showInfoWindow();
 			          db.close();
-			          
-			    	  //If the map has been generated and ZOOM_TO_ALL_BREADCRUMBS bool is true
-			  		// and there's more than one bcrumb set bounds to show all breadcrumbs
-			  	    if(map != null && ZOOM_TO_ALL_BREADCRUMBS == true && breadcrumbCount > 1 ){
-			  	    	LatLngBounds.Builder builder = new LatLngBounds.Builder();
-			  	    	    builder.include(allbreadcrumblocations.getPosition());
-			  	    	bounds = builder.build();
+
 			  	    	}
 			          
-        }
-        
-        if( map != null && ZOOM_TO_ALL_BREADCRUMBS == true && breadcrumbCount > 1 ){
-        
-               map.fitBounds(bounds);
         }
      
         
@@ -216,7 +199,7 @@ public class BreadcrumbMap extends Activity {
 					}
         		);
 	    	}
-		  }
+		  
 	
 	  
 	  @Override

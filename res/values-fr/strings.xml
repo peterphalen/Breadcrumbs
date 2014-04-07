@@ -5,15 +5,15 @@
     <string name="ViewMap">voir la carte</string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">jeter un \nbreadcrumb</string>
-    <string name="title_collected_breadcrumbs_activity">*Taper sur un Breadcrumb pour y naviguer.\n(Maintenir pour plus.)</string>
+    <string name="title_collected_breadcrumbs_activity">*Taper sur un Breadcrumb pour y naviguer.\n(Maintenir pour ouvrir.)</string>
     <string name="delete_button_label">Supprimer</string>
     <string name="save_button_label">Enregistrer</string>
     <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
     <string name="navigate_button_label">Naviguer au Breadcrumb</string>
 
-    <string name="title_activity_collected_breadcrumbs">Collection*</string>
-    <string name="title_activity_breadcrumb_map">Carte</string>
-    <string name="title_activity_edit_label">Breadcrumb</string>
+    <string name="title_activity_collected_breadcrumbs">Collection</string>
+    <string name="title_activity_breadcrumb_map">Breadcrumbs</string>
+    <string name="title_activity_edit_label">Breadcrumbs</string>
 
     <string name="edit_label_hint">Breadcrumb label</string>
     

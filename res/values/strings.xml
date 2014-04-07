@@ -4,16 +4,16 @@
     <string name="ViewMap"> view map </string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">drop a\nbreadcrumb</string>
-    <string name="title_collected_breadcrumbs_activity">*Tap a Breadcrumb to navigate back to it.\n(Tap and hold for options.)</string>
+    <string name="title_collected_breadcrumbs_activity">*Tap a Breadcrumb to navigate back to it.\n(Tap and hold to open.)</string>
 
     <string name="save_button_label">Save</string>
     <string name="delete_button_label">Delete</string>
 	<string name="navigate_button_label">Directions to this Breadcrumb</string>
 	    
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
-    <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs*:</string>
+    <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs:</string>
     <string name="title_activity_breadcrumb_map">Breadcrumbs</string>
-    <string name="title_activity_edit_label">Breadcrumb</string>
+    <string name="title_activity_edit_label">Breadcrumbs</string>
   
     <string name="edit_label_hint">Breadcrumb label</string>
     <string name="delete_all">Delete all Breadcrumbs</string>

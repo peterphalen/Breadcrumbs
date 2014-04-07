@@ -39,6 +39,8 @@ public class MainActivity extends Activity implements
 	String IMPROVE_ACCURACY_WARNING_TEXT;
 	String NO_BREADCRUMBS_YET_WARNING_TEXT;
 	String AUTO_GENERATED_BREADCRUMB_LABEL;
+	private DatabaseHandler db;
+	private int breadcrumbCount;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,6 +56,10 @@ public class MainActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		
+		db = new DatabaseHandler(this);
+		breadcrumbCount = db.getBreadcrumbsCount();
+
 
 	      mLocationClient = new LocationClient(this, this, this);
 	      mLocationRequest = new LocationRequest();
@@ -178,27 +184,24 @@ public class MainActivity extends Activity implements
 
 	    //open breadcrumb map
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
-        DatabaseHandler db = new DatabaseHandler(this);
 
         //Auto generate breadcrumb label which will be "Breadcrumb "
         //In whatever language and its number in your database
-        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (db.getBreadcrumbsCount()+1) );
+        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );
 	    db.addBreadcrumb(new Breadcrumb(BREADCRUMB_LATITUDE_CONVERTED, BREADCRUMB_LONGITUDE_CONVERTED, label));
 
 	    //Pass current location as an extra to map activity
 		intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);			
-		intent.putExtra("ZOOM_TO_ALL_BREADCRUMBS", false);
 		db.close();
 	    startActivity(intent);}
 	}
 
 
 	public void collectBreadcrumbs(View view) {
-		DatabaseHandler db = new DatabaseHandler(this);
 		
 		//Open collection activity. If there are no breadcrumbs show toast warning as well
-		if ( db.getBreadcrumbsCount() == 0 ) {
+		if ( breadcrumbCount == 0 ) {
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
@@ -212,7 +215,6 @@ public class MainActivity extends Activity implements
 
 	public void breadcrumbMap(View view) {
 		
-		DatabaseHandler db = new DatabaseHandler(this);
      // Check if any location has been found and there are no breadcrumbs then do nothing with message
         
      // Check if any location has been found
@@ -225,7 +227,7 @@ public class MainActivity extends Activity implements
 	    	
 	    	//If no breadcrumbs are in database but current location is found, 
 	    	//send current location to the map and open it
-		if ( db.getBreadcrumbsCount() == 0 ) {
+		if ( breadcrumbCount == 0 ) {
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();}
 			Intent intent = new Intent(this, BreadcrumbMap.class);
@@ -233,13 +235,13 @@ public class MainActivity extends Activity implements
 			//put our lastknowlocation (times 1e6) as extra
 			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
-			intent.putExtra("ZOOM_TO_ALL_BREADCRUMBS", true);
 			startActivity(intent);
 	    }
-		db.close();
 	}
 
 	protected void onStop(){
+		super.onStop();
+		db.close();
         /*
          * Remove location updates for a listener.
          * The current Activity is the listener, so
@@ -253,10 +255,12 @@ public class MainActivity extends Activity implements
      * considered "dead".
      */
        mLocationClient.disconnect();
-	      
-	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
+       EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
+
+     		
 	    
-		super.onStop();
+	
+	  
 
 
 	}

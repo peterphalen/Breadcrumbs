@@ -14,8 +14,8 @@
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
 
     <string name="title_activity_collected_breadcrumbs">収集</string>
-    <string name="title_activity_breadcrumb_map">地図</string>
-    <string name="title_activity_edit_label">パンくず</string>
+    <string name="title_activity_breadcrumb_map">パンくずトラッカー</string>
+    <string name="title_activity_edit_label">パンくずトラッカー</string>
     
     
     <string name="edit_label_hint">Breadcrumb label</string>
