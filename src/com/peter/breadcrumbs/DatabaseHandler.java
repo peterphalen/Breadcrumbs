@@ -183,7 +183,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     		  }
     	  
     	  //get all labels as strings
-    	  
     	  public Cursor getAllLabels() {
         	 SQLiteDatabase db = this.getReadableDatabase();
     		  return db.rawQuery("SELECT " + _id + " ," + KEY_LABEL + " FROM " + TABLE_BREADCRUMBS, null);
