@@ -20,7 +20,6 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -31,9 +30,6 @@ public class BreadcrumbMap extends Activity {
 	  DatabaseHandler db;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
-	  //if this bool is set to true by an intent, zoom to the bounds of all markers
-	  LatLngBounds bounds;
-
 	  
 	  String DELETE_ALL_QUESTION_TEXT;
 	  String OKAY_TEXT;
@@ -44,8 +40,8 @@ public class BreadcrumbMap extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_breadcrumb_map);
-	    
 
+	    //get String resources
 		  Resources res = getResources();
 		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
 		  OKAY_TEXT = res.getString(R.string.okay);
@@ -61,6 +57,7 @@ public class BreadcrumbMap extends Activity {
 		    
 		    int breadcrumbCount = db.getBreadcrumbsCount();
 		    
+		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
 			int INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
 			int INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
@@ -69,8 +66,7 @@ public class BreadcrumbMap extends Activity {
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
 			SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
 			
-			//If the map has been generated and ZOOM_TO_ALL_BREADCRUMBS bool is false
-			//show the latest breadcrumb, or if there's just one breadcrumb do the same
+			//if map is null and there are breadcurmbs zoom to the latest breadcrumb
 		    if(map != null && breadcrumbCount > 0 ){
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
@@ -79,7 +75,7 @@ public class BreadcrumbMap extends Activity {
 		    }
 		    
 			//If the map has been generated and there are no breadcrumbs in the db
-			//show the latest location		    
+			//show the latest location of the user at a lower zoom		    
 		    if(map != null && breadcrumbCount == 0){
 		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
@@ -96,15 +92,14 @@ public class BreadcrumbMap extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.breadcrumb_map, menu);
 		
-		return true;
+		return true; //return true because you want the delete all optio
 	}
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
 		
-		
-         
+		//this script gives you the delete all optiosmenu option
         switch (item.getItemId())
         {
         case R.id.delete_all:
@@ -136,9 +131,9 @@ public class BreadcrumbMap extends Activity {
                 public void onClick(DialogInterface arg0, int arg1) {
                 }
             });
-
-            
-
+  
+            //only show the "are you sure you want to delete?" alertbox
+            //if there are breadcrumbs in the database
             if (db.getBreadcrumbsCount() > 0) {
 
             delete_alertbox.show();
@@ -176,6 +171,8 @@ public class BreadcrumbMap extends Activity {
 			          .snippet(INFO_BOX_TEXT)
 			          .icon(BitmapDescriptorFactory
 			              .fromResource(R.drawable.red_dot)));
+			        // take all the marker ids and put them in a hashmap 
+			        //that maps them to the associated breadcrumb id they mark
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());
 			          allbreadcrumblocations.showInfoWindow();
 			          db.close();
@@ -187,9 +184,11 @@ public class BreadcrumbMap extends Activity {
         
         
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-
+        		//when you click an infowindow it references the hashmap
+        		//to get the breadcrumb id, opens EditLabel activity
+        		//and sends the breadcrumb id to the activity as an extra
         	@Override
-        	public void onInfoWindowClick(Marker marker) {
+        	public void onInfoWindowClick(Marker marker) { 
             String markerId = marker.getId();
 			int breadcrumbId = idMarkerMap.get(markerId);
 			Intent intent = new Intent(getApplicationContext(), EditLabel.class);
@@ -200,8 +199,6 @@ public class BreadcrumbMap extends Activity {
         		);
 	    	}
 		  
-	
-	  
 	  @Override
 	  public void onStop() {
 	    super.onStop();

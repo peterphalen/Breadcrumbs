@@ -1,14 +1,10 @@
 package com.peter.breadcrumbs;
 
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,11 +21,8 @@ public class EditLabel extends Activity {
 	int breadcrumbId;
 	ShareActionProvider provider;
 
-	Geocoder geocoder;
-	List<Address> addresses;
-
-	int blat;
-	int blang;
+	double breadcrumbLatitude;
+	double breadcrumbLongitude;
 	String breadcrumbLabel;
 	String DIRECTIONS_SNIPPET;
 
@@ -57,8 +50,7 @@ public class EditLabel extends Activity {
     	DIRECTIONS_SNIPPET = res.getString(R.string.share_directions_snippet);
     	
 	}
-	
-	
+
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -69,31 +61,24 @@ public class EditLabel extends Activity {
 			    
 			    if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 		    		  // call something for API Level 14+
-			 // Get the ActionProvider for later usage
+			 // Get the ActionProvider for later usage, share directions-snippet plus gogole map link in text form
 			    provider = (ShareActionProvider) menu.findItem(R.id.menu_share)
 			        .getActionProvider();
 			    if (provider != null){
 			    Intent intent = new Intent(Intent.ACTION_SEND);
 			    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
-			    blat = breadcrumb.getBreadcrumbLatitude();
-			    blang = breadcrumb.getBreadcrumbLongitude();
+			    breadcrumbLatitude = breadcrumb.getBreadcrumbLatitude()/1e6;
+			    breadcrumbLongitude = breadcrumb.getBreadcrumbLongitude()/1e6;
 			   
 	 			    intent.setType("text/plain");
-	 			    intent.putExtra(Intent.EXTRA_TEXT, DIRECTIONS_SNIPPET + " " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6);
+	 			    intent.putExtra(Intent.EXTRA_TEXT, DIRECTIONS_SNIPPET + " " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumbLatitude + "," + breadcrumbLongitude);
 				    provider.setShareIntent(intent);
 		        }
-
 	        
 			    }
-			    
-			    
-			   
-			
-			    
-			    
+	    
 			    return true;
 			    }
-	
 	
 			
 	@Override
@@ -111,27 +96,12 @@ public class EditLabel extends Activity {
 	    }
 	}
 	
-	@SuppressLint("NewApi")
-	public void doShare() {
-	    // populate the share intent with data
-		if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-  		  // call something for API Level 14+
-	    Intent intent = new Intent(Intent.ACTION_SEND);
-	    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
-	    int blat = breadcrumb.getBreadcrumbLatitude();
-	    int blang = breadcrumb.getBreadcrumbLongitude();
-	    intent.setType("text/plain");
-	    intent.putExtra(Intent.EXTRA_TEXT, blat + ", " + blang);
-	    provider.setShareIntent(intent);}
-	  } 
-	
 	  @Override
 	  public void onStart() {
 	    super.onStart();
 	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
 	  }
 	  
-	
     public void navigateTo(View view) {
     Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
 	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6));
@@ -140,7 +110,7 @@ public class EditLabel extends Activity {
     }
 	
     public void setBreadcrumbLabel(View view) {
-    	// Store breadcrumb label in the database
+    	// Store editText-entered breadcrumb label in the database
     	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
     	String breadcrumbLabel = editText.getEditableText().toString();
     	if (breadcrumbLabel.matches("")) {

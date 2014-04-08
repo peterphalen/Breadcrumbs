@@ -77,7 +77,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     		db.close(); // Closing database connection
     	}
    
-
+    //Delete all breadcrumbs
    public void deleteAllBreadcrumbs()   {
 	   
 	 SQLiteDatabase db = this.getWritableDatabase();
@@ -85,6 +85,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
        db.close();
    }
     
+   //Relabel breadcrumb, first arg _id, second label to insert
     public void relabelBreadcrumb(Integer id, String string) {
     	SQLiteDatabase db = this.getWritableDatabase();
     	 
@@ -110,8 +111,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	cursor.close();
     	return breadcrumb;
     }
-    
-    
     
     	// Getting All locations
     public List<Breadcrumb> getAllBreadcrumbs() {
@@ -182,7 +181,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     		db.close();
     		  }
     	  
-    	  //get all labels as strings
+    	  //get all labels as strings, used by simplecursoradapter in collectedbreadcrumbsactivity
     	  public Cursor getAllLabels() {
         	 SQLiteDatabase db = this.getReadableDatabase();
     		  return db.rawQuery("SELECT " + _id + " ," + KEY_LABEL + " FROM " + TABLE_BREADCRUMBS, null);

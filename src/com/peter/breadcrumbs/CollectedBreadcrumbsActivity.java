@@ -54,6 +54,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         .build();
         adView.loadAd(adRequest);
         
+        		//get string resources
 		  Resources res = getResources();
 		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
 		  OKAY_TEXT = res.getString(R.string.okay);
@@ -87,7 +88,6 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         case R.id.delete_all:
             // Single menu item is selected do something
             // Ex: launching new activity/screen or show alert message
-
         	AlertDialog.Builder delete_alertbox = new AlertDialog.Builder(CollectedBreadcrumbsActivity.this);
             
             // set the message to display
@@ -131,7 +131,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     	db = new DatabaseHandler(this);
 
         cursor = db.getAllLabels();
-
+        //make listview show labels from database
         adapter = new SimpleCursorAdapter(this,
         		android.R.layout.simple_list_item_1,
         		cursor, 
@@ -150,17 +150,16 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     if (listview.getAdapter().getCount() > 0) {
     	
     	Breadcrumb breadcrumb = db.getBreadcrumb(_id);
-    	
+    	//if you singleclick a list item put it in a google map directions url and open it
     	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6));
         startActivity(intent);
         intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");}}});
     
-    this.listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+    this.listview.setOnItemLongClickListener(new OnItemLongClickListener() { //do something onLongClick
 
     public boolean onItemLongClick(AdapterView<?> l, View v, final int position, long id) {
     	
     	final int _id = (int) id;
-
     	
     	AlertDialog.Builder alertbox = new AlertDialog.Builder(CollectedBreadcrumbsActivity.this);
         
@@ -187,24 +186,18 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     	
         // set a delete button and create a listener
         alertbox.setNegativeButton(DELETE_TEXT, new DialogInterface.OnClickListener() {
-        	
 
-            // do something when the button is clicked
+            // delete the breadcrumb when the button is clicked
             public void onClick(DialogInterface arg0, int arg1) {                
                 if (listview.getAdapter().getCount() > 0) {
-                	
 
                 	Breadcrumb breadcrumb = db.getBreadcrumb(_id);
                     db.deleteBreadcrumb(breadcrumb);
                     cursor = db.getAllLabels();
                     adapter.changeCursor(cursor);
-                    }
-                
-;            }
+                    }; 
+               }
         });
-
-
-
         alertbox.show();
 
         return true;
