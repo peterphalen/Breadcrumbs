@@ -51,11 +51,12 @@ public class BreadcrumbMap extends Activity {
 	    //get MapFragment
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
-		    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		    map.setPadding(0, 0, 0, 60);
-		    DatabaseHandler db = new DatabaseHandler(this);
-		    
+	    
+	    	
+	    	DatabaseHandler db = new DatabaseHandler(this);
+
 		    int breadcrumbCount = db.getBreadcrumbsCount();
+		    
 		    
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
@@ -65,7 +66,12 @@ public class BreadcrumbMap extends Activity {
 			
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
 			SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
-			
+
+		    if(map != null){
+			    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			    map.setPadding(0, 0, 0, 60);
+		    }
+		    
 			//if map is null and there are breadcurmbs zoom to the latest breadcrumb
 		    if(map != null && breadcrumbCount > 0 ){
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));

@@ -25,6 +25,7 @@ public class EditLabel extends Activity {
 	double breadcrumbLongitude;
 	String breadcrumbLabel;
 	String DIRECTIONS_SNIPPET;
+	Breadcrumb breadcrumb;
 
 	
 	@SuppressLint("NewApi")
@@ -41,6 +42,10 @@ public class EditLabel extends Activity {
     	breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
     	editText.setHint(breadcrumbLabel);
         
+    	breadcrumb = db.getBreadcrumb(breadcrumbId);
+	    breadcrumbLatitude = breadcrumb.getBreadcrumbLatitude()/1e6;
+	    breadcrumbLongitude = breadcrumb.getBreadcrumbLongitude()/1e6;
+    	
     	if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
     		  // call something for API Level 11+
     		ActionBar actionBar = getActionBar();
@@ -66,9 +71,7 @@ public class EditLabel extends Activity {
 			        .getActionProvider();
 			    if (provider != null){
 			    Intent intent = new Intent(Intent.ACTION_SEND);
-			    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
-			    breadcrumbLatitude = breadcrumb.getBreadcrumbLatitude()/1e6;
-			    breadcrumbLongitude = breadcrumb.getBreadcrumbLongitude()/1e6;
+			    
 			   
 	 			    intent.setType("text/plain");
 	 			    intent.putExtra(Intent.EXTRA_TEXT, DIRECTIONS_SNIPPET + " " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumbLatitude + "," + breadcrumbLongitude);
@@ -103,8 +106,7 @@ public class EditLabel extends Activity {
 	  }
 	  
     public void navigateTo(View view) {
-    Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
-	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6));
+	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumbLatitude + "," + breadcrumbLongitude));
     startActivity(intent);
     intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
     }

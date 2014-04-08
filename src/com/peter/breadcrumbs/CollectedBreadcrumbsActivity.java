@@ -21,10 +21,7 @@ import android.widget.SimpleCursorAdapter;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-
 	
-
 @SuppressLint("NewApi")
 public class CollectedBreadcrumbsActivity extends Activity  {
 
