@@ -32,4 +32,7 @@
     <string name="no_breadcrumbs_yet_warning">まだパンくずが落とされていません</string>
     <string name="auto_generated_breadcrumb_label">パンくず</string>
     
+    <string name="sat_view">Satellite View</string> 
+    <string name="road_view">Street View</string>  
+    
 </resources>

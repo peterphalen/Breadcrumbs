@@ -30,5 +30,8 @@
     <string name="improve_accuracy_warning">Para mejorar la precisión, activa le WIFI o el GPS</string>
     <string name="no_breadcrumbs_yet_warning">Todavía no has tirado un Breadcrumb</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
+    
+    <string name="sat_view">Satellite View</string> 
+    <string name="road_view">Street View</string>  
 
 </resources>

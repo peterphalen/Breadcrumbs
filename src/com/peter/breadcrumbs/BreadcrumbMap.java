@@ -8,8 +8,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,11 +32,20 @@ public class BreadcrumbMap extends Activity {
 	  DatabaseHandler db;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
+	  SharedPreferences sharedpreferences;
+	  
+	  
+	  private Menu menu;
+	  String MAP_TYPE_KEY;
+	  String MAP_TYPE_NORMAL;
+	  String MAP_TYPE_HYBRID;
 	  
 	  String DELETE_ALL_QUESTION_TEXT;
 	  String OKAY_TEXT;
 	  String CANCEL_TEXT;
 	  String INFO_BOX_TEXT;
+	  String SAT_VIEW_TEXT;
+	  String ROAD_VIEW_TEXT;
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +58,17 @@ public class BreadcrumbMap extends Activity {
 		  OKAY_TEXT = res.getString(R.string.okay);
 		  CANCEL_TEXT = res.getString(R.string.cancel);
 		  INFO_BOX_TEXT = res.getString(R.string.info_box_instructions);
+		  SAT_VIEW_TEXT = res.getString(R.string.sat_view);
+		  ROAD_VIEW_TEXT = res.getString(R.string.road_view);
+  
 	    
 	    //get MapFragment
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
 	    
+	    //get Shared prefs
+	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
 	    	
 	    	DatabaseHandler db = new DatabaseHandler(this);
 
@@ -68,7 +85,14 @@ public class BreadcrumbMap extends Activity {
 			SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
 
 		    if(map != null){
-			    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		    	String prefValue = sharedpreferences.getString(MAP_TYPE_KEY, MAP_TYPE_NORMAL);
+		    	int mapType;
+		    	if ("MAP_TYPE_HYBRID".equals(prefValue)) {
+		    	    mapType = GoogleMap.MAP_TYPE_HYBRID;
+		    	} else {
+		    	    mapType = GoogleMap.MAP_TYPE_NORMAL;
+		    	}
+		    	map.setMapType(mapType);
 			    map.setPadding(0, 0, 0, 60);
 		    }
 		    
@@ -97,17 +121,43 @@ public class BreadcrumbMap extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.breadcrumb_map, menu);
-		
+        MenuItem MapMenuItem = menu.findItem(R.id.mapType);
+        if(map.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
+        	MapMenuItem.setTitle(SAT_VIEW_TEXT);
+        }
+        if(map.getMapType() == GoogleMap.MAP_TYPE_HYBRID){
+        	MapMenuItem.setTitle(ROAD_VIEW_TEXT);
+        }		this.menu = menu;
 		return true; //return true because you want the delete all optio
 	}
+
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-		
+
 		//this script gives you the delete all optiosmenu option
         switch (item.getItemId())
         {
+        case R.id.mapType:
+            MenuItem mapMenuTitle = menu.findItem(R.id.mapType);
+        	if (map.getMapType() == GoogleMap.MAP_TYPE_HYBRID){
+        	map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(MAP_TYPE_KEY, "MAP_TYPE_NORMAL");
+            mapMenuTitle.setTitle(SAT_VIEW_TEXT);
+            editor.apply(); 
+            
+            }
+        	if (map.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
+        		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(MAP_TYPE_KEY, "MAP_TYPE_HYBRID");
+                editor.apply(); 
+                mapMenuTitle.setTitle(ROAD_VIEW_TEXT);
+        	}
+            return true;
+            
         case R.id.delete_all:
             // Single menu item is selected do something
             // Ex: launching new activity/screen or show alert message

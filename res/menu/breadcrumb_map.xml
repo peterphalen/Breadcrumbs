@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+  <item 
+      android:title="@string/sat_view" 
+      android:numericShortcut="1" 
+      android:id="@+id/mapType" />
+
+    
     <item
         android:id="@+id/delete_all"
-        android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/delete_all"/>
 
