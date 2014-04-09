@@ -57,8 +57,6 @@ public class MainActivity extends Activity implements
 		setContentView(R.layout.activity_main);
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		
-		db = new DatabaseHandler(this);
-		breadcrumbCount = db.getBreadcrumbsCount();
 
 
 	      mLocationClient = new LocationClient(this, this, this);
@@ -147,7 +145,10 @@ public class MainActivity extends Activity implements
 	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
 	 // Connect the client.
 	      mLocationClient.connect();
-	      
+
+			db = new DatabaseHandler(this);
+			breadcrumbCount = db.getBreadcrumbsCount();
+
 
 	  }
 
@@ -217,27 +218,28 @@ public class MainActivity extends Activity implements
 		
      // Check if any location has been found and there are no breadcrumbs then do nothing with message
         
-     // Check if any location has been found
-	    if (lastKnownLocation == null){
-	    	//if location hasn't been found, show toast warning
-	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
-					Toast.LENGTH_LONG).show();
-	    }
-	    else{	    	
-	    	
 	    	//If no breadcrumbs are in database but current location is found, 
 	    	//send current location to the map and open it
 		if ( breadcrumbCount == 0 ) {
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
-				    Toast.LENGTH_LONG).show();}
+				    Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(this, BreadcrumbMap.class);
 
 			//put our lastknowlocation (times 1e6) as extra
 			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
+			startActivity(intent);	
+		}
+		if (breadcrumbCount > 0) { //zoom to last breadcrumb location if there are breadcrumbs
+			Intent intent = new Intent(this, BreadcrumbMap.class);
+			
+			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED", true);
+
 			startActivity(intent);
+		}
+
 	    }
-	}
+	
 
 	protected void onStop(){
 		super.onStop();

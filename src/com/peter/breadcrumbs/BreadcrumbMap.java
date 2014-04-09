@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+@SuppressLint("NewApi")
 public class BreadcrumbMap extends Activity {
 	  private GoogleMap map;
 	  double SHOW_THIS_LATITUDE;
@@ -44,8 +45,9 @@ public class BreadcrumbMap extends Activity {
 	  String OKAY_TEXT;
 	  String CANCEL_TEXT;
 	  String INFO_BOX_TEXT;
-	  String SAT_VIEW_TEXT;
-	  String ROAD_VIEW_TEXT;
+	  String REQUEST_SAT_VIEW_TEXT;
+	  String REQUEST_ROAD_VIEW_TEXT;
+	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +60,14 @@ public class BreadcrumbMap extends Activity {
 		  OKAY_TEXT = res.getString(R.string.okay);
 		  CANCEL_TEXT = res.getString(R.string.cancel);
 		  INFO_BOX_TEXT = res.getString(R.string.info_box_instructions);
-		  SAT_VIEW_TEXT = res.getString(R.string.sat_view);
-		  ROAD_VIEW_TEXT = res.getString(R.string.road_view);
+		  REQUEST_SAT_VIEW_TEXT = res.getString(R.string.sat_view);
+		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
   
 	    
 	    //get MapFragment
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
-	    
+	    	    
 	    //get Shared prefs
 	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
@@ -79,6 +81,7 @@ public class BreadcrumbMap extends Activity {
 			Bundle extras = getIntent().getExtras();
 			int INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
 			int INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
+			boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED");
 
 			
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
@@ -96,6 +99,18 @@ public class BreadcrumbMap extends Activity {
 			    map.setPadding(0, 0, 0, 60);
 		    }
 		    
+		    if(VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){ // 
+		    		//if view map was just pressed and there are breadcrumbs zoom to latest one
+			    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
+			    int breadcrumbsCount = breadcrumbs.size()-1;
+			    SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
+			    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
+		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
+
+			    // Zoom in, animating the camera.
+			    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
+		    }
+		    else{
 			//if map is null and there are breadcurmbs zoom to the latest breadcrumb
 		    if(map != null && breadcrumbCount > 0 ){
 		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
@@ -110,7 +125,8 @@ public class BreadcrumbMap extends Activity {
 		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 			    // Zoom in, animating the camera.
-			    map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+			    map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
+		    	}
 		    }
 		    db.close();
 
@@ -123,10 +139,10 @@ public class BreadcrumbMap extends Activity {
 		getMenuInflater().inflate(R.menu.breadcrumb_map, menu);
         MenuItem MapMenuItem = menu.findItem(R.id.mapType);
         if(map.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
-        	MapMenuItem.setTitle(SAT_VIEW_TEXT);
+        	MapMenuItem.setTitle(REQUEST_SAT_VIEW_TEXT);
         }
         if(map.getMapType() == GoogleMap.MAP_TYPE_HYBRID){
-        	MapMenuItem.setTitle(ROAD_VIEW_TEXT);
+        	MapMenuItem.setTitle(REQUEST_ROAD_VIEW_TEXT);
         }		this.menu = menu;
 		return true; //return true because you want the delete all optio
 	}
@@ -135,27 +151,29 @@ public class BreadcrumbMap extends Activity {
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        MenuItem mapMenuTitle = menu.findItem(R.id.mapType);
+    	int mapType = GoogleMap.MAP_TYPE_NORMAL; 
 
 		//this script gives you the delete all optiosmenu option
         switch (item.getItemId())
         {
         case R.id.mapType:
-            MenuItem mapMenuTitle = menu.findItem(R.id.mapType);
         	if (map.getMapType() == GoogleMap.MAP_TYPE_HYBRID){
-        	map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        	mapType = GoogleMap.MAP_TYPE_NORMAL;
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(MAP_TYPE_KEY, "MAP_TYPE_NORMAL");
-            mapMenuTitle.setTitle(SAT_VIEW_TEXT);
+            mapMenuTitle.setTitle(REQUEST_SAT_VIEW_TEXT);
             editor.apply(); 
-            
             }
         	if (map.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
-        		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        		mapType = GoogleMap.MAP_TYPE_HYBRID;
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(MAP_TYPE_KEY, "MAP_TYPE_HYBRID");
+                mapMenuTitle.setTitle(REQUEST_ROAD_VIEW_TEXT);
                 editor.apply(); 
-                mapMenuTitle.setTitle(ROAD_VIEW_TEXT);
+
         	}
+        	map.setMapType(mapType);
             return true;
             
         case R.id.delete_all:
