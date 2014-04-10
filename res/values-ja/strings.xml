@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">パンくずトラッカー</string>
     <string name="ViewMap">地図を見てください</string>
     <string name="CollectBreadcrumbs">収集</string>
@@ -16,8 +15,7 @@
     <string name="title_activity_collected_breadcrumbs">収集</string>
     <string name="title_activity_breadcrumb_map">パンくずトラッカー</string>
     <string name="title_activity_edit_label">パンくずトラッカー</string>
-    
-    
+ 
     <string name="edit_label_hint">Breadcrumb label</string>
     <string name="delete_all">すべて削除</string>
     <string name="delete_all_question">すべてのパンくずを削除しますか？</string>
@@ -32,7 +30,7 @@
     <string name="no_breadcrumbs_yet_warning">まだパンくずが落とされていません</string>
     <string name="auto_generated_breadcrumb_label">パンくず</string>
     
-    <string name="sat_view">Satellite View</string> 
-    <string name="road_view">Street View</string>  
+    <string name="sat_view">Earth</string> 
+    <string name="road_view">地図</string>  
     
 </resources>

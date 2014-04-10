@@ -93,6 +93,7 @@ public class MainActivity extends Activity implements
 		   //Request locaiton updates
 		      mLocationClient.requestLocationUpdates(mLocationRequest, this);
 		      
+		      if (lastKnownLocation != null) {
 				 // Get the current location's latitude & longitude
 		    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
 		    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
@@ -100,11 +101,11 @@ public class MainActivity extends Activity implements
 		    	//Convert latitude and longitude to an integer
 		    	//Requires multiplying by 1e6, which means you have to divide 
 		    	//the number by 1e6 when you access it later
-		    	
 		        BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
 		        BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
 		        BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
 		        BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
+		        }
 		    
 	   }
 	  
@@ -112,7 +113,7 @@ public class MainActivity extends Activity implements
 	  public void onLocationChanged(Location location) {
 		// When new location is found, update lastKnownLocation var to it
 		  lastKnownLocation = location;
-		  
+		  if (lastKnownLocation != null){
 			 // Get the current location's latitude & longitude
 	    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
 	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
@@ -123,7 +124,7 @@ public class MainActivity extends Activity implements
 	    	 BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
 		     BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
 		     BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
-		     BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
+		     BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;}
 		  	  }
 	  
 	   @Override

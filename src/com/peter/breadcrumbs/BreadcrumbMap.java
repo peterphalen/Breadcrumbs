@@ -10,12 +10,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -34,8 +37,7 @@ public class BreadcrumbMap extends Activity {
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
 	  SharedPreferences sharedpreferences;
-	  
-	  
+	  	  
 	  private Menu menu;
 	  String MAP_TYPE_KEY;
 	  String MAP_TYPE_NORMAL;
@@ -48,12 +50,13 @@ public class BreadcrumbMap extends Activity {
 	  String REQUEST_SAT_VIEW_TEXT;
 	  String REQUEST_ROAD_VIEW_TEXT;
 	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
+	  Location location;
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_breadcrumb_map);
-
+        
 	    //get String resources
 		  Resources res = getResources();
 		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
@@ -62,11 +65,12 @@ public class BreadcrumbMap extends Activity {
 		  INFO_BOX_TEXT = res.getString(R.string.info_box_instructions);
 		  REQUEST_SAT_VIEW_TEXT = res.getString(R.string.sat_view);
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
-  
 	    
 	    //get MapFragment
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
+	    
+	    location = new Location("");
 	    	    
 	    //get Shared prefs
 	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -81,11 +85,20 @@ public class BreadcrumbMap extends Activity {
 			Bundle extras = getIntent().getExtras();
 			int INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
 			int INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
-			boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED");
+			VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED");
 
 			
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
 			SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
+			location.setLatitude(SHOW_THIS_LATITUDE);
+			location.setLongitude(SHOW_THIS_LONGITUDE);
+					    
+	        // Look up the AdView as a resource and load a request.
+	        AdView adView = (AdView)this.findViewById(R.id.adView2);
+	        AdRequest adRequest = new AdRequest.Builder()
+	        .setLocation(location)
+	        .build();
+	        adView.loadAd(adRequest);
 
 		    if(map != null){
 		    	String prefValue = sharedpreferences.getString(MAP_TYPE_KEY, MAP_TYPE_NORMAL);
@@ -99,7 +112,7 @@ public class BreadcrumbMap extends Activity {
 			    map.setPadding(0, 0, 0, 60);
 		    }
 		    
-		    if(VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){ // 
+		    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){  
 		    		//if view map was just pressed and there are breadcrumbs zoom to latest one
 			    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
 			    int breadcrumbsCount = breadcrumbs.size()-1;
