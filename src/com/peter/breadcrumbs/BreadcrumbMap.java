@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,7 +22,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 @SuppressLint("NewApi")
-public class BreadcrumbMap extends Activity {
+public class BreadcrumbMap extends FragmentActivity {
 	  private GoogleMap map;
 	  double SHOW_THIS_LATITUDE;
 	  double SHOW_THIS_LONGITUDE;
@@ -71,7 +71,7 @@ public class BreadcrumbMap extends Activity {
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
 	    
 	    //get MapFragment
-	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
+	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
 	    
 	    location = new Location("");
