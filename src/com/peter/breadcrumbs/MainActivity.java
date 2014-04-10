@@ -194,7 +194,8 @@ public class MainActivity extends Activity implements
 
 	    //Pass current location as an extra to map activity
 		intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
-		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);			
+		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);	
+		intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
 		db.close();
 	    startActivity(intent);}
 	}
@@ -229,6 +230,8 @@ public class MainActivity extends Activity implements
 			//put our lastknowlocation (times 1e6) as extra
 			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
+			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED", true);
+
 			startActivity(intent);	
 		}
 		if (breadcrumbCount > 0) { //zoom to last breadcrumb location if there are breadcrumbs

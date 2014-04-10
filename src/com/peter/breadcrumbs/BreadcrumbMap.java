@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,14 +22,15 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 @SuppressLint("NewApi")
-public class BreadcrumbMap extends Activity {
+public class BreadcrumbMap extends FragmentActivity {
 	  private GoogleMap map;
 	  double SHOW_THIS_LATITUDE;
 	  double SHOW_THIS_LONGITUDE;
@@ -50,6 +51,9 @@ public class BreadcrumbMap extends Activity {
 	  String REQUEST_SAT_VIEW_TEXT;
 	  String REQUEST_ROAD_VIEW_TEXT;
 	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
+	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = false;
+	  boolean DROP_BREADCRUMB_PRESSED = false;
+
 	  Location location;
 	  	    
 	@SuppressLint("NewApi")
@@ -67,7 +71,7 @@ public class BreadcrumbMap extends Activity {
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
 	    
 	    //get MapFragment
-	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map1))
+	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
 	    
 	    location = new Location("");
@@ -76,16 +80,14 @@ public class BreadcrumbMap extends Activity {
 	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 	    	
-	    	DatabaseHandler db = new DatabaseHandler(this);
-
-		    int breadcrumbCount = db.getBreadcrumbsCount();
-		    
 		    
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
 			int INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
 			int INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
 			VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED");
+			VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED");
+			DROP_BREADCRUMB_PRESSED = extras.getBoolean("DROP_BREADCRUMB_PRESSED");
 
 			
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
@@ -112,36 +114,6 @@ public class BreadcrumbMap extends Activity {
 			    map.setPadding(0, 0, 0, 60);
 		    }
 		    
-		    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){  
-		    		//if view map was just pressed and there are breadcrumbs zoom to latest one
-			    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
-			    int breadcrumbsCount = breadcrumbs.size()-1;
-			    SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
-			    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
-		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
-
-			    // Zoom in, animating the camera.
-			    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
-		    }
-		    else{
-			//if map is null and there are breadcurmbs zoom to the latest breadcrumb
-		    if(map != null && breadcrumbCount > 0 ){
-		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
-
-		    // Zoom in, animating the camera.
-		    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
-		    }
-		    
-			//If the map has been generated and there are no breadcrumbs in the db
-			//show the latest location of the user at a lower zoom		    
-		    if(map != null && breadcrumbCount == 0){
-		    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
-
-			    // Zoom in, animating the camera.
-			    map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-		    	}
-		    }
-		    db.close();
 
 	}
 	
@@ -262,10 +234,42 @@ public class BreadcrumbMap extends Activity {
 			        //that maps them to the associated breadcrumb id they mark
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());
 			          allbreadcrumblocations.showInfoWindow();
-			          db.close();
+			          
+			          
 
 			  	    	}
-			          
+
+	    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){  
+	    		//if view map was just pressed and there are breadcrumbs zoom to latest one
+		    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
+		    int breadcrumbsCount = breadcrumbs.size()-1;
+		    SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
+		    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
+	    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
+
+		    // Zoom in, animating the camera.
+		    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
+	    }
+	    else{
+		//if map is null and there are breadcurmbs zoom to the latest breadcrumb
+	    if(map != null && DROP_BREADCRUMB_PRESSED == true ){
+	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
+
+	    // Zoom in, animating the camera.
+	    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
+	    }
+	    
+		//If the map has been generated and there are no breadcrumbs in the db
+		//show the latest location of the user at a lower zoom		    
+	    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED == true){
+	    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
+
+		    // Zoom in, animating the camera.
+		    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
+	    	}
+	    }
+        db.close();
+      
         }
      
         
@@ -289,6 +293,10 @@ public class BreadcrumbMap extends Activity {
 	  @Override
 	  public void onStop() {
 	    super.onStop();
+	    
+	    VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
+		VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = false;
+		DROP_BREADCRUMB_PRESSED = false;
 	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
 	  }
 }	
