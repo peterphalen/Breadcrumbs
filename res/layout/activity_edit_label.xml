@@ -15,7 +15,7 @@
         android:inputType="text"
         android:hint="@string/edit_label_hint" >
 
-        <requestFocus android:layout_width="wrap_content" />
+        <requestFocus />
 
     </EditText>
 
@@ -35,7 +35,7 @@
         <Button
             android:id="@+id/button1"
             android:layout_height="fill_parent"
-			android:layout_width="0dp"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@drawable/edit_button_style"
             android:onClick="setBreadcrumbLabel"

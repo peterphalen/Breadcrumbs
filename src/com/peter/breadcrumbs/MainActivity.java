@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,15 +40,6 @@ public class MainActivity extends Activity implements
 	String AUTO_GENERATED_BREADCRUMB_LABEL;
 	private DatabaseHandler db;
 	private int breadcrumbCount;
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return false;
-	}
-	
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
