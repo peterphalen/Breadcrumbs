@@ -1,17 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical" 
+    tools:context=".MainActivity" >
+    
+    <LinearLayout
+	android:id="@+id/buttonsView"
     android:padding="2dp"
-    android:background="#333300"
-    android:gravity="center">
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <Button
         android:id="@+id/button1"
+		 android:layout_height="0dp"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
         android:layout_weight="4"
         android:background="@drawable/main_buttons"
         android:onClick="dropBreadcrumb"
@@ -22,23 +24,39 @@
     <Button
         android:id="@+id/button2"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
+		 android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/collected_button"
+        android:onClick="collectBreadcrumbs"
         android:text="@string/CollectBreadcrumbs"
         android:textColor="#FfFfFf"
-		android:onClick="collectBreadcrumbs"
         android:textSize="32sp" />
     
     <Button
         android:id="@+id/button3"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
+		 android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/view_map_button"
+        android:onClick="breadcrumbMap"
         android:text="@string/ViewMap"
         android:textColor="#FfFfFf"
-		android:onClick="breadcrumbMap"
         android:textSize="32sp" />
-
-</LinearLayout>
+    	</LinearLayout>
+    
+        <RelativeLayout
+		android:id="@+id/progressBarView"
+   		 android:layout_width="match_parent"
+   		 android:layout_height="match_parent"
+   		 android:orientation="vertical"
+		 android:background="#88666666">
+        <ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="visible" /> 
+        </RelativeLayout>        			
+        </RelativeLayout>

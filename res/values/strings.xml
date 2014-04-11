@@ -4,7 +4,7 @@
     <string name="ViewMap"> view map </string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">drop a\nbreadcrumb</string>
-    <string name="title_collected_breadcrumbs_activity">*Tap a Breadcrumb to navigate back to it.\n(Tap and hold to open.)</string>
+    <string name="title_collected_breadcrumbs_activity">*Tap a Breadcrumb to navigate back to it.\n(Tap and hold to open)</string>
 
     <string name="save_button_label">Save</string>
     <string name="delete_button_label">Delete</string>
@@ -25,7 +25,7 @@
     <string name="share_directions_snippet">Directions to</string>
     
     
-    <string name="no_location_found_warning">No location found yet\nPlease try again in just a sec</string>
+    <string name="no_location_found_warning">No location found yet.\nMake sure your location is enabled in settings.</string>
     <string name="improve_accuracy_warning">Improve accuracy by enabling WIFI and/or GPS</string>
     <string name="no_breadcrumbs_yet_warning">You haven\'t dropped any Breadcrumbs yet</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>

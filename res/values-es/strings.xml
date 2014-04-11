@@ -5,7 +5,7 @@
     <string name="ViewMap">ver mapa</string>
     <string name="CollectBreadcrumbs">colección</string>
     <string name="DropBreadcrumb">tirar un \nbreadcrumb</string>
-    <string name="title_collected_breadcrumbs_activity">*Haz click un Breadcrumb para indicaciones para llegar a la ubicación.\n(Mantener para màs.)</string>
+    <string name="title_collected_breadcrumbs_activity">*Haz click un Breadcrumb para indicaciones para llegar a la ubicación.\n(Mantener para màs)</string>
     <string name="delete_button_label">Eliminar</string>
     <string name="save_button_label">Guardar</string>
     <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
@@ -26,7 +26,7 @@
     <string name="info_box_instructions">¡Haz click en esta ventana para más!</string>
     <string name="share_directions_snippet">Indicaciones para llegar a</string>
     
-    <string name="no_location_found_warning">Ubicación no encontrado\nTrata de nuevo en un segundo</string>
+    <string name="no_location_found_warning">Ubicación no encontrado.</string>
     <string name="improve_accuracy_warning">Para mejorar la precisión, activa le WIFI o el GPS</string>
     <string name="no_breadcrumbs_yet_warning">Todavía no has tirado un Breadcrumb</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>

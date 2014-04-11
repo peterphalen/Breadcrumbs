@@ -8,8 +8,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -41,22 +41,19 @@ public class MainActivity extends Activity implements
 	String AUTO_GENERATED_BREADCRUMB_LABEL;
 	private DatabaseHandler db;
 	private int breadcrumbCount;
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return false;
-	}
-	
 
+	private RelativeLayout progressBarView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+
 		
+		//get Spinner but make it invisible
+		progressBarView = (RelativeLayout)findViewById(R.id.progressBarView);
+		progressBarView.setVisibility(View.GONE);
 
 
 	      mLocationClient = new LocationClient(this, this, this);
@@ -129,15 +126,20 @@ public class MainActivity extends Activity implements
 	  
 	   @Override
 	   public void onDisconnected() {
-	     
+		      // Display the error code on failure
+			   int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+			   if (errorCode != ConnectionResult.SUCCESS) {
+			     GooglePlayServicesUtil.getErrorDialog(errorCode, this, 0).show();
+			     }
 	   }
 
 	   @Override
 	   public void onConnectionFailed(ConnectionResult connectionResult) {
 	      // Display the error code on failure
-	      Toast.makeText(this, "Location services failure: " + 
-	      connectionResult.getErrorCode(),
-	      Toast.LENGTH_SHORT).show();
+		   int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		   if (errorCode != ConnectionResult.SUCCESS) {
+		     GooglePlayServicesUtil.getErrorDialog(errorCode, this, 0).show();
+		     }
 	   }
 
 	  @Override
@@ -173,6 +175,8 @@ public class MainActivity extends Activity implements
 					Toast.LENGTH_LONG).show();
 	    }
 	    else{
+	    	
+	    	progressBarView.setVisibility(View.VISIBLE);
 
 		// check if Wifi or GPS enabled and if not send user to the GSP settings
 
@@ -194,7 +198,7 @@ public class MainActivity extends Activity implements
 
 	    //Pass current location as an extra to map activity
 		intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
-		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);	
+		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 		intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
 		db.close();
 	    startActivity(intent);}
@@ -202,7 +206,8 @@ public class MainActivity extends Activity implements
 
 
 	public void collectBreadcrumbs(View view) {
-		
+		progressBarView.setVisibility(View.VISIBLE);
+
 		//Open collection activity. If there are no breadcrumbs show toast warning as well
 		if ( breadcrumbCount == 0 ) {
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
@@ -217,12 +222,20 @@ public class MainActivity extends Activity implements
 	}
 
 	public void breadcrumbMap(View view) {
+
 		
      // Check if any location has been found and there are no breadcrumbs then do nothing with message
         
 	    	//If no breadcrumbs are in database but current location is found, 
 	    	//send current location to the map and open it
 		if ( breadcrumbCount == 0 ) {
+			
+			  if ( lastKnownLocation == null){
+			    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
+							Toast.LENGTH_LONG).show();
+			    }else{
+					progressBarView.setVisibility(View.VISIBLE);
+
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(this, BreadcrumbMap.class);
@@ -232,11 +245,12 @@ public class MainActivity extends Activity implements
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED", true);
 
-			startActivity(intent);	
+			startActivity(intent);}
 		}
 		if (breadcrumbCount > 0) { //zoom to last breadcrumb location if there are breadcrumbs
 			Intent intent = new Intent(this, BreadcrumbMap.class);
-			
+			progressBarView.setVisibility(View.VISIBLE);
+
 			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED", true);
 
 			startActivity(intent);
@@ -261,13 +275,9 @@ public class MainActivity extends Activity implements
      * considered "dead".
      */
        mLocationClient.disconnect();
+       
+       progressBarView.setVisibility(View.GONE);
        EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
-
-     		
-	    
-	
-	  
-
 
 	}
 }

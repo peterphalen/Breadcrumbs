@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -53,6 +52,8 @@ public class BreadcrumbMap extends FragmentActivity {
 	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
 	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = false;
 	  boolean DROP_BREADCRUMB_PRESSED = false;
+	  Integer INT_SHOW_THIS_LATITUDE;
+	  Integer INT_SHOW_THIS_LONGITUDE;
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +80,13 @@ public class BreadcrumbMap extends FragmentActivity {
 		    
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
-			int INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
-			int INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
+			INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
+			INT_SHOW_THIS_LONGITUDE = extras.getInt("INT_SHOW_THIS_LONGITUDE");
 			VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED");
 			VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED");
 			DROP_BREADCRUMB_PRESSED = extras.getBoolean("DROP_BREADCRUMB_PRESSED");
 
 			
-			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
-			SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
-					    
 	        // Look up the AdView as a resource and load a request.
 	        AdView adView = (AdView)this.findViewById(R.id.adView2);
 	        AdRequest adRequest = new AdRequest.Builder()
@@ -232,6 +230,10 @@ public class BreadcrumbMap extends FragmentActivity {
 
 			  	    	}
 
+		if (INT_SHOW_THIS_LATITUDE != null && INT_SHOW_THIS_LONGITUDE != null){
+		SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
+		SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
+
 	    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){  
 	    		//if view map was just pressed and there are breadcrumbs zoom to latest one
 		    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
@@ -259,6 +261,7 @@ public class BreadcrumbMap extends FragmentActivity {
 
 		    // Zoom in, animating the camera.
 		    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
+		    }
 	    	}
 	    }
         db.close();
