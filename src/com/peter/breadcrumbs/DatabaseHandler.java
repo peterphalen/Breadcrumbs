@@ -1,4 +1,4 @@
-package com.detimil.breadcrumbs1;
+package com.peter.breadcrumbs;
 
 import java.util.ArrayList;
 import java.util.List;

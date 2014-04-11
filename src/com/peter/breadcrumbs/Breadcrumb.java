@@ -1,4 +1,4 @@
-package com.detimil.breadcrumbs1;
+package com.peter.breadcrumbs;
 
 public class Breadcrumb {
 	private int _id;
