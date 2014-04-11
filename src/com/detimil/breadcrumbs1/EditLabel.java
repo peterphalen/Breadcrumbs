@@ -1,4 +1,4 @@
-package com.peter.breadcrumbs;
+package com.detimil.breadcrumbs1;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ShareActionProvider;
 
+import com.detimil.breadcrumbs1.R;
 import com.google.analytics.tracking.android.EasyTracker;
 
 public class EditLabel extends Activity {

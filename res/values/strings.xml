@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Breadcrumbs</string>
+    <string name="app_name">Breadcrumbs Beta</string>
     <string name="ViewMap"> view map </string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">drop a\nbreadcrumb</string>

@@ -1,4 +1,4 @@
-package com.peter.breadcrumbs;
+package com.detimil.breadcrumbs1;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.detimil.breadcrumbs1.R;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
