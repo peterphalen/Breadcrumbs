@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:cacheColorHint="#00000000"
         android:isScrollContainer="true"
-        android:longClickable="true" >
+        android:longClickable="true"
+        android:padding="0dp" >
     </ListView>
 
 	<com.google.android.gms.ads.AdView
@@ -23,7 +24,7 @@
 		    	ads:adSize="SMART_BANNER"
                 android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				ads:adUnitId="ca-app-pub-9215174569054218/1308319083"
+				ads:adUnitId="ca-app-pub-9215174569054218/2845647483"
 				android:layout_above="@+id/text_view_categories_title"
                          />
     
@@ -37,7 +38,8 @@
         android:layout_alignParentBottom="true"
         android:text="@string/title_collected_breadcrumbs_activity"
         android:textSize="16sp"
-        android:textColor="#FFFFFF"  >
+        android:textColor="#FFFFFF" 
+        android:gravity="bottom"    >
         </TextView>
     
 </RelativeLayout>

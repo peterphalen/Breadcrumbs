@@ -53,8 +53,6 @@ public class BreadcrumbMap extends FragmentActivity {
 	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
 	  boolean VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = false;
 	  boolean DROP_BREADCRUMB_PRESSED = false;
-
-	  Location location;
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +71,7 @@ public class BreadcrumbMap extends FragmentActivity {
 	    //get MapFragment
 	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
-	    
-	    location = new Location("");
-	    	    
+	    	    	    
 	    //get Shared prefs
 	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
@@ -92,13 +88,10 @@ public class BreadcrumbMap extends FragmentActivity {
 			
 			SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
 			SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
-			location.setLatitude(SHOW_THIS_LATITUDE);
-			location.setLongitude(SHOW_THIS_LONGITUDE);
 					    
 	        // Look up the AdView as a resource and load a request.
 	        AdView adView = (AdView)this.findViewById(R.id.adView2);
 	        AdRequest adRequest = new AdRequest.Builder()
-	        .setLocation(location)
 	        .build();
 	        adView.loadAd(adRequest);
 
