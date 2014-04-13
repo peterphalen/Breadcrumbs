@@ -21,6 +21,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 @SuppressLint("NewApi")
-public class BreadcrumbMap extends FragmentActivity {
+public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickListener{
 	  private GoogleMap map;
 	  double SHOW_THIS_LATITUDE;
 	  double SHOW_THIS_LONGITUDE;
@@ -37,6 +38,9 @@ public class BreadcrumbMap extends FragmentActivity {
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
 	  SharedPreferences sharedpreferences;
+	  
+	  double clickedLatitude;
+	  double clickedLongitude;
 	  	  
 	  private Menu menu;
 	  String MAP_TYPE_KEY;
@@ -54,6 +58,11 @@ public class BreadcrumbMap extends FragmentActivity {
 	  boolean DROP_BREADCRUMB_PRESSED = false;
 	  Integer INT_SHOW_THIS_LATITUDE;
 	  Integer INT_SHOW_THIS_LONGITUDE;
+	  String AUTO_GENERATED_BREADCRUMB_LABEL;
+	  int breadcrumbCount;
+	  int CLICKED_BREADCRUMB_LATITUDE_INT;
+	  int CLICKED_BREADCRUMB_LONGITUDE_INT;
+
 	  	    
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +77,8 @@ public class BreadcrumbMap extends FragmentActivity {
 		  INFO_BOX_TEXT = res.getString(R.string.info_box_instructions);
 		  REQUEST_SAT_VIEW_TEXT = res.getString(R.string.sat_view);
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
-	    
+		  AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);
+		  
 	    //get MapFragment
 	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
@@ -77,7 +87,8 @@ public class BreadcrumbMap extends FragmentActivity {
 	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 	    	
-		    
+        db = new DatabaseHandler(this);
+
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
 			INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
@@ -85,7 +96,7 @@ public class BreadcrumbMap extends FragmentActivity {
 			VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED");
 			VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = extras.getBoolean("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED");
 			DROP_BREADCRUMB_PRESSED = extras.getBoolean("DROP_BREADCRUMB_PRESSED");
-
+			
 			
 	        // Look up the AdView as a resource and load a request.
 	        AdView adView = (AdView)this.findViewById(R.id.adView2);
@@ -105,6 +116,8 @@ public class BreadcrumbMap extends FragmentActivity {
 			    map.setPadding(0, 0, 0, 60);
 		    }
 		    
+
+            breadcrumbCount = db.getBreadcrumbsCount();
 
 	}
 	
@@ -168,7 +181,7 @@ public class BreadcrumbMap extends FragmentActivity {
                 // do something when the button is clicked
                 public void onClick(DialogInterface arg0, int arg1) {   
 
-               if (db.getBreadcrumbsCount() > 0) {
+               if (breadcrumbCount > 0) {
 
               	db.deleteAllBreadcrumbs();
         	    map.clear();}
@@ -184,7 +197,7 @@ public class BreadcrumbMap extends FragmentActivity {
   
             //only show the "are you sure you want to delete?" alertbox
             //if there are breadcrumbs in the database
-            if (db.getBreadcrumbsCount() > 0) {
+            if (breadcrumbCount > 0) {
 
             delete_alertbox.show();
             db.close();
@@ -208,7 +221,6 @@ public class BreadcrumbMap extends FragmentActivity {
 	protected void onResume(){
 		super.onResume();
 	    map.clear();
-	    DatabaseHandler db = new DatabaseHandler(this);
 
 	    breadcrumbs = db.getAllBreadcrumbs();
 	    
@@ -226,8 +238,6 @@ public class BreadcrumbMap extends FragmentActivity {
 			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());
 			          allbreadcrumblocations.showInfoWindow();
 			          
-			          
-
 			  	    	}
 
 		if (INT_SHOW_THIS_LATITUDE != null && INT_SHOW_THIS_LONGITUDE != null){
@@ -236,10 +246,8 @@ public class BreadcrumbMap extends FragmentActivity {
 
 	    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){  
 	    		//if view map was just pressed and there are breadcrumbs zoom to latest one
-		    List<Breadcrumb> breadcrumbs = db.getAllBreadcrumbs();
-		    int breadcrumbsCount = breadcrumbs.size()-1;
-		    SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLatitude())/1e6);
-		    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbsCount).getBreadcrumbLongitude())/1e6);
+	    	SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbCount).getBreadcrumbLatitude())/1e6);
+		    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbCount).getBreadcrumbLongitude())/1e6);
 	    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 		    // Zoom in, animating the camera.
@@ -264,7 +272,6 @@ public class BreadcrumbMap extends FragmentActivity {
 		    }
 	    	}
 	    }
-        db.close();
       
         }
      
@@ -280,12 +287,52 @@ public class BreadcrumbMap extends FragmentActivity {
 			int breadcrumbId = idMarkerMap.get(markerId);
 			Intent intent = new Intent(getApplicationContext(), EditLabel.class);
 			intent.putExtra("breadcrumbId", breadcrumbId);
-	        startActivityForResult(intent, 0);
+	        startActivity(intent);
         				};
 					}
         		);
-	    	}
-		  
+	    	
+	
+    map.setOnMapLongClickListener(this);
+    
+	}
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+    	
+    	
+
+        breadcrumbCount = db.getBreadcrumbsCount();
+        //Auto generate breadcrumb label which will be "Breadcrumb "
+        //In whatever language and its number in your database
+        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );
+        clickedLatitude = point.latitude;
+        clickedLongitude = point.longitude;
+        CLICKED_BREADCRUMB_LATITUDE_INT = (int)(clickedLatitude * 1e6);
+        CLICKED_BREADCRUMB_LONGITUDE_INT = (int)(clickedLongitude * 1e6);
+        db.addBreadcrumb(new Breadcrumb(CLICKED_BREADCRUMB_LATITUDE_INT, CLICKED_BREADCRUMB_LONGITUDE_INT, label));
+        
+        map.clear();
+	    
+   	 breadcrumbs = db.getAllBreadcrumbs();
+
+	    if (breadcrumbs != null) {
+		//get markers for each breadcrumb
+        for (Breadcrumb brd : breadcrumbs) {
+			        Marker allbreadcrumblocations = map.addMarker(new MarkerOptions()
+			          .position(new LatLng((brd.getBreadcrumbLatitude()/1e6), (brd.getBreadcrumbLongitude())/1e6))
+			          .title(brd.getLabel())
+			          .snippet(INFO_BOX_TEXT)
+			          .icon(BitmapDescriptorFactory
+			              .fromResource(R.drawable.red_dot)));
+			        // take all the marker ids and put them in a hashmap 
+			        //that maps them to the associated breadcrumb id they mark
+			        idMarkerMap.put(allbreadcrumblocations.getId(), brd.getId());
+			          allbreadcrumblocations.showInfoWindow();     
+			          		}
+        }
+    }
+	
 	  @Override
 	  public void onStop() {
 	    super.onStop();
@@ -293,6 +340,8 @@ public class BreadcrumbMap extends FragmentActivity {
 	    VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED = false;
 		VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED = false;
 		DROP_BREADCRUMB_PRESSED = false;
+        db.close();
+
 	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
 	  }
 }	

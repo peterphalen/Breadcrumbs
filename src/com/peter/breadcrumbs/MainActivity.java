@@ -176,7 +176,6 @@ public class MainActivity extends Activity implements
 	    }
 	    else{
 	    	
-	    	progressBarView.setVisibility(View.VISIBLE);
 
 		// check if Wifi or GPS enabled and if not send user to the GSP settings
 
@@ -201,6 +200,9 @@ public class MainActivity extends Activity implements
 		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 		intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
 		db.close();
+    	progressBarView.setVisibility(View.VISIBLE);
+
+		
 	    startActivity(intent);}
 	}
 
@@ -210,9 +212,11 @@ public class MainActivity extends Activity implements
 
 		//Open collection activity. If there are no breadcrumbs show toast warning as well
 		if ( breadcrumbCount == 0 ) {
+			Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
+
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
+
 	        startActivity(intent);
 		}
 	else{
@@ -234,7 +238,6 @@ public class MainActivity extends Activity implements
 			    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 							Toast.LENGTH_LONG).show();
 			    }else{
-					progressBarView.setVisibility(View.VISIBLE);
 
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
@@ -244,14 +247,15 @@ public class MainActivity extends Activity implements
 			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED", true);
+			progressBarView.setVisibility(View.VISIBLE);
 
 			startActivity(intent);}
 		}
 		if (breadcrumbCount > 0) { //zoom to last breadcrumb location if there are breadcrumbs
 			Intent intent = new Intent(this, BreadcrumbMap.class);
-			progressBarView.setVisibility(View.VISIBLE);
 
 			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED", true);
+			progressBarView.setVisibility(View.VISIBLE);
 
 			startActivity(intent);
 		}

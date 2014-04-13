@@ -5,7 +5,7 @@
     <string name="ViewMap">voir la carte</string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">jeter un \nbreadcrumb</string>
-    <string name="title_collected_breadcrumbs_activity">*Taper sur un Breadcrumb pour y naviguer.\n(Maintenir pour ouvrir.)</string>
+    <string name="title_collected_breadcrumbs_activity">*Taper sur un Breadcrumb pour y naviguer.\n(Maintenir pour ouvrir)</string>
     <string name="delete_button_label">Supprimer</string>
     <string name="save_button_label">Enregistrer</string>
     <string name="breadcrumb_edit_instructions">Renommer Breadcrumb</string>
