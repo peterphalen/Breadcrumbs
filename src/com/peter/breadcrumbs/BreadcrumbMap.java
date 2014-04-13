@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -30,7 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 @SuppressLint("NewApi")
-public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickListener{
+public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickListener, OnMarkerDragListener{
 	  private GoogleMap map;
 	  double SHOW_THIS_LATITUDE;
 	  double SHOW_THIS_LONGITUDE;
@@ -41,6 +42,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  
 	  double clickedLatitude;
 	  double clickedLongitude;
+	  double draggedLatitude;
+	  double draggedLongitude;
 	  	  
 	  private Menu menu;
 	  String MAP_TYPE_KEY;
@@ -62,6 +65,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  int breadcrumbCount;
 	  int CLICKED_BREADCRUMB_LATITUDE_INT;
 	  int CLICKED_BREADCRUMB_LONGITUDE_INT;
+	  
+	  LatLng draggedMarkerPosition;
 
 	  	    
 	@SuppressLint("NewApi")
@@ -231,6 +236,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			          .position(new LatLng((brd.getBreadcrumbLatitude()/1e6), (brd.getBreadcrumbLongitude())/1e6))
 			          .title(brd.getLabel())
 			          .snippet(INFO_BOX_TEXT)
+			          .draggable(true)
 			          .icon(BitmapDescriptorFactory
 			              .fromResource(R.drawable.red_dot)));
 			        // take all the marker ids and put them in a hashmap 
@@ -294,13 +300,29 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    	
 	
     map.setOnMapLongClickListener(this);
+    map.setOnMarkerDragListener(this);
     
 	}
 
+	@Override
+	public void onMarkerDragEnd(Marker marker) {
+		// TODO Auto-generated method stub
+		//get marker ID via hashmap
+        String draggedMarkerId = marker.getId();
+		int draggedBreadcrumbId = idMarkerMap.get(draggedMarkerId);
+		//get marker end position and adjust breadcrumb accordingly
+		draggedMarkerPosition = marker.getPosition();
+		draggedLatitude = draggedMarkerPosition.latitude;
+		draggedLongitude = draggedMarkerPosition.longitude;
+		int DRAGGED_BREADCRUMB_LATITUDE_INT = (int)(draggedLatitude * 1e6);
+        int DRAGGED_BREADCRUMB_LONGITUDE_INT = (int)(draggedLongitude * 1e6);
+        db.newBreadcrumbPosition(draggedBreadcrumbId, DRAGGED_BREADCRUMB_LATITUDE_INT, DRAGGED_BREADCRUMB_LONGITUDE_INT);
+	}
+	
+	
+	//longclicking map adds a breadcrumb to it
     @Override
     public void onMapLongClick(LatLng point) {
-    	
-    	
 
         breadcrumbCount = db.getBreadcrumbsCount();
         //Auto generate breadcrumb label which will be "Breadcrumb "
@@ -344,5 +366,23 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 
 	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
 	  }
-}	
+
+
+	@Override
+	public void onMarkerDrag(Marker arg0) {
+		// TODO Why is this method necessary?
+		
+	}
+
+
+	@Override
+	public void onMarkerDragStart(Marker arg0) {
+		// TODO Why is this method necessary?
+		
+	}
+
+
+
+		
+	}	
 

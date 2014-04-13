@@ -95,6 +95,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
     }
 
+    //Give new lat and lang to breadcrumb, for when you drag it, first arg _id, second is lat, third is lang
+    public void newBreadcrumbPosition(Integer id, Integer latitude, Integer longitude) {
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	 
+		ContentValues values = new ContentValues();
+		values.put(KEY_LATITUDE, latitude); // put second arg into latitude column
+		values.put(KEY_LONGITUDE, longitude); // put second arg into longtitude column
+		db.update(TABLE_BREADCRUMBS, values, _id + "=" + id, null); // update specific row by id
+		db.close();
+    }
+    
     	// Getting single breadcrumb
     public Breadcrumb getBreadcrumb(int id) {
     	SQLiteDatabase db = this.getReadableDatabase();
