@@ -246,20 +246,23 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			          
 			  	    	}
 
-		if (INT_SHOW_THIS_LATITUDE != null && INT_SHOW_THIS_LONGITUDE != null){
-		SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
-		SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
+
 
 	    if(map != null && VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED == true){  
 	    		//if view map was just pressed and there are breadcrumbs zoom to latest one
-	    	SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbCount).getBreadcrumbLatitude())/1e6);
-		    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbCount).getBreadcrumbLongitude())/1e6);
+	    	SHOW_THIS_LATITUDE = ((breadcrumbs.get(breadcrumbCount-1).getBreadcrumbLatitude())/1e6);
+		    SHOW_THIS_LONGITUDE = ((breadcrumbs.get(breadcrumbCount-1).getBreadcrumbLongitude())/1e6);
 	    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 		    // Zoom in, animating the camera.
 		    map.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
 	    }
 	    else{
+	    	
+			if (INT_SHOW_THIS_LATITUDE != null && INT_SHOW_THIS_LONGITUDE != null){
+				SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
+				SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
+	    	
 		//if map is null and there are breadcurmbs zoom to the latest breadcrumb
 	    if(map != null && DROP_BREADCRUMB_PRESSED == true ){
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
@@ -306,7 +309,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 
 	@Override
 	public void onMarkerDragEnd(Marker marker) {
-		// TODO Auto-generated method stub
 		//get marker ID via hashmap
         String draggedMarkerId = marker.getId();
 		int draggedBreadcrumbId = idMarkerMap.get(draggedMarkerId);
