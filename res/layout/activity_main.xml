@@ -19,7 +19,7 @@
         android:onClick="dropBreadcrumb"
         android:text="@string/DropBreadcrumb"
         android:textColor="#FfFfFf"
-        android:textSize="48sp" />
+        android:textSize="@dimens/text_size_larger_main" />
 
     <Button
         android:id="@+id/button2"
@@ -30,7 +30,7 @@
         android:onClick="collectBreadcrumbs"
         android:text="@string/CollectBreadcrumbs"
         android:textColor="#FfFfFf"
-        android:textSize="32sp" />
+        android:textSize="@dimens/text_size_smaller_main" />
     
     <Button
         android:id="@+id/button3"
@@ -41,7 +41,7 @@
         android:onClick="breadcrumbMap"
         android:text="@string/ViewMap"
         android:textColor="#FfFfFf"
-        android:textSize="32sp" />
+        android:textSize="@dimens/text_size_smaller_main" />
     	</LinearLayout>
     
         <RelativeLayout

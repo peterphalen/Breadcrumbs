@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -41,7 +42,7 @@ public class MainActivity extends Activity implements
 	String AUTO_GENERATED_BREADCRUMB_LABEL;
 	private DatabaseHandler db;
 	private int breadcrumbCount;
-
+	long LOCATION_RESOLVED = 0;
 	private RelativeLayout progressBarView;
 
 	@Override
@@ -173,9 +174,16 @@ public class MainActivity extends Activity implements
 	    if ( lastKnownLocation == null){
 	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
+	    	EasyTracker.getInstance(this)
+	    	.send(MapBuilder
+	    		      .createEvent("Location Issues",     // Event category (required)
+	    	                   "Drop Breadcrumb Button",  // Event action (required)
+	    	                   "Location not found",   // Event label
+	    	                   LOCATION_RESOLVED)            // Event value
+	    	      .build());
+	    	LOCATION_RESOLVED = 1;
 	    }
 	    else{
-	    	
 
 		// check if Wifi or GPS enabled and if not send user to the GSP settings
 
@@ -199,10 +207,21 @@ public class MainActivity extends Activity implements
 		intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 		intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
+		intent.putExtra("THERE_ARE_BREADCRUMBS_ON_MAP", true);
 		db.close();
+
+    	if (LOCATION_RESOLVED == 1){
+	    	EasyTracker.getInstance(this)
+	    	.send(MapBuilder
+	    		      .createEvent("Location Issues",     // Event category (required)
+	    	                   "Drop Breadcrumb Button",  // Event action (required)
+	    	                   "Location found again",   // Event label
+	    	                   LOCATION_RESOLVED)            // Event value
+	    	      .build());
+	    	LOCATION_RESOLVED = 0;
+    	}
     	progressBarView.setVisibility(View.VISIBLE);
 
-		
 	    startActivity(intent);}
 	}
 
@@ -227,7 +246,7 @@ public class MainActivity extends Activity implements
 
 	public void breadcrumbMap(View view) {
 
-		
+
      // Check if any location has been found and there are no breadcrumbs then do nothing with message
         
 	    	//If no breadcrumbs are in database but current location is found, 
@@ -237,6 +256,14 @@ public class MainActivity extends Activity implements
 			  if ( lastKnownLocation == null){
 			    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 							Toast.LENGTH_LONG).show();
+			    	EasyTracker.getInstance(this)
+			    	.send(MapBuilder
+			    		      .createEvent("Location Issues",     // Event category (required)
+			    	                   "View Map Button",  // Event action (required)
+			    	                   "Location not found",   // Event label
+			    	                   LOCATION_RESOLVED)            // Event value
+			    	      .build());
+			    	LOCATION_RESOLVED = 1;
 			    }else{
 
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
@@ -246,15 +273,28 @@ public class MainActivity extends Activity implements
 			//put our lastknowlocation (times 1e6) as extra
 			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
-			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_NOT_STORED", true);
+			intent.putExtra("VIEW_MAP_PRESSED", true);
+
 			progressBarView.setVisibility(View.VISIBLE);
+			
+			if (LOCATION_RESOLVED == 1){
+		    	EasyTracker.getInstance(this)
+		    	.send(MapBuilder
+		    		      .createEvent("Location Issues",     // Event category (required)
+		    	                   "View Map Button",  // Event action (required)
+		    	                   "Location recovered",   // Event label
+		    	                   LOCATION_RESOLVED)            // Event value
+		    	      .build());
+		    	LOCATION_RESOLVED = 0;
+			}
 
 			startActivity(intent);}
 		}
 		if (breadcrumbCount > 0) { //zoom to last breadcrumb location if there are breadcrumbs
 			Intent intent = new Intent(this, BreadcrumbMap.class);
+			intent.putExtra("THERE_ARE_BREADCRUMBS_ON_MAP", true);
+			intent.putExtra("VIEW_MAP_PRESSED", true);
 
-			intent.putExtra("VIEW_MAP_PRESSED_AND_BREADCRUMBS_STORED", true);
 			progressBarView.setVisibility(View.VISIBLE);
 
 			startActivity(intent);
