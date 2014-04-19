@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements
 	protected LocationManager locationManager;
     protected LocationClient mLocationClient;
     protected LocationRequest mLocationRequest;
+    protected LocationListener locationListener;
 
 
 	protected WifiManager wifi;
@@ -63,7 +64,7 @@ public class MainActivity extends Activity implements
 	   // Use high accuracy
 	      mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 	   // Set the update interval to 0 seconds
-	      mLocationRequest.setInterval(0);
+	      mLocationRequest.setInterval(100);
 	   // Set the fastest update interval to 0 second
 	      mLocationRequest.setFastestInterval(0);
 
@@ -75,22 +76,42 @@ public class MainActivity extends Activity implements
 					NO_LOCATION_WARNING_TEXT = res.getString(R.string.no_location_found_warning);
 					IMPROVE_ACCURACY_WARNING_TEXT = res.getString(R.string.improve_accuracy_warning);
 					NO_BREADCRUMBS_YET_WARNING_TEXT = res.getString(R.string.no_breadcrumbs_yet_warning);
-					AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);
-				
-					
+					AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);	
+					  
+					if(locationManager != null){
+
+						  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
+								  new android.location.LocationListener() {
+					                    @Override
+					                    public void onStatusChanged(String provider, int status,
+					                            Bundle extras) {
+					                    }
+
+					                    @Override
+					                    public void onProviderEnabled(String provider) {
+					                    }
+
+					                    @Override
+					                    public void onProviderDisabled(String provider) {
+					                    }
+
+					                    @Override
+					                    public void onLocationChanged(final Location location) {
+					                    }
+					                }, null);}
 			}
 	
+
 
 	  @Override
 	   public void onConnected(Bundle dataBundle) {
 	      // Display the connection status
-
+		
+		  
 		   // Get the current location's latitude & longitude
 		      lastKnownLocation = mLocationClient.getLastLocation();
-		      
-		   //Request locaiton updates
-		      mLocationClient.requestLocationUpdates(mLocationRequest, this);
-		      
+
+
 		      if (lastKnownLocation != null) {
 				 // Get the current location's latitude & longitude
 		    	BREADCRUMB_LATITUDE = lastKnownLocation.getLatitude();
@@ -104,7 +125,7 @@ public class MainActivity extends Activity implements
 		        BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
 		        BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
 		        }
-		    
+		      
 	   }
 	  
 	  @Override
@@ -122,7 +143,8 @@ public class MainActivity extends Activity implements
 	    	 BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
 		     BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
 		     BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
-		     BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;}
+		     BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
+ }
 		  	  }
 	  
 	   @Override
@@ -179,7 +201,7 @@ public class MainActivity extends Activity implements
 	    		      .createEvent("Location Issues",     // Event category (required)
 	    	                   "Drop Breadcrumb Button",  // Event action (required)
 	    	                   "Location not found",   // Event label
-	    	                   LOCATION_RESOLVED)            // Event value
+	    	                   null)            // Event value
 	    	      .build());
 	    	LOCATION_RESOLVED = 1;
 	    }
@@ -215,8 +237,8 @@ public class MainActivity extends Activity implements
 	    	.send(MapBuilder
 	    		      .createEvent("Location Issues",     // Event category (required)
 	    	                   "Drop Breadcrumb Button",  // Event action (required)
-	    	                   "Location found again",   // Event label
-	    	                   LOCATION_RESOLVED)            // Event value
+	    	                   "Location recovered!",   // Event label
+	    	                   null)            // Event value
 	    	      .build());
 	    	LOCATION_RESOLVED = 0;
     	}
@@ -261,7 +283,7 @@ public class MainActivity extends Activity implements
 			    		      .createEvent("Location Issues",     // Event category (required)
 			    	                   "View Map Button",  // Event action (required)
 			    	                   "Location not found",   // Event label
-			    	                   LOCATION_RESOLVED)            // Event value
+			    	                   null)            // Event value
 			    	      .build());
 			    	LOCATION_RESOLVED = 1;
 			    }else{
@@ -282,8 +304,8 @@ public class MainActivity extends Activity implements
 		    	.send(MapBuilder
 		    		      .createEvent("Location Issues",     // Event category (required)
 		    	                   "View Map Button",  // Event action (required)
-		    	                   "Location recovered",   // Event label
-		    	                   LOCATION_RESOLVED)            // Event value
+		    	                   "Location recovered!",   // Event label
+		    	                   null)            // Event value
 		    	      .build());
 		    	LOCATION_RESOLVED = 0;
 			}
@@ -319,7 +341,7 @@ public class MainActivity extends Activity implements
      * considered "dead".
      */
        mLocationClient.disconnect();
-       
+ 
        progressBarView.setVisibility(View.GONE);
        EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
 
