@@ -77,28 +77,9 @@ public class MainActivity extends Activity implements
 					IMPROVE_ACCURACY_WARNING_TEXT = res.getString(R.string.improve_accuracy_warning);
 					NO_BREADCRUMBS_YET_WARNING_TEXT = res.getString(R.string.no_breadcrumbs_yet_warning);
 					AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);	
-					  
-					if(locationManager != null){
+					 					
+					wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
-						  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
-								  new android.location.LocationListener() {
-					                    @Override
-					                    public void onStatusChanged(String provider, int status,
-					                            Bundle extras) {
-					                    }
-
-					                    @Override
-					                    public void onProviderEnabled(String provider) {
-					                    }
-
-					                    @Override
-					                    public void onProviderDisabled(String provider) {
-					                    }
-
-					                    @Override
-					                    public void onLocationChanged(final Location location) {
-					                    }
-					                }, null);}
 			}
 	
 
@@ -194,6 +175,30 @@ public class MainActivity extends Activity implements
 		      
 		// Check if any location has been found
 	    if ( lastKnownLocation == null){
+	    	
+			if(locationManager != null){
+
+				  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
+						  new android.location.LocationListener() {
+			                    @Override
+			                    public void onStatusChanged(String provider, int status,
+			                            Bundle extras) {
+			                    }
+
+			                    @Override
+			                    public void onProviderEnabled(String provider) {
+			                    }
+
+			                    @Override
+			                    public void onProviderDisabled(String provider) {
+			                    }
+
+			                    @Override
+			                    public void onLocationChanged(final Location location) {
+			                    	lastKnownLocation = location;
+			                    }
+			                }, null);}
+	    	
 	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 					Toast.LENGTH_LONG).show();
 	    	EasyTracker.getInstance(this)
@@ -206,17 +211,6 @@ public class MainActivity extends Activity implements
 	    	LOCATION_RESOLVED = 1;
 	    }
 	    else{
-
-		// check if Wifi or GPS enabled and if not send user to the GSP settings
-
-		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-
-		//If both GPS and Wifi are off, continue with method but warn user with toast
-	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
-	    	Toast.makeText(getApplicationContext(), IMPROVE_ACCURACY_WARNING_TEXT,
-					Toast.LENGTH_LONG).show();
-	    }
-
 	    //open breadcrumb map
 	    Intent intent = new Intent(this, BreadcrumbMap.class);
 
@@ -244,6 +238,12 @@ public class MainActivity extends Activity implements
     	}
     	progressBarView.setVisibility(View.VISIBLE);
 
+
+		//If both GPS and Wifi are off, continue with method but warn user with toast
+	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
+	    	Toast.makeText(getApplicationContext(), IMPROVE_ACCURACY_WARNING_TEXT,
+					Toast.LENGTH_LONG).show();
+	    }
 	    startActivity(intent);}
 	}
 
@@ -276,6 +276,30 @@ public class MainActivity extends Activity implements
 		if ( breadcrumbCount == 0 ) {
 			
 			  if ( lastKnownLocation == null){
+				  
+					if(locationManager != null){
+
+						  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
+								  new android.location.LocationListener() {
+					                    @Override
+					                    public void onStatusChanged(String provider, int status,
+					                            Bundle extras) {
+					                    }
+
+					                    @Override
+					                    public void onProviderEnabled(String provider) {
+					                    }
+
+					                    @Override
+					                    public void onProviderDisabled(String provider) {
+					                    }
+
+					                    @Override
+					                    public void onLocationChanged(final Location location) {
+					                    	lastKnownLocation = location;
+					                    }
+					                }, null);}
+				  
 			    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 							Toast.LENGTH_LONG).show();
 			    	EasyTracker.getInstance(this)
@@ -297,7 +321,6 @@ public class MainActivity extends Activity implements
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 			intent.putExtra("VIEW_MAP_PRESSED", true);
 
-			progressBarView.setVisibility(View.VISIBLE);
 			
 			if (LOCATION_RESOLVED == 1){
 		    	EasyTracker.getInstance(this)
@@ -309,6 +332,7 @@ public class MainActivity extends Activity implements
 		    	      .build());
 		    	LOCATION_RESOLVED = 0;
 			}
+			progressBarView.setVisibility(View.VISIBLE);
 
 			startActivity(intent);}
 		}

@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
-	
-	<com.google.android.gms.ads.AdView
+
+<com.google.android.gms.ads.AdView
 		        xmlns:ads="http://schemas.android.com/apk/res-auto"
 				android:id="@+id/adView2"
 		    	ads:adSize="SMART_BANNER"

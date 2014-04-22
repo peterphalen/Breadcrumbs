@@ -47,8 +47,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  	  
 	  private Menu menu;
 	  String MAP_TYPE_KEY;
-	  String MAP_TYPE_NORMAL;
-	  String MAP_TYPE_HYBRID;
 	  
 	  String DELETE_ALL_QUESTION_TEXT;
 	  String OKAY_TEXT;
@@ -67,6 +65,12 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  boolean THERE_ARE_BREADCRUMBS_ON_MAP;
 	  
 	  LatLng draggedMarkerPosition;
+	  private AdView adView;
+      String DEVICE_ID = "d318d395"; 	
+      int mapTypeNormal = GoogleMap.MAP_TYPE_NORMAL;
+      int mapTypeHybrid = GoogleMap.MAP_TYPE_HYBRID;
+      int mapType = mapTypeNormal;
+
 
 	  	    
 	@SuppressLint("NewApi")
@@ -74,6 +78,11 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_breadcrumb_map);
         
+		  
+	    //get MapFragment
+	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
+		        .getMap();
+	    
 	    //get String resources
 		  Resources res = getResources();
 		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
@@ -83,15 +92,11 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 		  REQUEST_SAT_VIEW_TEXT = res.getString(R.string.sat_view);
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
 		  AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);
-		  
-	    //get MapFragment
-	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
-		        .getMap();
+
 	    	    	    
 	    //get Shared prefs
 	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
-        db = new DatabaseHandler(this);
+    	int prefValue = sharedpreferences.getInt(MAP_TYPE_KEY, mapTypeNormal);
 
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
@@ -100,20 +105,20 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			VIEW_MAP_PRESSED = extras.getBoolean("VIEW_MAP_PRESSED");
 			THERE_ARE_BREADCRUMBS_ON_MAP = extras.getBoolean("THERE_ARE_BREADCRUMBS_ON_MAP");
 			DROP_BREADCRUMB_PRESSED = extras.getBoolean("DROP_BREADCRUMB_PRESSED");
-	
-	        // Look up the AdView as a resource and load a request.
-	        AdView adView = (AdView)this.findViewById(R.id.adView2);
-	        AdRequest adRequest = new AdRequest.Builder()
+			
+			// Look up the AdView as a resource and load a request.
+	        adView = (AdView)this.findViewById(R.id.adView2);
+			AdRequest adRequest = new AdRequest.Builder()
+	        .addTestDevice(DEVICE_ID)
 	        .build();
 	        adView.loadAd(adRequest);
 
+
 		    if(map != null){
-		    	String prefValue = sharedpreferences.getString(MAP_TYPE_KEY, MAP_TYPE_NORMAL);
-		    	int mapType;
 		    	if ("MAP_TYPE_HYBRID".equals(prefValue)) {
-		    	    mapType = GoogleMap.MAP_TYPE_HYBRID;
+		    	    mapType = mapTypeHybrid;
 		    	} else {
-		    	    mapType = GoogleMap.MAP_TYPE_NORMAL;
+		    	    mapType = mapTypeNormal;
 		    	}
 		    	map.setMapType(mapType);
 			    map.setPadding(0, 0, 0, 70);
@@ -128,44 +133,42 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.breadcrumb_map, menu);
         MenuItem MapMenuItem = menu.findItem(R.id.mapType);
-        if(map.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
+        if(mapType == mapTypeNormal){
         	MapMenuItem.setTitle(REQUEST_SAT_VIEW_TEXT);
         }
-        if(map.getMapType() == GoogleMap.MAP_TYPE_HYBRID){
+        if(mapType == mapTypeHybrid){
         	MapMenuItem.setTitle(REQUEST_ROAD_VIEW_TEXT);
         }		this.menu = menu;
-		return true; //return true because you want the delete all optio
+		return true; 
 	}
 
 	
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+		//this script gives you the maptypes and delete all options menu option
         MenuItem mapMenuTitle = menu.findItem(R.id.mapType);
-    	int mapType = GoogleMap.MAP_TYPE_NORMAL; 
-
-		//this script gives you the delete all optiosmenu option
         switch (item.getItemId())
         {
         case R.id.mapType:
-        	if (map.getMapType() == GoogleMap.MAP_TYPE_HYBRID){
-        	mapType = GoogleMap.MAP_TYPE_NORMAL;
+        	if (map.getMapType() == mapTypeHybrid){
+        	mapType = mapTypeNormal;
             SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(MAP_TYPE_KEY, "MAP_TYPE_NORMAL");
+            editor.putInt(MAP_TYPE_KEY, mapTypeNormal);
             mapMenuTitle.setTitle(REQUEST_SAT_VIEW_TEXT);
             editor.apply(); 
             }
-        	if (map.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
-        		mapType = GoogleMap.MAP_TYPE_HYBRID;
+        	if (map.getMapType() == mapTypeNormal){
+        		mapType = mapTypeHybrid;
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(MAP_TYPE_KEY, "MAP_TYPE_HYBRID");
+                editor.putInt(MAP_TYPE_KEY, mapTypeHybrid);
                 mapMenuTitle.setTitle(REQUEST_ROAD_VIEW_TEXT);
                 editor.apply(); 
-
         	}
         	map.setMapType(mapType);
+
             return true;
-            
+
         case R.id.delete_all:
             // Single menu item is selected do something
             // Ex: launching new activity/screen or show alert message
@@ -213,6 +216,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  @Override
 	  public void onStart() {
 	    super.onStart();
+        db = new DatabaseHandler(this);
         breadcrumbCount = db.getBreadcrumbsCount();
         if (breadcrumbCount == 0){
 			THERE_ARE_BREADCRUMBS_ON_MAP = false;
@@ -265,7 +269,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 				SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
 				SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
 	    	
-		//if map is null and there are breadcurmbs zoom to the latest breadcrumb
+		//if map is not null and there are breadcurmbs on map and drop a breadcrumb was pressed zoom to the latest breadcrumb
 	    if(map != null && DROP_BREADCRUMB_PRESSED == true && THERE_ARE_BREADCRUMBS_ON_MAP == true){
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
@@ -306,7 +310,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	
     map.setOnMapLongClickListener(this);
     map.setOnMarkerDragListener(this);
-    
+    adView.resume();
 	}
 
 	@Override
@@ -362,16 +366,26 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 
         }
     }
+    
+	  @Override
+	  public void onPause() {
+		    adView.pause();
+
+	    super.onPause();
+	    
+	  }
 	
 	  @Override
 	  public void onStop() {
-	    super.onStop();
 	    
 	    VIEW_MAP_PRESSED = false;
 		DROP_BREADCRUMB_PRESSED = false;
         db.close();
 
 	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
+	    
+	    super.onStop();
+
 	  }
 
 
