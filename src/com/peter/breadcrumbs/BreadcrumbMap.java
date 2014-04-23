@@ -106,8 +106,10 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			DROP_BREADCRUMB_PRESSED = extras.getBoolean("DROP_BREADCRUMB_PRESSED");
 			
 			// Look up the AdView as a resource and load a request.
-	        adView = (AdView)this.findViewById(R.id.adView2);
-
+			 	        adView = (AdView)this.findViewById(R.id.adView2);
+			 			AdRequest adRequest = new AdRequest.Builder()
+			  	        .build();
+			  	        adView.loadAd(adRequest);
 
 
 		    if(map != null){
