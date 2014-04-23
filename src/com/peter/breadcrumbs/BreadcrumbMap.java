@@ -66,7 +66,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  
 	  LatLng draggedMarkerPosition;
 	  private AdView adView;
-      String DEVICE_ID = "d318d395"; 	
       int mapTypeNormal = GoogleMap.MAP_TYPE_NORMAL;
       int mapTypeHybrid = GoogleMap.MAP_TYPE_HYBRID;
       int mapType = mapTypeNormal;
@@ -108,10 +107,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			
 			// Look up the AdView as a resource and load a request.
 	        adView = (AdView)this.findViewById(R.id.adView2);
-			AdRequest adRequest = new AdRequest.Builder()
-	        .addTestDevice(DEVICE_ID)
-	        .build();
-	        adView.loadAd(adRequest);
+
 
 
 		    if(map != null){

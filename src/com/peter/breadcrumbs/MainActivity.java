@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements
 	String AUTO_GENERATED_BREADCRUMB_LABEL;
 	private DatabaseHandler db;
 	private int breadcrumbCount;
-	long LOCATION_RESOLVED = 0;
+	long LOCATION_RESOLVED;
 	private RelativeLayout progressBarView;
 
 	@Override
@@ -177,7 +177,8 @@ public class MainActivity extends Activity implements
 	    if ( lastKnownLocation == null){
 	    	
 			if(locationManager != null){
-
+				//this locationManager update is needed because of a bug
+				//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
 				  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
 						  new android.location.LocationListener() {
 			                    @Override
@@ -278,7 +279,8 @@ public class MainActivity extends Activity implements
 			  if ( lastKnownLocation == null){
 				  
 					if(locationManager != null){
-
+							//this locationManager update is needed because of a bug
+							//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
 						  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
 								  new android.location.LocationListener() {
 					                    @Override
