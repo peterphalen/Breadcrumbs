@@ -11,7 +11,8 @@
             backward-compatibility can go here.
         -->
     </style>
-
+    <style name="Theme.NoTitle" parent="@android:style/Theme.NoTitleBar"></style>
+    
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -122,14 +124,20 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			    map.setPadding(0, 0, 0, 70);
 		    }
 		    
+		    if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
+	    		  // call something for API Level 11+
+	    		ActionBar actionBar = getActionBar();
+	    		actionBar.setDisplayHomeAsUpEnabled(true);}
+		    
 
 	}
 	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.breadcrumb_map, menu);
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.breadcrumb_map, menu);
         MenuItem MapMenuItem = menu.findItem(R.id.mapType);
         if(mapType == mapTypeNormal){
         	MapMenuItem.setTitle(REQUEST_SAT_VIEW_TEXT);
@@ -137,7 +145,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
         if(mapType == mapTypeHybrid){
         	MapMenuItem.setTitle(REQUEST_ROAD_VIEW_TEXT);
         }		this.menu = menu;
-		return true; 
+ 	   	return super.onCreateOptionsMenu(menu);
 	}
 
 	
@@ -208,7 +216,9 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
  
         default:
             return super.onOptionsItemSelected(item);
+
         }
+        
     }    
 
 	  @Override

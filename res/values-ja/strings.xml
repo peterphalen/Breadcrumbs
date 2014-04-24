@@ -24,11 +24,15 @@
     <string name="options">オプション</string>
     <string name="info_box_instructions">詳細は、ボックスをクリックしてください</string>
     <string name="share_directions_snippet"> </string>
+       <string name="settings">設定</string>
     
-    <string name="no_location_found_warning">No location found yet.\nMake sure your location is enabled in settings.</string>
     <string name="improve_accuracy_warning">無線LANやGPSを有効にすることで正確さが向上します。</string>
     <string name="no_breadcrumbs_yet_warning">まだパンくずが落とされていません</string>
     <string name="auto_generated_breadcrumb_label">パンくず</string>
+    
+        <string name="no_location_found_text">No Location Found</string>
+    <string name="location_services_disabled_text">Location Services Disabled</string>
+    <string name="enable_location_services_prompt">Please make sure location services (and GPS or Wifi) are enabled in settings</string>
     
     <string name="sat_view">Earth</string> 
     <string name="road_view">地図</string>  

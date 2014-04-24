@@ -1,6 +1,7 @@
 package com.peter.breadcrumbs;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,7 +59,12 @@ public class CollectedBreadcrumbsActivity extends Activity  {
 		  OKAY_TEXT = res.getString(R.string.okay);
 		  CANCEL_TEXT = res.getString(R.string.cancel);	
 		  DELETE_TEXT = res.getString(R.string.delete_button_label);		
-		  OPTIONS_TEXT = res.getString(R.string.options);		
+		  OPTIONS_TEXT = res.getString(R.string.options);	
+		  
+		  if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
+    		  // call something for API Level 11+
+    		ActionBar actionBar = getActionBar();
+    		actionBar.setDisplayHomeAsUpEnabled(true);}
 
     }
     
@@ -70,10 +77,10 @@ public class CollectedBreadcrumbsActivity extends Activity  {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.collected_breadcrumbs, menu);
-		
-		return true;
+		// Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.collected_breadcrumbs, menu);
+ 	   	return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override

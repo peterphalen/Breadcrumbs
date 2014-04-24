@@ -3,6 +3,7 @@
   <item 
       android:title="@string/sat_view" 
       android:numericShortcut="1" 
+      android:showAsAction="never"
       android:id="@+id/mapType" />
 
     

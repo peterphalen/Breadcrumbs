@@ -21,15 +21,19 @@
 
     <string name="delete_all_question">Supprimer tous les Breadcrumbs?</string>
     <string name="okay">Oui</string>
-    <string name="cancel">Annuler</string>
+    <string name="cancel">Non</string>
     <string name="options">Ouvrir</string>
+       <string name="settings">Paramètres</string>
     <string name="info_box_instructions">Cliquez cette fenêtre pour plus!</string>
     <string name="share_directions_snippet">Directions à</string>
     
-    <string name="no_location_found_warning">Position pas encore trouvée\nVerifiez que les services de localisation Google sont activées</string>
-    <string name="improve_accuracy_warning">Afin d’en améliorer la précision, activer le GPS (et/ou le WIFI)</string>
     <string name="no_breadcrumbs_yet_warning">Vous avez pas encore jeter un Breadcrumb</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
+    
+            <string name="no_location_found_text">Position Pas Encore Trouvée</string>
+    <string name="location_services_disabled_text">Services de Localisation Désactivés</string>
+    <string name="enable_location_services_prompt">Verifiez que les services de localisation Google sont activés</string>
+    <string name="improve_accuracy_warning">Afin d’en améliorer la précision, activer le GPS (et/ou le WIFI)</string>
     
     <string name="sat_view">Image satellite</string> 
     <string name="road_view">Plan</string>  
