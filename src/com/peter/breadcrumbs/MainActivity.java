@@ -223,8 +223,7 @@ public class MainActivity extends Activity implements
 			    	                   null)            // Event value
 			    	      .build());
 	    	//////////AlertDialog prompting location settings
-		    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(
-	                this);
+		    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);
 
 	        // Setting Dialog Title
 		    NoLocationAlertDialog.setTitle("No Location Found");
@@ -250,10 +249,6 @@ public class MainActivity extends Activity implements
 	                new DialogInterface.OnClickListener() {
 	                    public void onClick(DialogInterface dialog, int which) {
 	                        // Write your code here to invoke NO event
-	                	    Intent intent = new Intent(getApplicationContext(), BreadcrumbMap.class);
-
-	                	    startActivity(intent);
-
 	                        dialog.cancel();
 	                    }
 	                });
@@ -304,8 +299,7 @@ public class MainActivity extends Activity implements
 if ( !GPSEnabled && !WIFIEnabled ){
 	    	
 	    	//////////AlertDialog prompting location settings
-	    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(
-                this);
+	    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(MainActivity.this);
 
         // Setting Dialog Title
 	    GPSalertDialog.setTitle("Location Services Disabled");
@@ -422,8 +416,7 @@ if ( !GPSEnabled && !WIFIEnabled ){
 				    	      .build());
 				    	
 				    	//////////AlertDialog prompting location settings
-				    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(
-			                this);
+				    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(MainActivity.this);
 
 			        // Setting Dialog Title
 				    GPSalertDialog.setTitle("Location Services Disabled");
