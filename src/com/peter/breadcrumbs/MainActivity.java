@@ -269,15 +269,46 @@ public class MainActivity extends Activity implements
 		    	                   null)            // Event value
 		    	      .build());
 	    	
-	     	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
-					Toast.LENGTH_LONG).show();}
+
+	    	//////////AlertDialog prompting location settings
+		    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);
+
+	        // Setting Dialog Title
+		    NoLocationAlertDialog.setTitle("No Location Found");
+
+	        // Setting Dialog Message
+		    NoLocationAlertDialog.setMessage(NO_LOCATION_WARNING_TEXT);
+
+	        // Setting Icon to Dialog
+	        // alertDialog.setIcon(R.drawable.ic_launcher);
+
+	        // Setting Positive "Yes" Button
+		    NoLocationAlertDialog.setPositiveButton("Settings",
+	                new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int which) {
+
+	                        // Activity transfer to wifi settings
+	                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+	                    }
+	                });
+
+	        // Setting Negative "NO" Button
+		    NoLocationAlertDialog.setNegativeButton(CANCEL_TEXT,
+	                new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int which) {
+	                        // Write your code here to invoke NO event
+	                        dialog.cancel();
+	                    }
+	                });
+
+	        // Showing Alert Message
+		    NoLocationAlertDialog.show();
+	    	//////////ENDAlertDialog prompting location settings
+		    }
 
 	    }
 	    else{
 
-
-
-    	
 if ( !GPSEnabled && !WIFIEnabled ){
 	    	
 	    	//////////AlertDialog prompting location settings
@@ -376,6 +407,9 @@ if ( !GPSEnabled && !WIFIEnabled ){
 	    	//If no breadcrumbs are in database but current location is found, 
 	    	//send current location to the map and open it
 		if ( breadcrumbCount == 0 ) {
+
+			GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+			WIFIEnabled = wifi.isWifiEnabled();
 			
 			  if ( lastKnownLocation == null){
 				  
@@ -404,8 +438,6 @@ if ( !GPSEnabled && !WIFIEnabled ){
 					                }, null);}
 
 			    	
-					GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
-					WIFIEnabled = wifi.isWifiEnabled();
 					
 					
 					
@@ -463,7 +495,42 @@ if ( !GPSEnabled && !WIFIEnabled ){
 				    	                   "GPS/WIFI *are* Enabled",  // Event action (required)
 				    	                   "View Breadcrumbs Button",   // Event label
 				    	                   null)            // Event value
-				    	      .build());}
+				    	      .build());
+			    	
+			    	//////////AlertDialog prompting location settings
+			    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(MainActivity.this);
+
+		        // Setting Dialog Title
+			    GPSalertDialog.setTitle("Location Not Found");
+
+		        // Setting Dialog Message
+			    GPSalertDialog.setMessage(NO_LOCATION_WARNING_TEXT);
+
+		        // Setting Icon to Dialog
+		        // alertDialog.setIcon(R.drawable.ic_launcher);
+
+		        // Setting Positive "Yes" Button
+			    GPSalertDialog.setPositiveButton("Settings",
+		                new DialogInterface.OnClickListener() {
+		                    public void onClick(DialogInterface dialog, int which) {
+
+		                        // Activity transfer to wifi settings
+		                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+		                    }
+		                });
+
+		        // Setting Negative "NO" Button
+			    GPSalertDialog.setNegativeButton(CANCEL_TEXT,
+		                new DialogInterface.OnClickListener() {
+		                    public void onClick(DialogInterface dialog, int which) {
+		                        // Write your code here to invoke NO event
+
+		                        dialog.cancel();
+		                    }
+		                });
+
+		        // Showing Alert Message
+			    GPSalertDialog.show();}
 			  
 			  }else{
 
