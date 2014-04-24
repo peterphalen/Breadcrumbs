@@ -50,7 +50,6 @@ public class EditLabel extends Activity {
     		  // call something for API Level 11+
     		ActionBar actionBar = getActionBar();
     		actionBar.setDisplayHomeAsUpEnabled(true);}
-    
     	Resources res = getResources();
     	DIRECTIONS_SNIPPET = res.getString(R.string.share_directions_snippet);
     	

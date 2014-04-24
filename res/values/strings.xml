@@ -26,7 +26,7 @@
     
     
     <string name="no_location_found_warning">No location found yet.\nMake sure your location services (and GPS or Wifi) are enabled in settings.</string>
-    <string name="improve_accuracy_warning">Improve accuracy by enabling WIFI and/or GPS</string>
+    <string name="improve_accuracy_warning">Improve accuracy by enabling GPS (and/or WIFI)</string>
     <string name="no_breadcrumbs_yet_warning">You haven\'t dropped any Breadcrumbs yet</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
     

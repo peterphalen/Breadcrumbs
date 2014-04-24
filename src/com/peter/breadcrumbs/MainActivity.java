@@ -1,13 +1,16 @@
 package com.peter.breadcrumbs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -41,10 +44,13 @@ public class MainActivity extends Activity implements
 	String IMPROVE_ACCURACY_WARNING_TEXT;
 	String NO_BREADCRUMBS_YET_WARNING_TEXT;
 	String AUTO_GENERATED_BREADCRUMB_LABEL;
+	  String CANCEL_TEXT;
 	private DatabaseHandler db;
 	private int breadcrumbCount;
 	long LOCATION_RESOLVED;
 	private RelativeLayout progressBarView;
+	boolean GPSEnabled = true;
+	boolean WIFIEnabled = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,8 @@ public class MainActivity extends Activity implements
 					IMPROVE_ACCURACY_WARNING_TEXT = res.getString(R.string.improve_accuracy_warning);
 					NO_BREADCRUMBS_YET_WARNING_TEXT = res.getString(R.string.no_breadcrumbs_yet_warning);
 					AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);	
+					  CANCEL_TEXT = res.getString(R.string.cancel);
+
 					 					
 					wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
@@ -173,6 +181,9 @@ public class MainActivity extends Activity implements
 
 	public void dropBreadcrumb(View view) {
 		      
+		GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+		WIFIEnabled = wifi.isWifiEnabled();
+
 		// Check if any location has been found
 	    if ( lastKnownLocation == null){
 	    	
@@ -199,21 +210,71 @@ public class MainActivity extends Activity implements
 			                    	lastKnownLocation = location;
 			                    }
 			                }, null);}
-	    	
-	    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
-					Toast.LENGTH_LONG).show();
-	    	EasyTracker.getInstance(this)
-	    	.send(MapBuilder
-	    		      .createEvent("Location Issues",     // Event category (required)
-	    	                   "Drop Breadcrumb Button",  // Event action (required)
-	    	                   "Location not found",   // Event label
-	    	                   null)            // Event value
-	    	      .build());
-	    	LOCATION_RESOLVED = 1;
+
+	    	//if lastKnownLocation still null after 'kickstart' prompt location settings
+	    	if (!GPSEnabled && !WIFIEnabled){
+	    		
+		    	//if location services ARE enabled tell me about it
+		    	EasyTracker.getInstance(this)
+			    	.send(MapBuilder
+			    		      .createEvent("Location not found",     // Event category (required)
+			    	                   "GPS/WIFI Not Enabled",  // Event action (required)
+			    	                   "Drop Breadcrumb Button",   // Event label
+			    	                   null)            // Event value
+			    	      .build());
+	    	//////////AlertDialog prompting location settings
+		    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(
+	                this);
+
+	        // Setting Dialog Title
+		    NoLocationAlertDialog.setTitle("No Location Found");
+
+	        // Setting Dialog Message
+		    NoLocationAlertDialog.setMessage(NO_LOCATION_WARNING_TEXT);
+
+	        // Setting Icon to Dialog
+	        // alertDialog.setIcon(R.drawable.ic_launcher);
+
+	        // Setting Positive "Yes" Button
+		    NoLocationAlertDialog.setPositiveButton("Settings",
+	                new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int which) {
+
+	                        // Activity transfer to wifi settings
+	                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+	                    }
+	                });
+
+	        // Setting Negative "NO" Button
+		    NoLocationAlertDialog.setNegativeButton(CANCEL_TEXT,
+	                new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int which) {
+	                        // Write your code here to invoke NO event
+	                	    Intent intent = new Intent(getApplicationContext(), BreadcrumbMap.class);
+
+	                	    startActivity(intent);
+
+	                        dialog.cancel();
+	                    }
+	                });
+
+	        // Showing Alert Message
+		    NoLocationAlertDialog.show();
+	    	//////////ENDAlertDialog prompting location settings
+	    	}			    	
+	    	//if location services ARE enabled tell me about it
+	    	else{EasyTracker.getInstance(this)
+		    	.send(MapBuilder
+		    		      .createEvent("Location not found",     // Event category (required)
+		    	                   "GPS/WIFI *are* Enabled",  // Event action (required)
+		    	                   "View Breadcrumbs Button",   // Event label
+		    	                   null)            // Event value
+		    	      .build());}
+
 	    }
 	    else{
 	    //open breadcrumb map
-	    Intent intent = new Intent(this, BreadcrumbMap.class);
+    	 Intent intent = new Intent(this, BreadcrumbMap.class);
 
         //Auto generate breadcrumb label which will be "Breadcrumb "
         //In whatever language and its number in your database
@@ -239,13 +300,53 @@ public class MainActivity extends Activity implements
     	}
     	progressBarView.setVisibility(View.VISIBLE);
 
+    	
+if ( !GPSEnabled && !WIFIEnabled ){
+	    	
+	    	//////////AlertDialog prompting location settings
+	    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(
+                this);
 
-		//If both GPS and Wifi are off, continue with method but warn user with toast
-	    if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && !wifi.isWifiEnabled()) {
-	    	Toast.makeText(getApplicationContext(), IMPROVE_ACCURACY_WARNING_TEXT,
-					Toast.LENGTH_LONG).show();
-	    }
+        // Setting Dialog Title
+	    GPSalertDialog.setTitle("Location Services Disabled");
+
+        // Setting Dialog Message
+	    GPSalertDialog.setMessage(IMPROVE_ACCURACY_WARNING_TEXT);
+
+        // Setting Icon to Dialog
+        // alertDialog.setIcon(R.drawable.ic_launcher);
+
+        // Setting Positive "Yes" Button
+	    GPSalertDialog.setPositiveButton("Settings",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Activity transfer to wifi settings
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+
+        // Setting Negative "NO" Button
+	    GPSalertDialog.setNegativeButton(CANCEL_TEXT,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to invoke NO event
+                	    Intent intent = new Intent(getApplicationContext(), BreadcrumbMap.class);
+
+                	    startActivity(intent);
+
+                        dialog.cancel();
+                    }
+                });
+
+        // Showing Alert Message
+	    GPSalertDialog.show();
+    	//////////ENDAlertDialog prompting location settings
+	    }else{
 	    startActivity(intent);}
+	    }
+	    
+	    
 	}
 
 
@@ -304,15 +405,70 @@ public class MainActivity extends Activity implements
 				  
 			    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
 							Toast.LENGTH_LONG).show();
-			    	EasyTracker.getInstance(this)
-			    	.send(MapBuilder
-			    		      .createEvent("Location Issues",     // Event category (required)
-			    	                   "View Map Button",  // Event action (required)
-			    	                   "Location not found",   // Event label
-			    	                   null)            // Event value
-			    	      .build());
-			    	LOCATION_RESOLVED = 1;
-			    }else{
+			    	
+					GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+					WIFIEnabled = wifi.isWifiEnabled();
+					
+					
+					
+			    	if ( !GPSEnabled && !WIFIEnabled ){
+			    		
+			    		EasyTracker.getInstance(this)
+				    	.send(MapBuilder
+				    		      .createEvent("Location not found",     // Event category (required)
+				    	                   "GPS & WIFI Disabled",  // Event action (required)
+				    	                   "View Breadcrumbs Button",   // Event label
+				    	                   null)            // Event value
+				    	      .build());
+				    	
+				    	//////////AlertDialog prompting location settings
+				    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(
+			                this);
+
+			        // Setting Dialog Title
+				    GPSalertDialog.setTitle("Location Services Disabled");
+
+			        // Setting Dialog Message
+				    GPSalertDialog.setMessage(IMPROVE_ACCURACY_WARNING_TEXT);
+
+			        // Setting Icon to Dialog
+			        // alertDialog.setIcon(R.drawable.ic_launcher);
+
+			        // Setting Positive "Yes" Button
+				    GPSalertDialog.setPositiveButton("Settings",
+			                new DialogInterface.OnClickListener() {
+			                    public void onClick(DialogInterface dialog, int which) {
+
+			                        // Activity transfer to wifi settings
+			                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			                    }
+			                });
+
+			        // Setting Negative "NO" Button
+				    GPSalertDialog.setNegativeButton(CANCEL_TEXT,
+			                new DialogInterface.OnClickListener() {
+			                    public void onClick(DialogInterface dialog, int which) {
+			                        // Write your code here to invoke NO event
+
+			                        dialog.cancel();
+			                    }
+			                });
+
+			        // Showing Alert Message
+				    GPSalertDialog.show();
+				    
+			    	}
+			    	//////////ENDAlertDialog prompting location settings 
+			    	//if location services ARE enabled tell me about it
+			    	else{EasyTracker.getInstance(this)
+				    	.send(MapBuilder
+				    		      .createEvent("Location not found",     // Event category (required)
+				    	                   "GPS/WIFI *are* Enabled",  // Event action (required)
+				    	                   "View Breadcrumbs Button",   // Event label
+				    	                   null)            // Event value
+				    	      .build());}
+			  
+			  }else{
 
 			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
 				    Toast.LENGTH_LONG).show();
@@ -323,21 +479,11 @@ public class MainActivity extends Activity implements
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 			intent.putExtra("VIEW_MAP_PRESSED", true);
 
-			
-			if (LOCATION_RESOLVED == 1){
-		    	EasyTracker.getInstance(this)
-		    	.send(MapBuilder
-		    		      .createEvent("Location Issues",     // Event category (required)
-		    	                   "View Map Button",  // Event action (required)
-		    	                   "Location recovered!",   // Event label
-		    	                   null)            // Event value
-		    	      .build());
-		    	LOCATION_RESOLVED = 0;
-			}
 			progressBarView.setVisibility(View.VISIBLE);
 
 			startActivity(intent);}
 		}
+		
 		if (breadcrumbCount > 0) { //zoom to last breadcrumb location if there are breadcrumbs
 			Intent intent = new Intent(this, BreadcrumbMap.class);
 			intent.putExtra("THERE_ARE_BREADCRUMBS_ON_MAP", true);

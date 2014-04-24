@@ -27,7 +27,7 @@
     <string name="share_directions_snippet">Directions à</string>
     
     <string name="no_location_found_warning">Position pas encore trouvée\nVerifiez que les services de localisation Google sont activées</string>
-    <string name="improve_accuracy_warning">Afin d’en améliorer la précision, activer le WIFI et/ou le GPS</string>
+    <string name="improve_accuracy_warning">Afin d’en améliorer la précision, activer le GPS (et/ou le WIFI)</string>
     <string name="no_breadcrumbs_yet_warning">Vous avez pas encore jeter un Breadcrumb</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
     

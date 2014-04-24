@@ -177,7 +177,6 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     			intent.putExtra("breadcrumbId", _id);
     	        startActivity(intent);
                 }
-
             }
         });
     	
