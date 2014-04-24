@@ -184,6 +184,9 @@ public class MainActivity extends Activity implements
 		GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
 		WIFIEnabled = wifi.isWifiEnabled();
 
+	    //open breadcrumb map
+    	 Intent intent = new Intent(this, BreadcrumbMap.class);
+
 		// Check if any location has been found
 	    if ( lastKnownLocation == null){
 	    	
@@ -264,36 +267,15 @@ public class MainActivity extends Activity implements
 		    	                   "GPS/WIFI *are* Enabled",  // Event action (required)
 		    	                   "View Breadcrumbs Button",   // Event label
 		    	                   null)            // Event value
-		    	      .build());}
+		    	      .build());
+	    	
+	     	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
+					Toast.LENGTH_LONG).show();}
 
 	    }
 	    else{
-	    //open breadcrumb map
-    	 Intent intent = new Intent(this, BreadcrumbMap.class);
 
-        //Auto generate breadcrumb label which will be "Breadcrumb "
-        //In whatever language and its number in your database
-        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );
-	    db.addBreadcrumb(new Breadcrumb(BREADCRUMB_LATITUDE_CONVERTED, BREADCRUMB_LONGITUDE_CONVERTED, label));
 
-	    //Pass current location as an extra to map activity
-		intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
-		intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
-		intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
-		intent.putExtra("THERE_ARE_BREADCRUMBS_ON_MAP", true);
-		db.close();
-
-    	if (LOCATION_RESOLVED == 1){
-	    	EasyTracker.getInstance(this)
-	    	.send(MapBuilder
-	    		      .createEvent("Location Issues",     // Event category (required)
-	    	                   "Drop Breadcrumb Button",  // Event action (required)
-	    	                   "Location recovered!",   // Event label
-	    	                   null)            // Event value
-	    	      .build());
-	    	LOCATION_RESOLVED = 0;
-    	}
-    	progressBarView.setVisibility(View.VISIBLE);
 
     	
 if ( !GPSEnabled && !WIFIEnabled ){
@@ -327,6 +309,17 @@ if ( !GPSEnabled && !WIFIEnabled ){
                         // Write your code here to invoke NO event
                 	    Intent intent = new Intent(getApplicationContext(), BreadcrumbMap.class);
 
+            	        //Auto generate breadcrumb label which will be "Breadcrumb "
+            	        //In whatever language and its number in your database
+            	        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );
+            		    db.addBreadcrumb(new Breadcrumb(BREADCRUMB_LATITUDE_CONVERTED, BREADCRUMB_LONGITUDE_CONVERTED, label));
+
+            		    //Pass current location as an extra to map activity
+            			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
+            			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
+            			intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
+            			intent.putExtra("THERE_ARE_BREADCRUMBS_ON_MAP", true);
+            			db.close();
                 	    startActivity(intent);
 
                         dialog.cancel();
@@ -337,6 +330,19 @@ if ( !GPSEnabled && !WIFIEnabled ){
 	    GPSalertDialog.show();
     	//////////ENDAlertDialog prompting location settings
 	    }else{
+	    	
+	        //Auto generate breadcrumb label which will be "Breadcrumb "
+	        //In whatever language and its number in your database
+	        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );
+		    db.addBreadcrumb(new Breadcrumb(BREADCRUMB_LATITUDE_CONVERTED, BREADCRUMB_LONGITUDE_CONVERTED, label));
+
+		    //Pass current location as an extra to map activity
+			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
+			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
+			intent.putExtra("DROP_BREADCRUMB_PRESSED", true);
+			intent.putExtra("THERE_ARE_BREADCRUMBS_ON_MAP", true);
+			db.close();
+	    	progressBarView.setVisibility(View.VISIBLE);
 	    startActivity(intent);}
 	    }
 	    
@@ -396,16 +402,14 @@ if ( !GPSEnabled && !WIFIEnabled ){
 					                    	lastKnownLocation = location;
 					                    }
 					                }, null);}
-				  
-			    	Toast.makeText(getApplicationContext(), NO_LOCATION_WARNING_TEXT,
-							Toast.LENGTH_LONG).show();
+
 			    	
 					GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
 					WIFIEnabled = wifi.isWifiEnabled();
 					
 					
 					
-			    	if ( !GPSEnabled && !WIFIEnabled ){
+			    	if ( !GPSEnabled && !WIFIEnabled && lastKnownLocation == null ){
 			    		
 			    		EasyTracker.getInstance(this)
 				    	.send(MapBuilder
