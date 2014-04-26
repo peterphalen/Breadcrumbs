@@ -28,8 +28,8 @@
      
     <string name="no_location_found_text">No Location Found</string>
     <string name="location_services_disabled_text">Location Services Disabled</string>
-    <string name="enable_location_services_prompt">Please make sure location services (and GPS or Wifi) are enabled in settings</string>
-    <string name="improve_accuracy_warning">Improve accuracy by enabling GPS (and/or WIFI) in settings</string>
+    <string name="enable_location_services_prompt">Please make sure location services and GPS are enabled in settings</string>
+    <string name="improve_accuracy_warning">Improve accuracy by enabling GPS in settings?</string>
     <string name="no_breadcrumbs_yet_warning">You haven\'t dropped any Breadcrumbs yet</string>
     <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
     

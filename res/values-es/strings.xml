@@ -32,7 +32,7 @@
         <string name="no_location_found_text">Ubicación No Encontrado</string>
     <string name="location_services_disabled_text">Servicios de Ubicación Desactivados</string>
     <string name="enable_location_services_prompt">Habilita los servicios de ubicación de Google</string>
-    <string name="improve_accuracy_warning">Para mejorar la precisión, activa el GPS (y/o le WIFI)</string>
+    <string name="improve_accuracy_warning">Para mejorar la precisión, activa el GPS</string>
         <string name="auto_generated_breadcrumb_label">Breadcrumb</string>
     
     

@@ -2,13 +2,11 @@ package com.peter.breadcrumbs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -34,7 +32,6 @@ public class MainActivity extends Activity implements
     protected LocationListener locationListener;
 
 
-	protected WifiManager wifi;
 	private Location lastKnownLocation;
 	private double BREADCRUMB_LATITUDE;
 	private double BREADCRUMB_LONGITUDE;
@@ -91,8 +88,6 @@ public class MainActivity extends Activity implements
 					ENABLE_LOCATION_SERVICES_PROMPT = res.getString(R.string.enable_location_services_prompt);	
 					SETTINGS_TEXT = res.getString(R.string.settings);
 					 					
-					wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-
 			}
 	
 
@@ -187,22 +182,41 @@ public class MainActivity extends Activity implements
 	public void dropBreadcrumb(View view) {
 		      
 		GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
-		WIFIEnabled = wifi.isWifiEnabled();
-
-
 
 		// Check if any location has been found
 	    if ( lastKnownLocation == null){
 	    	
+			if(locationManager != null){
+				//this locationManager update is needed because of a bug
+				//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
+				  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
+						  new android.location.LocationListener() {
+			                    @Override
+			                    public void onStatusChanged(String provider, int status,
+			                            Bundle extras) {
+			                    }
+
+			                    @Override
+			                    public void onProviderEnabled(String provider) {
+			                    }
+
+			                    @Override
+			                    public void onProviderDisabled(String provider) {
+			                    }
+
+			                    @Override
+			                    public void onLocationChanged(final Location location) {
+			                    }
+			                }, null);}
 
 	    	//if lastKnownLocation still null after 'kickstart' prompt location settings
-	    	if (!GPSEnabled && !WIFIEnabled){
+	    	if ( !GPSEnabled ){
 	    		
-		    	//if location services ARE enabled tell me about it
+		    	//if location services are not enabled tell me about it
 		    	EasyTracker.getInstance(this)
 			    	.send(MapBuilder
 			    		      .createEvent("Location not found",     // Event category (required)
-			    	                   "GPS/WIFI Not Enabled",  // Event action (required)
+			    	                   "GPS Not Enabled",  // Event action (required)
 			    	                   "Drop Breadcrumb Button",   // Event label
 			    	                   null)            // Event value
 			    	      .build());
@@ -210,7 +224,7 @@ public class MainActivity extends Activity implements
 		    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);
 
 	        // Setting Dialog Title
-		    NoLocationAlertDialog.setTitle(LOCATION_SERVICES_DISABLED_TEXT);
+		    NoLocationAlertDialog.setTitle(NO_LOCATION_FOUND_TEXT);
 
 	        // Setting Dialog Message
 		    NoLocationAlertDialog.setMessage(ENABLE_LOCATION_SERVICES_PROMPT);
@@ -223,7 +237,7 @@ public class MainActivity extends Activity implements
 	                new DialogInterface.OnClickListener() {
 	                    public void onClick(DialogInterface dialog, int which) {
 
-	                        // Activity transfer to wifi settings
+	                        // Activity transfer to location settings
 	                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 	                    }
 	                });
@@ -244,34 +258,13 @@ public class MainActivity extends Activity implements
 	    	//if location services ARE enabled tell me about it
 	    	else{
 	    		
-				if(locationManager != null){
-					//this locationManager update is needed because of a bug
-					//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
-					  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
-							  new android.location.LocationListener() {
-				                    @Override
-				                    public void onStatusChanged(String provider, int status,
-				                            Bundle extras) {
-				                    }
 
-				                    @Override
-				                    public void onProviderEnabled(String provider) {
-				                    }
-
-				                    @Override
-				                    public void onProviderDisabled(String provider) {
-				                    }
-
-				                    @Override
-				                    public void onLocationChanged(final Location location) {
-				                    }
-				                }, null);}
 	    		
 	    		EasyTracker.getInstance(this)
 		    	.send(MapBuilder
 		    		      .createEvent("Location not found",     // Event category (required)
-		    	                   "GPS or WIFI *is* Enabled",  // Event action (required)
-		    	                   "View Breadcrumbs Button",   // Event label
+		    	                   "GPS *is* Enabled",  // Event action (required)
+		    	                   "Drop Breadcrumb Button",   // Event label
 		    	                   null)            // Event value
 		    	      .build());
 	    	
@@ -315,7 +308,7 @@ public class MainActivity extends Activity implements
 	    }
 	    else{
 
-if ( !GPSEnabled && !WIFIEnabled ){
+if ( !GPSEnabled ){
 	    	
 	    	//////////AlertDialog prompting location settings
 	    AlertDialog.Builder GPSalertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -343,7 +336,9 @@ if ( !GPSEnabled && !WIFIEnabled ){
 	    GPSalertDialog.setNegativeButton(CANCEL_TEXT,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to invoke NO event
+                        // Send your location as dropped crumb even without GPS enabled
+                    	// TODO Change the confirm text here to make it clear that user will be dropping crumb? Ignore?
+                    	
                 	    Intent intent = new Intent(getApplicationContext(), BreadcrumbMap.class);
 
             	        //Auto generate breadcrumb label which will be "Breadcrumb "
@@ -418,11 +413,32 @@ if ( !GPSEnabled && !WIFIEnabled ){
 		if ( breadcrumbCount == 0 ) {			
 			  if ( lastKnownLocation == null){
 					GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
-					WIFIEnabled = wifi.isWifiEnabled();
 					
+					if(locationManager != null){
+						//this locationManager update is needed because of a bug
+						//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
+					  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
+							  new android.location.LocationListener() {
+				                    @Override
+				                    public void onStatusChanged(String provider, int status,
+				                            Bundle extras) {
+				                    }
 
+				                    @Override
+				                    public void onProviderEnabled(String provider) {
+				                    }
+
+				                    @Override
+				                    public void onProviderDisabled(String provider) {
+				                    }
+
+				                    @Override
+				                    public void onLocationChanged(final Location location) {
+				                    }
+				                }, null);}
+					
 					//if lastKnownLocation still null after 'kickstart' prompt location settings
-			    	if (!GPSEnabled && !WIFIEnabled){
+			    	if ( !GPSEnabled ){
 			    		
 
 			    	//////////AlertDialog prompting location settings
@@ -462,28 +478,7 @@ if ( !GPSEnabled && !WIFIEnabled ){
 			    	}			    	
 			    	//if location services ARE enabled tell me about it
 			    	else{
-						if(locationManager != null){
-							//this locationManager update is needed because of a bug
-							//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
-						  locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, 
-								  new android.location.LocationListener() {
-					                    @Override
-					                    public void onStatusChanged(String provider, int status,
-					                            Bundle extras) {
-					                    }
 
-					                    @Override
-					                    public void onProviderEnabled(String provider) {
-					                    }
-
-					                    @Override
-					                    public void onProviderDisabled(String provider) {
-					                    }
-
-					                    @Override
-					                    public void onLocationChanged(final Location location) {
-					                    }
-					                }, null);}
 
 			    	//////////AlertDialog prompting location settings
 				    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);

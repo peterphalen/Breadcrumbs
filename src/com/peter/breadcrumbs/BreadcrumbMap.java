@@ -8,10 +8,8 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +38,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  DatabaseHandler db;
 	  List <Breadcrumb> breadcrumbs;
 	  HashMap<String, Integer> idMarkerMap = new HashMap<String, Integer>();
-	  SharedPreferences sharedpreferences;
 	  
 	  double clickedLatitude;
 	  double clickedLongitude;
@@ -94,10 +91,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
 		  AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);
 
-	    	    	    
-	    //get Shared prefs
-	    sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-    	int prefValue = sharedpreferences.getInt(MAP_TYPE_KEY, mapTypeNormal);
 
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
@@ -115,11 +108,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 
 
 		    if(map != null){
-		    	if ("MAP_TYPE_HYBRID".equals(prefValue)) {
-		    	    mapType = mapTypeHybrid;
-		    	} else {
-		    	    mapType = mapTypeNormal;
-		    	}
 		    	map.setMapType(mapType);
 			    map.setPadding(0, 0, 0, 70);
 		    }
@@ -159,17 +147,12 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
         case R.id.mapType:
         	if (map.getMapType() == mapTypeHybrid){
         	mapType = mapTypeNormal;
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putInt(MAP_TYPE_KEY, mapTypeNormal);
+    
             mapMenuTitle.setTitle(REQUEST_SAT_VIEW_TEXT);
-            editor.apply(); 
             }
         	if (map.getMapType() == mapTypeNormal){
         		mapType = mapTypeHybrid;
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putInt(MAP_TYPE_KEY, mapTypeHybrid);
                 mapMenuTitle.setTitle(REQUEST_ROAD_VIEW_TEXT);
-                editor.apply(); 
         	}
         	map.setMapType(mapType);
 

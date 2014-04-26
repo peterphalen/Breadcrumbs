@@ -33,7 +33,7 @@
             <string name="no_location_found_text">Position Pas Encore Trouvée</string>
     <string name="location_services_disabled_text">Services de Localisation Désactivés</string>
     <string name="enable_location_services_prompt">Verifiez que les services de localisation Google sont activés</string>
-    <string name="improve_accuracy_warning">Afin d’en améliorer la précision, activer le GPS (et/ou le WIFI)</string>
+    <string name="improve_accuracy_warning">Afin d’en améliorer la précision, activer le GPS</string>
     
     <string name="sat_view">Image satellite</string> 
     <string name="road_view">Plan</string>  
