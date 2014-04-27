@@ -6,18 +6,35 @@
     android:background="#F0F0F0"
     tools:context=".CollectedBreadcrumbsActivity" >
 
+    
+     <LinearLayout
+    android:id="@+id/list_holder"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/ad_holder"
+>
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/adView1"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
         android:cacheColorHint="#00000000"
         android:isScrollContainer="true"
         android:longClickable="true"
         android:padding="0dp" >
     </ListView>
+        </LinearLayout>
+    
 
+     <LinearLayout
+    android:id="@+id/ad_holder"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    				android:layout_above="@+id/text_view_categories_title"
+>
+    
+    
 	<com.google.android.gms.ads.AdView
 		        xmlns:ads="http://schemas.android.com/apk/res-auto"
 				android:id="@+id/adView1"
@@ -25,9 +42,9 @@
                 android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				ads:adUnitId="ca-app-pub-9215174569054218/2845647483"
-				android:layout_above="@+id/text_view_categories_title"
                          />
-    
+        </LinearLayout>
+	
      <TextView
         android:id="@+id/text_view_categories_title"
         android:layout_width="fill_parent"

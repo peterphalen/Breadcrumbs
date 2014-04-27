@@ -30,9 +30,9 @@
     <string name="no_breadcrumbs_yet_warning">まだパンくずが落とされていません</string>
     <string name="auto_generated_breadcrumb_label">パンくず</string>
     
-        <string name="no_location_found_text">No Location Found</string>
-    <string name="location_services_disabled_text">Location Services Disabled</string>
-    <string name="enable_location_services_prompt">Please make sure location services and GPS are enabled in settings</string>
+        <string name="no_location_found_text">場所が見つかりません</string>
+    <string name="location_services_disabled_text">位置情報サービスが無効</string>
+    <string name="enable_location_services_prompt">位置情報サービスを有効にする</string>
     
     <string name="sat_view">Earth</string> 
     <string name="road_view">地図</string>  

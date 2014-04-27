@@ -265,7 +265,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
 	    // Zoom in, animating the camera.
-	    map.animateCamera(CameraUpdateFactory.zoomTo(18), 2000, null);
+	    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
 	    }
 	    
 		//If the map has been generated and there are no breadcrumbs in the db
