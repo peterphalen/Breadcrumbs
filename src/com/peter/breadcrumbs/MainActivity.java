@@ -29,8 +29,6 @@ public class MainActivity extends Activity implements
 	protected LocationManager locationManager;
     protected LocationClient mLocationClient;
     protected LocationRequest mLocationRequest;
-    protected LocationListener locationListener;
-
 
 	private Location lastKnownLocation;
 	private double BREADCRUMB_LATITUDE;
@@ -47,10 +45,8 @@ public class MainActivity extends Activity implements
 	  String SETTINGS_TEXT;
 	private DatabaseHandler db;
 	private int breadcrumbCount;
-	long LOCATION_RESOLVED;
 	private RelativeLayout progressBarView;
 	boolean GPSEnabled = true;
-	boolean WIFIEnabled = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -308,6 +304,8 @@ public class MainActivity extends Activity implements
 	    }
 	    else{
 
+	    	//If GPS not enabled but we have a locaiton ask user if they want to enable it
+	    	//If they don't, drop a breadcrumb anyway
 if ( !GPSEnabled ){
 	    	
 	    	//////////AlertDialog prompting location settings
