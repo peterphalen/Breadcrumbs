@@ -23,7 +23,7 @@
        <string name="settings">Settings</string>
     
     <string name="options">Open</string>
-    <string name="info_box_instructions">Click this box for more!</string>
+    <string name="info_box_instructions">Click me for more!</string>
     <string name="share_directions_snippet">Directions to</string>
      
     <string name="no_location_found_text">No Location Found</string>

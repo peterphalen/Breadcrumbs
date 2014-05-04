@@ -117,7 +117,9 @@ public class EditLabel extends Activity {
     	if (breadcrumbLabel.matches("")) {
     	}else{
     	db.relabelBreadcrumb(breadcrumbId, breadcrumbLabel);}
-    	
+    	Intent returnIntent = new Intent();
+    	 returnIntent.putExtra("EDIT_BREADCRUMB_ID",breadcrumbId);
+    	 setResult(RESULT_OK,returnIntent);
 		finish();
     }
     
@@ -125,12 +127,16 @@ public class EditLabel extends Activity {
     	// Delete breadcrumb label in the database
     	Breadcrumb breadcrumb = db.getBreadcrumb(breadcrumbId);
         db.deleteBreadcrumb(breadcrumb);
-    	   
+        Intent returnIntent = new Intent();
+        setResult(RESULT_CANCELED, returnIntent); 
         finish();
         }
     
     public void cancel(View view) {
-   	    finish();  
+    	Intent returnIntent = new Intent();
+   	 returnIntent.putExtra("EDIT_BREADCRUMB_ID",breadcrumbId);
+   	 setResult(RESULT_OK,returnIntent);
+   	 finish();  
     }
     
     @Override
