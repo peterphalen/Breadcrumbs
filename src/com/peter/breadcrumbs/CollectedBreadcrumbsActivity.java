@@ -11,6 +11,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,9 +21,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 	
 @SuppressLint("NewApi")
 public class CollectedBreadcrumbsActivity extends Activity  {
@@ -31,13 +35,14 @@ public class CollectedBreadcrumbsActivity extends Activity  {
 	DatabaseHandler db;	
 	SimpleCursorAdapter adapter; 
 	Cursor cursor;
-	
+	Tracker tracker;
 	  String DELETE_ALL_QUESTION_TEXT;
 	  String OKAY_TEXT;
 	  String CANCEL_TEXT;
 	  String DELETE_TEXT;
 	  String OPTIONS_TEXT;
-	
+	  
+
 	    
     @SuppressLint("NewApi")
 	@Override
@@ -53,6 +58,17 @@ public class CollectedBreadcrumbsActivity extends Activity  {
         .build();
         adView.loadAd(adRequest);
         
+
+ 		 adView.setAdListener(new AdListener() {
+		        @Override
+		        public void onAdOpened() {
+		    		tracker.send(new HitBuilders.EventBuilder()
+		                .setCategory("Ad Click")
+		                .setAction("Collection Activity")
+		                .build());}
+		        
+		    });
+        
         		//get string resources
 		  Resources res = getResources();
 		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
@@ -65,13 +81,19 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     		  // call something for API Level 11+
     		ActionBar actionBar = getActionBar();
     		actionBar.setDisplayHomeAsUpEnabled(true);}
+		  
+		  tracker = ((MyApplication) getApplication()).getTracker(
+  				  MyApplication.TrackerName.APP_TRACKER);
+
 
     }
     
     @Override
 	  public void onStart() {
 	    super.onStart();
-	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
+	  
+	    //Get an Analytics tracker to report app starts & uncaught exceptions etc.
+	    GoogleAnalytics.getInstance(this).reportActivityStart(this);
 	  }
     
 
@@ -155,7 +177,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     	
     	Breadcrumb breadcrumb = db.getBreadcrumb(_id);
     	//if you singleclick a list item put it in a google map directions url and open it
-    	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1e6 + "," + breadcrumb.getBreadcrumbLongitude()/1e6));
+    	final Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://maps.google.com/maps?" + "&daddr=" + breadcrumb.getBreadcrumbLatitude()/1E6 + "," + breadcrumb.getBreadcrumbLongitude()/1E6));
         startActivity(intent);
         intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");}}});
     
@@ -212,7 +234,6 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     @Override
 	  public void onStop() {
 	    super.onStop();
-	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
-	  }
-
+	  //Stop the analytics tracking
+	    GoogleAnalytics.getInstance(this).reportActivityStop(this);	  }
 }

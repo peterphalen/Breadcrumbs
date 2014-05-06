@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ShareActionProvider;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 
 public class EditLabel extends Activity {
 		
@@ -35,6 +35,7 @@ public class EditLabel extends Activity {
 		setContentView(R.layout.activity_edit_label);
 		db = new DatabaseHandler(this);
 		
+		
 		Bundle extras = getIntent().getExtras();
 		breadcrumbId = extras.getInt("breadcrumbId");
 		
@@ -43,8 +44,8 @@ public class EditLabel extends Activity {
     	editText.setHint(breadcrumbLabel);
         
     	breadcrumb = db.getBreadcrumb(breadcrumbId);
-	    breadcrumbLatitude = breadcrumb.getBreadcrumbLatitude()/1e6;
-	    breadcrumbLongitude = breadcrumb.getBreadcrumbLongitude()/1e6;
+	    breadcrumbLatitude = breadcrumb.getBreadcrumbLatitude()/1E6;
+	    breadcrumbLongitude = breadcrumb.getBreadcrumbLongitude()/1E6;
     	
     	if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
     		  // call something for API Level 11+
@@ -101,7 +102,9 @@ public class EditLabel extends Activity {
 	  @Override
 	  public void onStart() {
 	    super.onStart();
-	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
+	    //Get an Analytics tracker to report app starts & uncaught exceptions etc.
+	    GoogleAnalytics.getInstance(this).reportActivityStart(this);
+	    
 	  }
 	  
     public void navigateTo(View view) {
@@ -142,7 +145,9 @@ public class EditLabel extends Activity {
     @Override
 	  public void onStop() {
 	    super.onStop();
-	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
-	  }
+	  //Stop the analytics tracking
+	    GoogleAnalytics.getInstance(this).reportActivityStop(this);	  
+	    
+    }
 
 }

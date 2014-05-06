@@ -28,7 +28,7 @@
         android:background="@drawable/collected_button"
         android:onClick="collectBreadcrumbs"
         android:text="@string/CollectBreadcrumbs"
-        android:textColor="#FfFfFf"
+        android:textColor="#FCFCFC"
         android:textSize="@dimen/text_size_smaller_main" />
     
     <Button

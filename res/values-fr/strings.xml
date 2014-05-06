@@ -24,7 +24,7 @@
     <string name="cancel">Non</string>
     <string name="options">Ouvrir</string>
        <string name="settings">Paramètres</string>
-    <string name="info_box_instructions">Cliquez cette fenêtre pour plus!</string>
+    <string name="info_box_instructions">Cliquez-moi pour plus!</string>
     <string name="share_directions_snippet">Directions à</string>
     
     <string name="no_breadcrumbs_yet_warning">Vous avez pas encore jeter un Breadcrumb</string>

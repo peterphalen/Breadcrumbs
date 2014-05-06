@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" 
+        tools:ignore="TypographyDashes">
+
+<!-- The apps Analytics Tracking Id -->
+<string name="ga_trackingId">UA-49051717-1</string>
+
+<!-- Enable automatic Activity measurement -->
+<bool name="ga_autoActivityTracking">true</bool>
+
+<!-- catch and report uncaught exceptions from the app -->
+<bool name="ga_reportUncaughtExceptions">true</bool>
+ 
+<!-- If ga_autoActivityTracking is enabled, an alternate screen name can be specified to
+substitute for the full length canonical Activity name in screen view hit. In order to
+specify an alternate screen name use an <screenName> element, with the name attribute
+specifying the canonical name, and the value the alias to use instead. -->
+<screenName name="com.peter.breadcrumbs.MainActivity">Main Activity</screenName>
+<screenName name="com.peter.breadcrumbs.CollectedBreadcrumbsActivity">Collection Activity</screenName>  
+<screenName name="com.peter.breadcrumbs.BreadcrumbMap">Map Activity</screenName>
+<screenName name="com.peter.breadcrumbs.EditLabel">EditLabel Activity</screenName> 
+</resources>

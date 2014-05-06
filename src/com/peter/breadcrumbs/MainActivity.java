@@ -13,8 +13,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -47,19 +48,19 @@ public class MainActivity extends Activity implements
 	private int breadcrumbCount;
 	private RelativeLayout progressBarView;
 	boolean GPSEnabled = true;
+	Tracker tracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-
-		
+		  
 		//get Spinner but make it invisible
 		progressBarView = (RelativeLayout)findViewById(R.id.progressBarView);
 		progressBarView.setVisibility(View.GONE);
-
-
+		 // Get tracker.
+        tracker = ((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.APP_TRACKER);
 	      mLocationClient = new LocationClient(this, this, this);
 	      mLocationRequest = new LocationRequest();
 	      
@@ -103,11 +104,11 @@ public class MainActivity extends Activity implements
 		    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
 		    		    	
 		    	//Convert latitude and longitude to an integer
-		    	//Requires multiplying by 1e6, which means you have to divide 
-		    	//the number by 1e6 when you access it later
-		        BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
+		    	//Requires multiplying by 1E6, which means you have to divide 
+		    	//the number by 1E6 when you access it later
+		        BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1E6);
 		        BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
-		        BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
+		        BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1E6);
 		        BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
 		        }
 		      
@@ -123,11 +124,11 @@ public class MainActivity extends Activity implements
 	    	BREADCRUMB_LONGITUDE = lastKnownLocation.getLongitude();
 	    	
 	    	//Convert latitude and longitude to an integer
-	    	//Requires multiplying by 1e6, which means you have to divide 
-	    	//the number by 1e6 when you access it later
-	    	 BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1e6);
+	    	//Requires multiplying by 1E6, which means you have to divide 
+	    	//the number by 1E6 when you access it later
+	    	 BREADCRUMB_LATITUDE = (BREADCRUMB_LATITUDE * 1E6);
 		     BREADCRUMB_LATITUDE_CONVERTED = (int)BREADCRUMB_LATITUDE;
-		     BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1e6);
+		     BREADCRUMB_LONGITUDE = (BREADCRUMB_LONGITUDE * 1E6);
 		     BREADCRUMB_LONGITUDE_CONVERTED = (int)BREADCRUMB_LONGITUDE;
  }
 		  	  }
@@ -153,8 +154,9 @@ public class MainActivity extends Activity implements
 	  @Override
 	  public void onStart() {
 	    super.onStart();
-	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
-	 // Connect the client.
+	    //Get an Analytics tracker to report app starts & uncaught exceptions etc.
+	    GoogleAnalytics.getInstance(this).reportActivityStart(this);
+	    // Connect the client.
 	      mLocationClient.connect();
 
 			db = new DatabaseHandler(this);
@@ -207,15 +209,13 @@ public class MainActivity extends Activity implements
 
 	    	//if lastKnownLocation still null after 'kickstart' prompt location settings
 	    	if ( !GPSEnabled ){
-	    		
+
 		    	//if location services are not enabled tell me about it
-		    	EasyTracker.getInstance(this)
-			    	.send(MapBuilder
-			    		      .createEvent("Location not found",     // Event category (required)
-			    	                   "GPS Not Enabled",  // Event action (required)
-			    	                   "Drop Breadcrumb Button",   // Event label
-			    	                   null)            // Event value
-			    	      .build());
+	    		tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Location not found")
+                .setAction("GPS Not Enabled")
+                .build());
+	    		
 	    	//////////AlertDialog prompting location settings
 		    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);
 
@@ -253,16 +253,10 @@ public class MainActivity extends Activity implements
 	    	}			    	
 	    	//if location services ARE enabled tell me about it
 	    	else{
-	    		
-
-	    		
-	    		EasyTracker.getInstance(this)
-		    	.send(MapBuilder
-		    		      .createEvent("Location not found",     // Event category (required)
-		    	                   "GPS *is* Enabled",  // Event action (required)
-		    	                   "Drop Breadcrumb Button",   // Event label
-		    	                   null)            // Event value
-		    	      .build());
+	    		tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Location not found")
+                .setAction("GPS *is* Enabled")
+                .build());
 	    	
 
 	    	//////////AlertDialog prompting location settings
@@ -390,8 +384,9 @@ if ( !GPSEnabled ){
 		if ( breadcrumbCount == 0 ) {
 			Intent intent = new Intent(this, CollectedBreadcrumbsActivity.class);
 
-			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
-				    Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
+				    Toast.LENGTH_LONG)
+				    .show();
 
 	        startActivity(intent);
 		}
@@ -409,9 +404,7 @@ if ( !GPSEnabled ){
 	    	//If no breadcrumbs are in database but current location is found, 
 	    	//send current location to the map and open it
 		if ( breadcrumbCount == 0 ) {			
-			  if ( lastKnownLocation == null){
-					GPSEnabled = locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
-					
+			  if ( lastKnownLocation == null){					
 					if(locationManager != null){
 						//this locationManager update is needed because of a bug
 						//affecting some Samsung phones. It's meant to 'kickstart' the locationListener
@@ -434,49 +427,7 @@ if ( !GPSEnabled ){
 				                    public void onLocationChanged(final Location location) {
 				                    }
 				                }, null);}
-					
-					//if lastKnownLocation still null after 'kickstart' prompt location settings
-			    	if ( !GPSEnabled ){
-			    		
-
-			    	//////////AlertDialog prompting location settings
-				    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);
-
-			        // Setting Dialog Title
-				    NoLocationAlertDialog.setTitle(LOCATION_SERVICES_DISABLED_TEXT);
-
-			        // Setting Dialog Message
-				    NoLocationAlertDialog.setMessage(ENABLE_LOCATION_SERVICES_PROMPT);
-
-			        // Setting Icon to Dialog
-			        // alertDialog.setIcon(R.drawable.ic_launcher);
-
-			        // Setting Positive "Yes" Button
-				    NoLocationAlertDialog.setPositiveButton(SETTINGS_TEXT,
-			                new DialogInterface.OnClickListener() {
-			                    public void onClick(DialogInterface dialog, int which) {
-
-			                        // Activity transfer to wifi settings
-			                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-			                    }
-			                });
-
-			        // Setting Negative "NO" Button
-				    NoLocationAlertDialog.setNegativeButton(CANCEL_TEXT,
-			                new DialogInterface.OnClickListener() {
-			                    public void onClick(DialogInterface dialog, int which) {
-			                        // Write your code here to invoke NO event
-			                        dialog.cancel();
-			                    }
-			                });
-
-			        // Showing Alert Message
-				    NoLocationAlertDialog.show();
-			    	//////////ENDAlertDialog prompting location settings
-			    	}			    	
-			    	//if location services ARE enabled tell me about it
-			    	else{
-
+								    		
 
 			    	//////////AlertDialog prompting location settings
 				    AlertDialog.Builder NoLocationAlertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -511,17 +462,18 @@ if ( !GPSEnabled ){
 
 			        // Showing Alert Message
 				    NoLocationAlertDialog.show();
-			    	//////////ENDAlertDialog prompting location settings
+				    ////////End of AlertDialog
 				    }
 
 			  
-			  }else{
+			  else{
 
-			Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
-				    Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), NO_BREADCRUMBS_YET_WARNING_TEXT,
+						    Toast.LENGTH_LONG)
+						    .show();
 			Intent intent = new Intent(this, BreadcrumbMap.class);
 
-			//put our lastknowlocation (times 1e6) as extra
+			//put our lastknowlocation (times 1E6) as extra
 			intent.putExtra("INT_SHOW_THIS_LATITUDE", BREADCRUMB_LATITUDE_CONVERTED);
 			intent.putExtra("INT_SHOW_THIS_LONGITUDE", BREADCRUMB_LONGITUDE_CONVERTED);
 			intent.putExtra("VIEW_MAP_PRESSED", true);
@@ -562,7 +514,7 @@ if ( !GPSEnabled ){
        mLocationClient.disconnect();
  
        progressBarView.setVisibility(View.GONE);
-       EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
-
+     //Stop the analytics tracking
+	    GoogleAnalytics.getInstance(this).reportActivityStop(this);	  
 	}
 }

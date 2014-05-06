@@ -55,7 +55,7 @@
         android:layout_alignParentBottom="true"
         android:text="@string/title_collected_breadcrumbs_activity"
         android:textSize="@dimen/text_size_crumb_instructions"
-        android:textColor="#FFFFFF" 
+        android:textColor="#FfFfFf" 
         android:gravity="bottom"    >
         </TextView>
     

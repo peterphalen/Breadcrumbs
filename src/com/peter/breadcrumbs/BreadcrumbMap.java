@@ -15,9 +15,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -66,7 +69,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	  int editBreadcrumbId = -8;
 	  int thisMarkerBreadcrumbId = -9;
 	  String markerId = null;
-	  
+	  Tracker tracker;
 	  LatLng draggedMarkerPosition;
 	  private AdView adView;
       int mapTypeNormal = GoogleMap.MAP_TYPE_NORMAL;
@@ -79,12 +82,12 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_breadcrumb_map);
-        
-		  
+        		  
 	    //get MapFragment
 	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
 		        .getMap();
-	    
+		  tracker = ((MyApplication) getApplication()).getTracker(
+  				  MyApplication.TrackerName.APP_TRACKER);
 	    //get String resources
 		  Resources res = getResources();
 		  DELETE_ALL_QUESTION_TEXT = res.getString(R.string.delete_all_question);
@@ -94,8 +97,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 		  REQUEST_SAT_VIEW_TEXT = res.getString(R.string.sat_view);
 		  REQUEST_ROAD_VIEW_TEXT = res.getString(R.string.road_view);
 		  AUTO_GENERATED_BREADCRUMB_LABEL = res.getString(R.string.auto_generated_breadcrumb_label);
-
-
+		    
+		  
 		    //get lat/lang pair to zoom to
 			Bundle extras = getIntent().getExtras();
 			INT_SHOW_THIS_LATITUDE = extras.getInt("INT_SHOW_THIS_LATITUDE");
@@ -111,6 +114,16 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			  	        adView.loadAd(adRequest);
 
 
+			  		 adView.setAdListener(new AdListener() {
+					        @Override
+					        public void onAdOpened() {
+					    		tracker.send(new HitBuilders.EventBuilder()
+					                .setCategory("Ad Click")
+					                .setAction("Map Activity")
+					                .build());}
+					        
+					    });
+			  	        
 		    if(map != null){
 		    	map.setMapType(mapType);
 			    map.setPadding(0, 0, 0, 70);
@@ -217,12 +230,12 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			THERE_ARE_BREADCRUMBS_ON_MAP = false;
         }else{
 			THERE_ARE_BREADCRUMBS_ON_MAP = true;
-			if (map != null && VIEW_MAP_PRESSED == true ){
+			if (map != null && VIEW_MAP_PRESSED == true){
 				map.setMyLocationEnabled(true);
 			}
         }
-	    EasyTracker.getInstance(this).activityStart(this);  // Google analytics.
-	    
+	    //Get an Analytics tracker to report app starts & uncaught exceptions etc.
+	    GoogleAnalytics.getInstance(this).reportActivityStart(this);	    
 	    }
 	  
 	
@@ -243,7 +256,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 
         for (Breadcrumb brd : breadcrumbs) {
 			        allbreadcrumblocations = map.addMarker(new MarkerOptions()
-			          .position(new LatLng((brd.getBreadcrumbLatitude()/1e6), (brd.getBreadcrumbLongitude())/1e6))
+			          .position(new LatLng((brd.getBreadcrumbLatitude()/1E6), (brd.getBreadcrumbLongitude())/1E6))
 			          .title(brd.getLabel())
 			          .snippet(INFO_BOX_TEXT)
 			          .draggable(true)
@@ -256,14 +269,15 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			        GetBreadcrumbFromMarkerMap.put(allbreadcrumblocationsID, thisMarkerBreadcrumbId);
 			        
 			        //If editBreadcrumbId is not set by onactivityresult then just show all the info windows
-			        if (editBreadcrumbId < 0){
+			        if (editBreadcrumbId == -8){
 					       allbreadcrumblocations.showInfoWindow();
-			        }
-			        //if the marker we're on matches the editBreadcrumbId then show it's info window
-			        if (thisMarkerBreadcrumbId > -9){
+			        }else{
+				        //if the marker we're on matches the editBreadcrumbId then show it's info window
 			        	if (thisMarkerBreadcrumbId == editBreadcrumbId){
 						       allbreadcrumblocations.showInfoWindow();
-			        	}}
+			        	}
+			        }
+		
 			        }
         
 
@@ -271,8 +285,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    if( VIEW_MAP_PRESSED == true && THERE_ARE_BREADCRUMBS_ON_MAP == true){  
 	    		//if view map was just pressed and there are breadcrumbs zoom to latest one
 	    	Breadcrumb LatestBreadcrumb = breadcrumbs.get(breadcrumbCount-1);
-	    	SHOW_THIS_LATITUDE = ((LatestBreadcrumb.getBreadcrumbLatitude())/1e6);
-		    SHOW_THIS_LONGITUDE = ((LatestBreadcrumb.getBreadcrumbLongitude())/1e6);
+	    	SHOW_THIS_LATITUDE = ((LatestBreadcrumb.getBreadcrumbLatitude())/1E6);
+		    SHOW_THIS_LONGITUDE = ((LatestBreadcrumb.getBreadcrumbLongitude())/1E6);
 	    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 	    	
 	    	// Zoom in, animating the camera.
@@ -282,8 +296,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    else{
 	    	
 			if (INT_SHOW_THIS_LATITUDE != null && INT_SHOW_THIS_LONGITUDE != null){
-				SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1e6;
-				SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1e6;
+				SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1E6;
+				SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1E6;
 	    	
 		//if map is not null and there are breadcurmbs on map and drop a breadcrumb was pressed zoom to the latest breadcrumb
 	    if( DROP_BREADCRUMB_PRESSED == true && THERE_ARE_BREADCRUMBS_ON_MAP == true){
@@ -315,11 +329,12 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
         		//and sends the breadcrumb id to the activity as an extra
         	@Override
         	public void onInfoWindowClick(Marker marker) { 
-            markerId = marker.getId();
-			int breadcrumbId = GetBreadcrumbFromMarkerMap.get(markerId);
-			Intent intent = new Intent(getApplicationContext(), EditLabel.class);
-			intent.putExtra("breadcrumbId", breadcrumbId);
-	        startActivityForResult(intent, 1);        				};
+                markerId = marker.getId();
+      			int breadcrumbId = GetBreadcrumbFromMarkerMap.get(markerId);
+      			Intent intent = new Intent(getApplicationContext(), EditLabel.class);
+      			intent.putExtra("breadcrumbId", breadcrumbId);
+    			editBreadcrumbId = breadcrumbId;
+      	        startActivityForResult(intent, 1);     				};
 					}
         		);
 	    	
@@ -341,6 +356,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
                     markerId = marker.getId();
         			int breadcrumbId = GetBreadcrumbFromMarkerMap.get(markerId);
         			Intent intent = new Intent(getApplicationContext(), EditLabel.class);
+        			editBreadcrumbId = breadcrumbId;
         			intent.putExtra("breadcrumbId", breadcrumbId);
         	        startActivityForResult(intent, 1);
             	}else{
@@ -370,8 +386,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 		draggedMarkerPosition = marker.getPosition();
 		draggedLatitude = draggedMarkerPosition.latitude;
 		draggedLongitude = draggedMarkerPosition.longitude;
-		int DRAGGED_BREADCRUMB_LATITUDE_INT = (int)(draggedLatitude * 1e6);
-        int DRAGGED_BREADCRUMB_LONGITUDE_INT = (int)(draggedLongitude * 1e6);
+		int DRAGGED_BREADCRUMB_LATITUDE_INT = (int)(draggedLatitude * 1E6);
+        int DRAGGED_BREADCRUMB_LONGITUDE_INT = (int)(draggedLongitude * 1E6);
         db.newBreadcrumbPosition(draggedBreadcrumbId, DRAGGED_BREADCRUMB_LATITUDE_INT, DRAGGED_BREADCRUMB_LONGITUDE_INT);
 	
 	}
@@ -387,8 +403,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
         String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );
         clickedLatitude = point.latitude;
         clickedLongitude = point.longitude;
-        CLICKED_BREADCRUMB_LATITUDE_INT = (int)(clickedLatitude * 1e6);
-        CLICKED_BREADCRUMB_LONGITUDE_INT = (int)(clickedLongitude * 1e6);
+        CLICKED_BREADCRUMB_LATITUDE_INT = (int)(clickedLatitude * 1E6);
+        CLICKED_BREADCRUMB_LONGITUDE_INT = (int)(clickedLongitude * 1E6);
         db.addBreadcrumb(new Breadcrumb(CLICKED_BREADCRUMB_LATITUDE_INT, CLICKED_BREADCRUMB_LONGITUDE_INT, label));
     	THERE_ARE_BREADCRUMBS_ON_MAP = true;
 
@@ -400,7 +416,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 		//get markers for each breadcrumb
         for (Breadcrumb brd : breadcrumbs) {
 			        Marker allbreadcrumblocations = map.addMarker(new MarkerOptions()
-			          .position(new LatLng((brd.getBreadcrumbLatitude()/1e6), (brd.getBreadcrumbLongitude())/1e6))
+			          .position(new LatLng((brd.getBreadcrumbLatitude()/1E6), (brd.getBreadcrumbLongitude())/1E6))
 			          .title(brd.getLabel())
 			          .snippet(INFO_BOX_TEXT)
 			          .draggable(true)
@@ -412,7 +428,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			        thisMarkerBreadcrumbId = brd.getId();
 			        GetBreadcrumbFromMarkerMap.put(allbreadcrumblocationsID, thisMarkerBreadcrumbId);
 			        
-			        //If editBreadcrumbId is not set by onactivityresult then just show all the info windows
 					       allbreadcrumblocations.showInfoWindow();
 
 			          		}
@@ -442,19 +457,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    super.onPause();
 	    
 	  }
-	
-	  @Override
-	  public void onStop() {
-	    
-	    VIEW_MAP_PRESSED = false;
-		DROP_BREADCRUMB_PRESSED = false;
-        db.close();
 
-	    EasyTracker.getInstance(this).activityStop(this);  // Google analytics.
-	    
-	    super.onStop();
-
-	  }
 
 
 	@Override
@@ -471,6 +474,18 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	}
 
 	
+	  @Override
+	  public void onStop() {
+	    
+	    VIEW_MAP_PRESSED = false;
+		DROP_BREADCRUMB_PRESSED = false;
+      db.close();
+
+    //Stop the analytics tracking
+	    GoogleAnalytics.getInstance(this).reportActivityStop(this);	  	    
+	    super.onStop();
+
+	  }
 		
 	}	
 

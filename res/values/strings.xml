@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Breadcrumbs</string>
-    <string name="ViewMap"> view map </string>
+    <string name="ViewMap">view map</string>
     <string name="CollectBreadcrumbs">collection</string>
     <string name="DropBreadcrumb">drop a\nbreadcrumb</string>
     <string name="title_collected_breadcrumbs_activity">*Tap a Breadcrumb to navigate back to it.\n(Tap and hold to open)</string>
@@ -11,7 +11,7 @@
 	<string name="navigate_button_label">Directions to this Breadcrumb</string>
 	    
     <string name="breadcrumb_edit_instructions">Rename Breadcrumb</string>
-    <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs:</string>
+    <string name="title_activity_collected_breadcrumbs">Your Breadcrumbs</string>
     <string name="title_activity_breadcrumb_map">Breadcrumbs</string>
     <string name="title_activity_edit_label">Breadcrumbs</string>
   
