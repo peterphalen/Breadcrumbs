@@ -141,6 +141,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    // Inflate the menu items for use in the action bar
+		// Check map type and allow user to click to the alternative
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.breadcrumb_map, menu);
         MenuItem MapMenuItem = menu.findItem(R.id.mapType);
@@ -157,7 +158,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-		//this script gives you the maptypes and delete all options menu option
+		//this script gives you the maptypes and delete all menu options
         MenuItem mapMenuTitle = menu.findItem(R.id.mapType);
         switch (item.getItemId())
         {
@@ -263,7 +264,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			          .icon(BitmapDescriptorFactory
 			              .fromResource(R.drawable.red_dot)));
 			        
-			        ///////Set up BIDI hashmap to hold marker ids and breacdrumb ids
+			        //Set up hashmap to associate markers with breadcrumbs
 			        String allbreadcrumblocationsID = allbreadcrumblocations.getId();
 			        thisMarkerBreadcrumbId = brd.getId();
 			        GetBreadcrumbFromMarkerMap.put(allbreadcrumblocationsID, thisMarkerBreadcrumbId);
@@ -299,7 +300,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 				SHOW_THIS_LATITUDE = INT_SHOW_THIS_LATITUDE/1E6;
 				SHOW_THIS_LONGITUDE = INT_SHOW_THIS_LONGITUDE/1E6;
 	    	
-		//if map is not null and there are breadcurmbs on map and drop a breadcrumb was pressed zoom to the latest breadcrumb
+		//if there are breadcurmbs on map and Drop a Breadcrumb was pressed, zoom to the latest breadcrumb
 	    if( DROP_BREADCRUMB_PRESSED == true && THERE_ARE_BREADCRUMBS_ON_MAP == true){
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
 
@@ -308,7 +309,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	    map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
 	    }
 	    
-		//If the map has been generated and there are no breadcrumbs in the db
+		//If there are no breadcrumbs in the db amd View Map was pressed to get here
 		//show the latest location of the user at a lower zoom		    
 	    if( VIEW_MAP_PRESSED == true && THERE_ARE_BREADCRUMBS_ON_MAP == false){
 	    	map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(SHOW_THIS_LATITUDE, SHOW_THIS_LONGITUDE), 10));
@@ -323,10 +324,10 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
      
         
         
+		//when you click an infowindow it references the hashmap
+		//to get the breadcrumb id, opens EditLabel activity
+		//and sends the breadcrumb id to the activity as an extra
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-        		//when you click an infowindow it references the hashmap
-        		//to get the breadcrumb id, opens EditLabel activity
-        		//and sends the breadcrumb id to the activity as an extra
         	@Override
         	public void onInfoWindowClick(Marker marker) { 
                 markerId = marker.getId();
@@ -343,7 +344,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
     map.setOnMarkerDragListener(this);
     
 
-    
+
+    // When you click a marker, clicking it again opens the associated Breadcrumb
     map.setOnMarkerClickListener(new OnMarkerClickListener() {
     	@Override
     	public boolean onMarkerClick(Marker marker) {
@@ -375,7 +377,9 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
     adView.resume();
     
 	}
-
+	
+	// When you finish dragging the marker, update the SQlite database
+	// with the new location
 	@Override
 	public void onMarkerDragEnd(Marker marker) {
 		//get marker ID via hashmap
@@ -396,7 +400,6 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 	//longclicking map adds a breadcrumb to it
     @Override
     public void onMapLongClick(LatLng point) {
-
         breadcrumbCount = db.getBreadcrumbsCount();
         //Auto generate breadcrumb label which will be "Breadcrumb "
         //In whatever language and its number in your database
@@ -435,6 +438,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
         }
     }
     
+    
+    //Give me back the breadcrumbId I sent you
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -461,9 +466,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 
 
 	@Override
-	public void onMarkerDrag(Marker arg0) {
-		// TODO Why is this method necessary?
-		
+	public void onMarkerDrag(Marker arg0) {		
 	}
 
 
