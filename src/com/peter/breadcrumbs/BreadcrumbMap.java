@@ -273,7 +273,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			        if (editBreadcrumbId == -8){
 					       allbreadcrumblocations.showInfoWindow();
 			        }else{
-				        //if the marker we're on matches the editBreadcrumbId then show it's info window
+				        //if the marker we're on matches the editBreadcrumbId then show its info window
 			        	if (thisMarkerBreadcrumbId == editBreadcrumbId){
 						       allbreadcrumblocations.showInfoWindow();
 			        	}
@@ -446,11 +446,8 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
         if (requestCode == 1) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
             	Bundle extras = data.getExtras();
             	editBreadcrumbId = extras.getInt("EDIT_BREADCRUMB_ID");            	
-                // Do something with the contact here (bigger example below)
             }
         }
     }
