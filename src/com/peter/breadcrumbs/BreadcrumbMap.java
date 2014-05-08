@@ -111,7 +111,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 			 	        adView = (AdView)this.findViewById(R.id.adView2);
 			 			AdRequest adRequest = new AdRequest.Builder()
 			  	        .build();
-			  	        adView.loadAd(adRequest);
+			 	        adView.loadAd(adRequest);
 
 
 			  		 adView.setAdListener(new AdListener() {
