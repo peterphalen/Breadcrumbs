@@ -119,7 +119,7 @@ public class BreadcrumbMap extends FragmentActivity implements OnMapLongClickLis
 					        public void onAdOpened() {
 					    		tracker.send(new HitBuilders.EventBuilder()
 					                .setCategory("Ad Click")
-					                .setAction("Map Activity")
+					                .setAction("Ad Click on Map Activity")
 					                .build());}
 					        
 					    });

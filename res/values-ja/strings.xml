@@ -23,7 +23,7 @@
     <string name="cancel">取消</string>
     <string name="options">オプション</string>
     <string name="info_box_instructions">詳細は、ボックスをクリックしてください</string>
-    <string name="share_directions_snippet"> </string>
+    <string name="share_directions_snippet"></string>
        <string name="settings">設定</string>
     
     <string name="improve_accuracy_warning">GPSを有効にすることで正確さが向上します。</string>

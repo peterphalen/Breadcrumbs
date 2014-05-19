@@ -7,11 +7,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,7 +63,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
 		        public void onAdOpened() {
 		    		tracker.send(new HitBuilders.EventBuilder()
 		                .setCategory("Ad Click")
-		                .setAction("Collection Activity")
+		                .setAction("Ad Click on Collection Activity")
 		                .build());}
 		        
 		    });
@@ -192,7 +191,7 @@ public class CollectedBreadcrumbsActivity extends Activity  {
     	Breadcrumb breadcrumb = db.getBreadcrumb(_id);
     	String breadcrumbLabel = breadcrumb.getLabel();
     	
-    	alertbox.setMessage("'" + breadcrumbLabel +"'");
+    	alertbox.setMessage(breadcrumbLabel);
     	
         // set a rename button and create a listener
         alertbox.setPositiveButton(OPTIONS_TEXT, new DialogInterface.OnClickListener() {

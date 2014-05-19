@@ -15,7 +15,7 @@
     <string name="title_activity_breadcrumb_map">Breadcrumbs</string>
     <string name="title_activity_edit_label">Breadcrumbs</string>
   
-    <string name="edit_label_hint">Breadcrumb label</string>
+    <string name="edit_label_hint">Change label</string>
     <string name="delete_all">Delete all Breadcrumbs</string>
     <string name="delete_all_question">Delete all Breadcrumbs?</string>
     <string name="okay">Okay</string>

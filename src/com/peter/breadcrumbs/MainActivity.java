@@ -334,6 +334,12 @@ if ( !GPSEnabled ){
                     	// TODO Change the confirm text here to make it clear that user will be dropping crumb? Ignore?
                     	
                 	    Intent intent = new Intent(getApplicationContext(), BreadcrumbMap.class);
+                	    
+        		    	//if location services are not enabled tell me about it
+        	    		tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Breadcrumb Dropped")
+                        .setAction("GPS Not Enabled")
+                        .build());
 
             	        //Auto generate breadcrumb label which will be "Breadcrumb "
             	        //In whatever language and its number in your database
@@ -360,6 +366,13 @@ if ( !GPSEnabled ){
 	    }else{
 		    //open breadcrumb map
 	    	 Intent intent = new Intent(this, BreadcrumbMap.class);
+	    	 
+		    	//if location services are not enabled tell me about it
+	    		tracker.send(new HitBuilders.EventBuilder()
+             .setCategory("Breadcrumb Dropped")
+             .setAction("GPS Enabled")
+             .build());
+	    		
 	        //Auto generate breadcrumb label which will be "Breadcrumb "
 	        //In whatever language and its number in your database
 	        String label = (AUTO_GENERATED_BREADCRUMB_LABEL +" " + (breadcrumbCount+1) );

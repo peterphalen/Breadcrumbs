@@ -3,7 +3,7 @@
         tools:ignore="TypographyDashes">
 
 <!-- The apps Analytics Tracking Id -->
-<string name="ga_trackingId">UA-49051717-1</string>
+<string name="ga_trackingId">UA-49051717-2</string>
 
 <!-- Enable automatic Activity measurement -->
 <bool name="ga_autoActivityTracking">true</bool>

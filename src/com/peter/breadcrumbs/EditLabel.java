@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ShareActionProvider;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class EditLabel extends Activity {
 		
@@ -26,6 +28,7 @@ public class EditLabel extends Activity {
 	String breadcrumbLabel;
 	String DIRECTIONS_SNIPPET;
 	Breadcrumb breadcrumb;
+	Tracker tracker;
 
 	
 	@SuppressLint("NewApi")
@@ -35,13 +38,13 @@ public class EditLabel extends Activity {
 		setContentView(R.layout.activity_edit_label);
 		db = new DatabaseHandler(this);
 		
-		
+		 // Get tracker.
+        tracker = ((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.APP_TRACKER);
+        
 		Bundle extras = getIntent().getExtras();
 		breadcrumbId = extras.getInt("breadcrumbId");
 		
-    	EditText editText = (EditText) findViewById(R.id.breadcrumbLabelEditText);
     	breadcrumbLabel = db.getBreadcrumb(breadcrumbId).getLabel();
-    	editText.setHint(breadcrumbLabel);
         
     	breadcrumb = db.getBreadcrumb(breadcrumbId);
 	    breadcrumbLatitude = breadcrumb.getBreadcrumbLatitude()/1E6;
@@ -50,7 +53,9 @@ public class EditLabel extends Activity {
     	if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
     		  // call something for API Level 11+
     		ActionBar actionBar = getActionBar();
-    		actionBar.setDisplayHomeAsUpEnabled(true);}
+    		actionBar.setDisplayHomeAsUpEnabled(true);
+    		actionBar.setTitle(breadcrumbLabel);
+    		}
     	Resources res = getResources();
     	DIRECTIONS_SNIPPET = res.getString(R.string.share_directions_snippet);
     	
@@ -66,13 +71,15 @@ public class EditLabel extends Activity {
 			    
 			    if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 		    		  // call something for API Level 14+
-			 // Get the ActionProvider for later usage, share directions-snippet plus gogole map link in text form
+			 // Get the ActionProvider for later usage, share directions-snippet plus google map link in text form
 			    provider = (ShareActionProvider) menu.findItem(R.id.menu_share)
 			        .getActionProvider();
 			    if (provider != null){
 			    Intent intent = new Intent(Intent.ACTION_SEND);
-			    
-			   
+	    		tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Breadcrumb Shared")
+                .setAction("Someone clicked share button")
+                .build());
 	 			    intent.setType("text/plain");
 	 			    intent.putExtra(Intent.EXTRA_TEXT, DIRECTIONS_SNIPPET + " " + breadcrumbLabel + ": http://maps.google.com/maps?" + "&daddr=" + breadcrumbLatitude + "," + breadcrumbLongitude);
 				    provider.setShareIntent(intent);

@@ -186,7 +186,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	  public void deleteBreadcrumb(Breadcrumb breadcrumb) {
       		SQLiteDatabase db = this.getWritableDatabase();
       		int id = breadcrumb.getId();
-    		System.out.println("Comment deleted with id: " + id);
     		db.delete(TABLE_BREADCRUMBS, _id
     		        + " = " + id, null);
     		db.close();
